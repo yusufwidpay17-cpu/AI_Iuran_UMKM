@@ -1,0 +1,130 @@
+erDiagram
+    USERS ||--o{ TAGIHAN : "mencatat (petugas_id)"
+    USERS ||--o{ AUDIT_LOG : "melakukan aksi"
+    TARIF ||--o{ PEDAGANG : "dikenakan ke"
+    TARIF ||--o{ TAGIHAN : "acuan nominal"
+    PEDAGANG ||--o{ TAGIHAN : "memiliki"
+    PEDAGANG ||--o{ FITUR_POLA_BAYAR : "dihitung dari riwayat tagihan"
+    ML_MODEL ||--o{ SEGMENTASI_PEDAGANG : "menghasilkan"
+    FITUR_POLA_BAYAR ||--|| SEGMENTASI_PEDAGANG : "input klaster"
+    PEDAGANG ||--o{ SEGMENTASI_PEDAGANG : "mendapat label segmen"
+
+    USERS {
+        varchar36 id PK
+        varchar100 nama
+        varchar50 username UK
+        varchar255 password
+        enum role "superadmin, admin, petugas"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    TARIF {
+        varchar36 id PK
+        varchar100 nama_tarif
+        varchar50 kategori
+        decimal10_2 nominal_harian
+        date berlaku_mulai
+        tinyint1 aktif
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PEDAGANG {
+        varchar36 id PK
+        varchar100 nama_pedagang
+        varchar20 no_ktp UK
+        varchar20 no_telepon
+        varchar100 nama_usaha
+        enum kategori_usaha "kuliner,pakaian,elektronik,sayuran,buah,sembako,lainnya"
+        varchar100 kategori_usaha_detail
+        varchar20 no_kios UK
+        varchar10 blok_kios
+        date tanggal_daftar
+        enum status_pedagang "aktif,nonaktif,sementara_tutup"
+        enum status_legal "legal,ilegal,proses_izin"
+        varchar255 foto_ktp
+        varchar255 foto_izin_usaha
+        text catatan
+        varchar36 tarif_id FK
+        decimal10_2 saldo_deposit
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    TAGIHAN {
+        varchar36 id PK
+        varchar36 pedagang_id FK
+        varchar36 tarif_id FK
+        varchar36 petugas_id FK
+        date tanggal_tagihan
+        decimal10_2 nominal_tagihan
+        decimal10_2 nominal_dibayar
+        enum status_bayar "lunas,belum_bayar,bayar_sebagian"
+        timestamp waktu_bayar
+        enum metode_bayar "tunai,transfer,qris"
+        varchar100 no_bukti
+        text catatan
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    LOG_PENGIRIMAN {
+        varchar36 id PK
+        timestamp waktu_kirim
+        varchar100 penerima
+        enum tipe_channel "whatsapp,email"
+        enum status "terkirim,gagal"
+        text response_api
+        text catatan
+    }
+
+    AUDIT_LOG {
+        varchar36 id PK
+        varchar36 user_id FK
+        varchar255 aksi
+        text deskripsi
+        timestamp created_at
+    }
+
+    FITUR_POLA_BAYAR {
+        bigint id PK
+        varchar36 pedagang_id FK
+        date periode_awal
+        date periode_akhir
+        int total_hari_tagihan
+        int jumlah_lunas
+        int jumlah_terlambat
+        int jumlah_bayar_sebagian
+        decimal10_2 rata_rata_keterlambatan_hari
+        decimal5_2 rasio_ketepatan_bayar
+        decimal10_2 total_nominal_tagihan
+        decimal10_2 total_nominal_dibayar
+        decimal10_2 total_tunggakan
+        timestamp dihitung_pada
+    }
+
+    ML_MODEL {
+        bigint id PK
+        varchar100 nama_model
+        varchar50 algoritma "K-Means"
+        int jumlah_cluster
+        json parameter
+        decimal5_3 silhouette_score
+        varchar255 path_model_pkl
+        varchar255 path_scaler_pkl
+        date periode_data_awal
+        date periode_data_akhir
+        boolean is_active
+        timestamp trained_at
+    }
+
+    SEGMENTASI_PEDAGANG {
+        bigint id PK
+        varchar36 pedagang_id FK
+        bigint ml_model_id FK
+        int cluster_index
+        varchar50 label_segmen "Pembayar Rajin / Cukup Rajin / Berisiko"
+        json fitur_snapshot
+        timestamp tanggal_analisis
+    }
