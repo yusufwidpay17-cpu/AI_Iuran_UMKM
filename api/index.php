@@ -27,6 +27,9 @@ if (!file_exists($sqliteFile)) {
     @touch($sqliteFile);
 }
 
+// Load Composer Autoload
+require __DIR__ . '/../vendor/autoload.php';
+
 // Load Laravel Bootstrap
 $app = require __DIR__ . '/../bootstrap/app.php';
 
