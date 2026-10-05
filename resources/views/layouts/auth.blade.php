@@ -9,61 +9,72 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     
     <style>
-        .auth-wrapper {
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #353f4b; /* Dark slate background from mockup */
+            margin: 0;
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: var(--background);
-            padding: var(--space-md);
         }
-        
+
         .auth-card {
             width: 100%;
-            max-width: 420px;
-            background-color: var(--surface-container-lowest);
-            border: 1px solid var(--outline-variant);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl) var(--space-lg);
-            box-shadow: var(--shadow-lg);
+            max-width: 360px;
+            background-color: #ffffff;
+            padding: 40px 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-radius: 2px;
         }
         
         .auth-brand {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: var(--space-xl);
-            text-align: center;
+            margin-bottom: 25px;
         }
-        
-        .auth-logo {
-            color: var(--primary);
-            margin-bottom: var(--space-sm);
+
+        .logo-circle-outer {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            background-color: #ffffff;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .logo-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 8px;
         }
         
         .auth-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--on-surface);
-        }
-        
-        .auth-subtitle {
-            font-size: 0.875rem;
-            color: var(--outline);
-            margin-top: var(--space-xs);
+            font-size: 22px;
+            font-weight: 300;
+            color: #4a5568;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <div class="auth-brand">
-                <svg class="auth-logo" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                </svg>
-                <h1 class="auth-title">AmanahLedger</h1>
-                <p class="auth-subtitle">SI Iuran UMKM Pasar</p>
+    <div class="auth-card">
+        <div class="auth-brand">
+            <div class="logo-circle-outer">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="logo-image">
             </div>
+            <h1 class="auth-title">Login ke akun Anda</h1>
+        </div>
             
             @if (session('error'))
                 <div class="alert alert-danger">

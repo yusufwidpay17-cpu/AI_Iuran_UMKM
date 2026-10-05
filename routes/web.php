@@ -11,6 +11,7 @@ use App\Http\Controllers\RiwayatTransaksiController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ExportExcelController;
 use App\Http\Controllers\SegmentasiController;
+use App\Http\Controllers\PenggunaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,4 +87,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/segmentasi', [SegmentasiController::class, 'index'])->name('segmentasi.index');
     Route::post('/segmentasi/train', [SegmentasiController::class, 'train'])->name('segmentasi.train');
     Route::get('/segmentasi/cek', [SegmentasiController::class, 'cek'])->name('segmentasi.cek');
+
+    // 10. Manajemen Pengguna
+    Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+    Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
+    Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
+    Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
 });

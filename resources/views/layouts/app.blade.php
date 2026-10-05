@@ -91,6 +91,13 @@
                     </svg>
                     Cek Deteksi Pedagang
                 </a>
+                <!-- 10. Manajemen Pengguna -->
+                <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
+                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    Manajemen Pengguna
+                </a>
             </nav>
             
             <div class="sidebar-footer">
@@ -198,6 +205,11 @@
                             <a href="{{ route('segmentasi.cek') }}" class="sidebar-nav-item {{ Route::is('segmentasi.cek') ? 'active' : '' }}">
                                 <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 Cek Deteksi Pedagang
+                            </a>
+                            <!-- 10. Manajemen Pengguna -->
+                            <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
+                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                Manajemen Pengguna
                             </a>
                         </nav>
                         <div style="margin-top: var(--space-md);">

@@ -963,8 +963,20 @@ a:hover {
     gap: 16px;
 }
 
+.grid-uneven {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 16px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 @media (max-width: 1024px) {
-    .grid-2, .grid-3 {
+    .grid-2, .grid-3, .grid-uneven {
         grid-template-columns: 1fr !important;
     }
 }

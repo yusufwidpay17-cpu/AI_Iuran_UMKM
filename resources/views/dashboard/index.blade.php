@@ -260,7 +260,7 @@
 </div>
 
 <!-- 3. GRID SECTION B & C (PEDAGANG BELUM BAYAR & TOP 5 TUNGGAKAN) -->
-<div class="grid-2" style="grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 16px;">
+<div class="grid-uneven" style="margin-bottom: 16px;">
     
     <!-- SECTION B: PEDAGANG BELUM BAYAR HARI INI -->
     <div id="tabel-belum-bayar" class="card" style="margin-bottom: 0;">
@@ -354,7 +354,7 @@
 </div>
 
 <!-- 4. GRID SECTION D & E (TRANSAKSI TERBARU & GRAFIK TREN) -->
-<div class="grid-2" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+<div class="grid-2" style="margin-bottom: 16px;">
     
     <!-- SECTION D: TRANSAKSI PEMBAYARAN TERBARU -->
     <div class="card" style="margin-bottom: 0;">
