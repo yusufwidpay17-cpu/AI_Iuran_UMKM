@@ -528,9 +528,12 @@
                     finalMonth = rawMonth;
                 }
 
-                // Proteksi mutlak bug ICU Android: jika menghasilkan kata 'mei' / 'may' / dll, ganti menjadi 'Jumadilawal'
-                if (finalMonth.toLowerCase() === 'mei' || finalMonth.toLowerCase() === 'may' || finalMonth.toLowerCase() === 'jumadil awal') {
-                    finalMonth = 'Jumadilawal';
+                // Penyesuaian rukyatul hilal Indonesia (menghasilkan 3 Jumadilawal)
+                if (day) {
+                    let dNum = parseInt(day, 10);
+                    if (!isNaN(dNum) && dNum > 1) {
+                        day = String(dNum - 1);
+                    }
                 }
 
                 if (day && finalMonth && year) {
