@@ -25,6 +25,7 @@
                 <tr>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">NAMA PENGGUNA</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">USERNAME</th>
+                    <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">EMAIL</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">PERAN (ROLE)</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">DITAMBAHKAN PADA</th>
                     <th style="padding: 16px; text-align: center; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px; width: 150px;">AKSI</th>
@@ -38,6 +39,9 @@
                     </td>
                     <td style="padding: 16px; vertical-align: middle; color: var(--on-surface-variant);">
                         {{ $user->username }}
+                    </td>
+                    <td style="padding: 16px; vertical-align: middle; color: var(--on-surface-variant);">
+                        {{ $user->email }}
                     </td>
                     <td style="padding: 16px; vertical-align: middle;">
                         @if($user->role == 'superadmin')
@@ -53,7 +57,11 @@
                     </td>
                     <td style="padding: 16px; vertical-align: middle; text-align: center;">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $user->id }}', '{{ $user->nama }}', '{{ $user->username }}', '{{ $user->role }}')" style="padding: 6px 12px; min-height: 32px;">Edit</button>
+                            <form action="{{ route('pengguna.reset-password', $user->id) }}" method="POST" style="margin:0;">
+                                @csrf
+                                <button type="submit" class="btn btn-sm" style="padding: 6px 12px; min-height: 32px; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;" title="Kirim Link Reset Password" onclick="return confirm('Kirim link reset password ke email pengguna ini?')">Reset Pass</button>
+                            </form>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $user->id }}', '{{ $user->nama }}', '{{ $user->username }}', '{{ $user->email }}', '{{ $user->role }}')" style="padding: 6px 12px; min-height: 32px;">Edit</button>
                             @if(auth()->id() != $user->id)
                             <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser('{{ $user->id }}')" style="padding: 6px 12px; min-height: 32px; background-color: #d32f2f; color: white;">Hapus</button>
                             @endif
@@ -64,7 +72,7 @@
                 
                 @if($pengguna->isEmpty())
                 <tr>
-                    <td colspan="5" class="text-center" style="padding: 40px; color: var(--outline);">
+                    <td colspan="6" class="text-center" style="padding: 40px; color: var(--outline);">
                         Belum ada data pengguna.
                     </td>
                 </tr>
@@ -91,16 +99,8 @@
                 <input type="text" name="username" class="form-control" required>
             </div>
             <div class="form-group">
-                <label class="form-label">Password</label>
-                <div style="position: relative;">
-                    <input type="password" name="password" id="tambah_password" class="form-control" required minlength="6" style="padding-right: 40px;">
-                    <span onclick="togglePassword('tambah_password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #a0aec0;">
-                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
-                        </svg>
-                    </span>
-                </div>
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" required>
             </div>
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label">Peran (Role)</label>
@@ -136,16 +136,8 @@
                 <input type="text" name="username" id="edit_username" class="form-control" required>
             </div>
             <div class="form-group">
-                <label class="form-label">Password <small style="font-weight:normal; color:#718096;">(Kosongkan jika tidak ingin mengubah)</small></label>
-                <div style="position: relative;">
-                    <input type="password" name="password" id="edit_password" class="form-control" minlength="6" style="padding-right: 40px;">
-                    <span onclick="togglePassword('edit_password')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #a0aec0;">
-                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
-                        </svg>
-                    </span>
-                </div>
+                <label class="form-label">Email</label>
+                <input type="email" name="email" id="edit_email" class="form-control" required>
             </div>
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label">Peran (Role)</label>
@@ -170,10 +162,11 @@
 </form>
 
 <script>
-    function editUser(id, nama, username, role) {
+    function editUser(id, nama, username, email, role) {
         document.getElementById('formEdit').action = "{{ url('pengguna') }}/" + id;
         document.getElementById('edit_nama').value = nama;
         document.getElementById('edit_username').value = username;
+        document.getElementById('edit_email').value = email;
         document.getElementById('edit_role').value = role;
         document.getElementById('modalEdit').style.display = 'flex';
     }
@@ -183,15 +176,6 @@
             const form = document.getElementById('formDelete');
             form.action = "{{ url('pengguna') }}/" + id;
             form.submit();
-        }
-    }
-
-    function togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-            input.type = 'text';
-        } else {
-            input.type = 'password';
         }
     }
 </script>

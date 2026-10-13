@@ -14,6 +14,14 @@ use Carbon\Carbon;
 
 class TagihanController extends Controller
 {
+    private function generateNoBukti($prefix = 'INV-')
+    {
+        do {
+            $noBukti = $prefix . date('YmdHis') . str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
+        } while (Tagihan::where('no_bukti', $noBukti)->exists());
+        
+        return $noBukti;
+    }
     /**
      * Display a mobile-first list of today's / selected date's bills for data entry
      */
@@ -53,6 +61,7 @@ class TagihanController extends Controller
 
         $tagihans = $query->join('pedagang', 'tagihan.pedagang_id', '=', 'pedagang.id')
             ->select('tagihan.*')
+            ->orderBy('tagihan.waktu_bayar', 'desc')
             ->orderBy('pedagang.blok_kios', 'asc')
             ->orderBy('pedagang.no_kios', 'asc')
             ->get();
@@ -77,6 +86,7 @@ class TagihanController extends Controller
             'pedagang_id' => 'required|exists:pedagang,id',
             'tanggal_tagihan' => 'required|date',
             'jenis_iuran' => 'required|string|max:50',
+            'status_pembayaran' => 'required|in:lunas,belum_bayar,bayar_sebagian',
             'nominal_tagihan' => 'required|numeric|min:0',
             'nominal_dibayar' => 'nullable|numeric|min:0',
             'metode_bayar' => 'nullable|string',
@@ -88,12 +98,29 @@ class TagihanController extends Controller
         $nominalDibayar = (float) ($request->input('nominal_dibayar') ?? $nominalTagihan);
         $metode = $request->input('metode_bayar') ?? 'tunai';
 
-        $langsungLunas = $request->input('status_pembayaran') === 'lunas' || $request->input('langsung_lunas', 1) == 1;
-        if ($langsungLunas && $nominalDibayar <= 0) {
-            $nominalDibayar = $nominalTagihan;
+        $statusInput = $request->input('status_pembayaran');
+        
+        if ($statusInput === 'lunas') {
+            if ($nominalDibayar <= 0) {
+                $nominalDibayar = $nominalTagihan;
+            }
+            $status = 'lunas';
+        } elseif ($statusInput === 'belum_bayar') {
+            $nominalDibayar = 0;
+            $status = 'belum_bayar';
+        } elseif ($statusInput === 'bayar_sebagian') {
+            if ($nominalDibayar >= $nominalTagihan) {
+                $status = 'lunas';
+            } else {
+                $status = 'bayar_sebagian';
+            }
+        } else {
+            $langsungLunas = $request->input('langsung_lunas', 1) == 1;
+            if ($langsungLunas && $nominalDibayar <= 0) {
+                $nominalDibayar = $nominalTagihan;
+            }
+            $status = $langsungLunas ? 'lunas' : ($nominalDibayar > 0 ? 'bayar_sebagian' : 'belum_bayar');
         }
-
-        $status = $langsungLunas ? 'lunas' : ($nominalDibayar > 0 ? 'bayar_sebagian' : 'belum_bayar');
 
         $carbonDate = \Carbon\Carbon::parse($request->tanggal_tagihan);
         $daysIndo = ['Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa', 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'];
@@ -102,9 +129,11 @@ class TagihanController extends Controller
         $namaBulan = $monthsIndo[(int)$carbonDate->format('m')] ?? $carbonDate->format('F');
         $tanggalIndo = $namaHari . ', ' . $carbonDate->format('d') . ' ' . $namaBulan . ' ' . $carbonDate->format('Y');
 
-        $autoCatatan = $langsungLunas 
+        $autoCatatan = $status === 'lunas'
             ? ("Lunas dibayar Rp " . number_format($nominalDibayar, 0, ',', '.') . " (" . strtoupper($metode) . ") pada " . $tanggalIndo . " Pukul " . now()->format('H:i') . " WIB.")
-            : ($request->catatan ?? 'Tagihan iuran harian');
+            : ($status === 'bayar_sebagian' 
+                ? ("Dibayar sebagian Rp " . number_format($nominalDibayar, 0, ',', '.') . " pada " . $tanggalIndo) 
+                : ($request->catatan ?? 'Tagihan iuran harian'));
 
         $existing = Tagihan::where('pedagang_id', $pdg->id)
             ->where('tanggal_tagihan', $request->tanggal_tagihan)
@@ -113,17 +142,24 @@ class TagihanController extends Controller
         if ($existing) {
             $existing->nominal_tagihan = $nominalTagihan;
             $existing->jenis_iuran = $request->jenis_iuran;
-            if ($langsungLunas) {
-                $existing->nominal_dibayar = $nominalDibayar;
-                $existing->status_bayar = 'lunas';
+            $existing->nominal_dibayar = $nominalDibayar;
+            $existing->status_bayar = $status;
+            
+            if ($status === 'lunas' || $status === 'bayar_sebagian') {
                 $existing->waktu_bayar = now();
                 $existing->metode_bayar = $metode;
+                if (empty($existing->no_bukti)) {
+                    $existing->no_bukti = $this->generateNoBukti();
+                }
                 $existing->catatan = ($request->filled('catatan') ? $request->catatan . ' | ' : '') . $autoCatatan;
             } else {
+                $existing->waktu_bayar = null;
+                $existing->metode_bayar = null;
                 if ($request->filled('catatan')) {
                     $existing->catatan = $request->catatan;
                 }
             }
+            
             $existing->petugas_id = Auth::id();
             $existing->save();
 
@@ -132,11 +168,11 @@ class TagihanController extends Controller
                 'user_id' => Auth::id(),
                 'aksi' => 'UPDATE_MANUAL_BILL',
                 'deskripsi' => 'Mencatat transaksi pedagang: ' . $pdg->nama_pedagang . 
-                    ' Rp ' . number_format($nominalDibayar, 0, ',', '.') . ' (LUNAS).',
+                    ' Rp ' . number_format($nominalDibayar, 0, ',', '.') . ' (' . strtoupper($status) . ').',
                 'created_at' => now(),
             ]);
 
-            return back()->with('success', 'Transaksi pembayaran pedagang ' . $pdg->nama_pedagang . ' sebesar Rp ' . number_format($nominalDibayar, 0, ',', '.') . ' berhasil dicatat sebagai LUNAS.');
+            return back()->with('success', 'Transaksi pembayaran pedagang ' . $pdg->nama_pedagang . ' sebesar Rp ' . number_format($nominalDibayar, 0, ',', '.') . ' berhasil dicatat.');
         }
 
         Tagihan::create([
@@ -149,9 +185,9 @@ class TagihanController extends Controller
             'nominal_tagihan' => $nominalTagihan,
             'nominal_dibayar' => $nominalDibayar,
             'status_bayar' => $status,
-            'waktu_bayar' => $langsungLunas ? now() : null,
-            'metode_bayar' => $langsungLunas ? $metode : null,
-            'no_bukti' => $langsungLunas ? ('INV-' . date('YmdHis')) : null,
+            'waktu_bayar' => ($status === 'lunas' || $status === 'bayar_sebagian') ? now() : null,
+            'metode_bayar' => ($status === 'lunas' || $status === 'bayar_sebagian') ? $metode : null,
+            'no_bukti' => ($status === 'lunas' || $status === 'bayar_sebagian') ? $this->generateNoBukti() : null,
             'catatan' => $autoCatatan
         ]);
 
@@ -230,7 +266,7 @@ class TagihanController extends Controller
                     'status_bayar' => $status,
                     'waktu_bayar' => $waktu,
                     'metode_bayar' => $metode,
-                    'no_bukti' => $status == 'lunas' ? 'DEP-AUTO-' . date('YmdHis') : null,
+                    'no_bukti' => $status == 'lunas' ? $this->generateNoBukti('DEP-AUTO-') : null,
                     'catatan' => $catatan
                 ]);
                 $createdCount++;
@@ -248,12 +284,13 @@ class TagihanController extends Controller
         $tagihan = Tagihan::with('pedagang')->findOrFail($id);
 
         $request->validate([
+            'status_pembayaran' => 'required|in:lunas,belum_bayar,bayar_sebagian',
             'nominal_dibayar' => 'required|numeric|min:0',
             'metode_bayar' => 'required|in:tunai,transfer,qris',
-            'no_bukti' => 'nullable|string|max:100',
             'catatan' => 'nullable|string',
         ]);
 
+        $statusInput = $request->input('status_pembayaran');
         $nominalDibayarInput = (float) $request->input('nominal_dibayar');
         $pedagang = $tagihan->pedagang;
 
@@ -264,49 +301,69 @@ class TagihanController extends Controller
         $namaBulan = $monthsIndo[(int)$carbonDate->format('m')] ?? $carbonDate->format('F');
         $tanggalIndo = $namaHari . ', ' . $carbonDate->format('d') . ' ' . $namaBulan . ' ' . $carbonDate->format('Y');
 
-        // Adjust nominal_tagihan to nominal_dibayar if nominal_tagihan was higher (e.g. 15.000) but actual payment is 5.000 and user intends full payment
-        if ($nominalDibayarInput > 0 && $nominalDibayarInput < $tagihan->nominal_tagihan) {
-            if ($request->input('set_lunas', 1) == 1) {
-                $tagihan->nominal_tagihan = $nominalDibayarInput;
+        // Determine final status and nominal
+        if ($statusInput === 'lunas') {
+            if ($nominalDibayarInput <= 0) {
+                $nominalDibayarInput = $tagihan->nominal_tagihan;
+            }
+            $status = 'lunas';
+        } elseif ($statusInput === 'belum_bayar') {
+            $nominalDibayarInput = 0;
+            $status = 'belum_bayar';
+        } else {
+            if ($nominalDibayarInput >= $tagihan->nominal_tagihan) {
+                $status = 'lunas';
+            } else {
+                $status = 'bayar_sebagian';
             }
         }
 
+        $tagihan->nominal_dibayar = $nominalDibayarInput;
+        $tagihan->status_bayar = $status;
         $selisih = $nominalDibayarInput - $tagihan->nominal_tagihan;
+        $metodeStr = strtoupper($request->input('metode_bayar'));
 
-        if ($selisih >= 0) {
-            $tagihan->nominal_dibayar = $tagihan->nominal_tagihan;
-            $tagihan->status_bayar = 'lunas';
-            
-            $autoCatatan = "Lunas dibayar Rp " . number_format($nominalDibayarInput, 0, ',', '.') . " (" . strtoupper($request->input('metode_bayar')) . ") pada " . $tanggalIndo . " Pukul " . now()->format('H:i') . " WIB.";
+        if ($status === 'lunas') {
+            $autoCatatan = "Lunas dibayar Rp " . number_format($nominalDibayarInput, 0, ',', '.') . " (" . $metodeStr . ") pada " . $tanggalIndo . " Pukul " . now()->format('H:i') . " WIB.";
             if ($selisih > 0) {
                 $pedagang->saldo_deposit += $selisih;
                 $pedagang->save();
                 $autoCatatan .= " Kelebihan bayar Rp " . number_format($selisih, 0, ',', '.') . " dimasukkan ke deposit.";
             }
             $tagihan->catatan = ($request->input('catatan') ? $request->input('catatan') . ' | ' : '') . $autoCatatan;
-        } else {
-            $tagihan->nominal_dibayar = $nominalDibayarInput;
-            $tagihan->status_bayar = 'bayar_sebagian';
-            $autoCatatan = "Dibayar sebagian Rp " . number_format($nominalDibayarInput, 0, ',', '.') . " dari Rp " . number_format($tagihan->nominal_tagihan, 0, ',', '.') . " (" . strtoupper($request->input('metode_bayar')) . ") pada " . $tanggalIndo . ".";
+            $tagihan->waktu_bayar = now();
+            $tagihan->metode_bayar = $request->input('metode_bayar');
+            if (empty($tagihan->no_bukti)) {
+                $tagihan->no_bukti = $this->generateNoBukti();
+            }
+        } elseif ($status === 'bayar_sebagian') {
+            $autoCatatan = "Dibayar sebagian Rp " . number_format($nominalDibayarInput, 0, ',', '.') . " dari Rp " . number_format($tagihan->nominal_tagihan, 0, ',', '.') . " (" . $metodeStr . ") pada " . $tanggalIndo . ".";
             $tagihan->catatan = ($request->input('catatan') ? $request->input('catatan') . ' | ' : '') . $autoCatatan;
+            $tagihan->waktu_bayar = now();
+            $tagihan->metode_bayar = $request->input('metode_bayar');
+            if (empty($tagihan->no_bukti)) {
+                $tagihan->no_bukti = $this->generateNoBukti();
+            }
+        } else {
+            $tagihan->waktu_bayar = null;
+            $tagihan->metode_bayar = null;
+            if ($request->filled('catatan')) {
+                $tagihan->catatan = $request->input('catatan');
+            }
         }
-
-        $tagihan->waktu_bayar = now();
-        $tagihan->metode_bayar = $request->input('metode_bayar');
-        $tagihan->no_bukti = $request->input('no_bukti') ?? ('INV-' . date('YmdHis'));
         $tagihan->petugas_id = Auth::id();
         $tagihan->save();
 
         AuditLog::create([
             'id' => (string) Str::uuid(),
             'user_id' => Auth::id(),
-            'aksi' => 'PAY_BILL',
-            'deskripsi' => 'Mencatat pembayaran pedagang: ' . $pedagang->nama_pedagang . 
-                ' Rp ' . number_format($nominalDibayarInput, 0, ',', '.') . ' (Status: LUNAS).',
+            'aksi' => 'UPDATE_TRANSACTION',
+            'deskripsi' => 'Mengubah transaksi pedagang: ' . $pedagang->nama_pedagang . 
+                ' Rp ' . number_format($nominalDibayarInput, 0, ',', '.') . ' (Status: ' . strtoupper($status) . ').',
             'created_at' => now(),
         ]);
 
-        return back()->with('success', 'Pembayaran pedagang ' . $pedagang->nama_pedagang . ' sebesar Rp ' . number_format($nominalDibayarInput, 0, ',', '.') . ' berhasil dicatat sebagai LUNAS.');
+        return back()->with('success', 'Transaksi pedagang ' . $pedagang->nama_pedagang . ' berhasil diupdate (Status: ' . strtoupper($status) . ').');
     }
 
     public function tidakAda(Request $request, $id)

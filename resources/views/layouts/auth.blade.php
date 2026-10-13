@@ -13,57 +13,67 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #353f4b; /* Dark slate background from mockup */
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             margin: 0;
-            padding: 0;
+            padding: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            min-height: -webkit-fill-available;
+            box-sizing: border-box;
         }
 
         .auth-card {
             width: 100%;
-            max-width: 360px;
+            max-width: 380px;
             background-color: #ffffff;
-            padding: 40px 30px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            border-radius: 2px;
+            padding: 36px 28px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
+            border-radius: 20px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 28px 20px;
+                border-radius: 16px;
+            }
         }
         
         .auth-brand {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .logo-circle-outer {
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 1px solid #e2e8f0;
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background-color: #ffffff;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .logo-image {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            padding: 8px;
+            object-fit: cover;
         }
         
         .auth-title {
-            font-size: 22px;
-            font-weight: 300;
-            color: #4a5568;
+            font-size: 24px;
+            font-weight: 600;
+            color: #0f172a;
             margin: 0;
+            letter-spacing: -0.5px;
         }
     </style>
 </head>
@@ -73,8 +83,14 @@
             <div class="logo-circle-outer">
                 <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="logo-image">
             </div>
-            <h1 class="auth-title">Login ke akun Anda</h1>
+            <h1 class="auth-title">@yield('title', 'Login ke akun Anda')</h1>
         </div>
+            
+            @if (session('success'))
+                <div style="background-color: #d1fae5; color: #065f46; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                    {{ session('success') }}
+                </div>
+            @endif
             
             @if (session('error'))
                 <div class="alert alert-danger">

@@ -69,7 +69,7 @@
 
     <div style="flex-shrink: 0; display: flex; gap: 6px;">
         <button type="submit" class="btn btn-primary">Tampilkan</button>
-        <a href="{{ route('laporan.index') }}" class="btn btn-secondary" style="display: inline-flex; align-items: center;">Reset</a>
+        <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ route('laporan.index', ['reset' => 1]) }}'">Reset</button>
     </div>
 </form>
 
@@ -99,6 +99,7 @@
             <thead>
                 <tr>
                     <th>Tanggal</th>
+                    <th>Jam</th>
                     <th>No Kios</th>
                     <th>Nama Pedagang</th>
                     <th>Jenis Iuran</th>
@@ -111,9 +112,25 @@
             </thead>
             <tbody>
                 @forelse ($tagihans as $tgh)
-                    @php $sisa = $tgh->nominal_tagihan - $tgh->nominal_dibayar; @endphp
+                    @php 
+                        $sisa = $tgh->nominal_tagihan - $tgh->nominal_dibayar; 
+                        $waktu = $tgh->waktu_bayar ?? $tgh->created_at ?? $tgh->updated_at;
+                    @endphp
                     <tr>
                         <td class="numeric-display">{{ $tgh->tanggal_tagihan ? $tgh->tanggal_tagihan->format('d/m/Y') : '-' }}</td>
+                        <td class="numeric-display" style="font-weight: 600; color: var(--on-surface-variant); white-space: nowrap;">
+                            @if($waktu)
+                                <span style="display: inline-flex; align-items: center; gap: 4px;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--outline);">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polyline points="12 6 12 12 16 14"></polyline>
+                                    </svg>
+                                    {{ $waktu->format('H:i:s') }} <span style="font-size: 0.7rem; color: var(--outline);">WIB</span>
+                                </span>
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="numeric-display" style="font-weight: 700;">{{ $tgh->pedagang->no_kios ?? '-' }}</td>
                         <td style="font-weight: 600;">
                             @if ($tgh->pedagang)
@@ -133,7 +150,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" style="text-align: center; color: var(--outline); padding: var(--space-xl);">Data laporan tidak ditemukan untuk filter ini.</td>
+                        <td colspan="10" style="text-align: center; color: var(--outline); padding: var(--space-xl);">Data laporan tidak ditemukan untuk filter ini.</td>
                     </tr>
                 @endforelse
             </tbody>

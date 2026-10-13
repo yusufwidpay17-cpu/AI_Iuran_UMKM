@@ -40,7 +40,12 @@ class RiwayatTransaksiController extends Controller
             $query->where('status_bayar', $request->input('status_bayar'));
         }
 
-        $transaksis = $query->orderBy('waktu_bayar', 'desc')->paginate(15)->withQueryString();
+        if ($request->has('reset')) {
+            // Return empty paginator
+            $transaksis = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
+        } else {
+            $transaksis = $query->orderBy('waktu_bayar', 'desc')->paginate(15)->withQueryString();
+        }
         $pedagangs = Pedagang::orderBy('nama_pedagang', 'asc')->get();
 
         return view('riwayat.index', compact('transaksis', 'pedagangs'));

@@ -41,6 +41,7 @@
             <tr>
                 <th>No</th>
                 <th>Tanggal</th>
+                <th>Jam</th>
                 <th>Kios</th>
                 <th>Nama Pedagang</th>
                 <th>Jenis Iuran</th>
@@ -52,10 +53,14 @@
         </thead>
         <tbody>
             @forelse ($tagihans as $index => $tgh)
-                @php $sisa = $tgh->nominal_tagihan - $tgh->nominal_dibayar; @endphp
+                @php 
+                    $sisa = $tgh->nominal_tagihan - $tgh->nominal_dibayar; 
+                    $waktu = $tgh->waktu_bayar ?? $tgh->created_at ?? $tgh->updated_at;
+                @endphp
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $tgh->tanggal_tagihan ? $tgh->tanggal_tagihan->format('d/m/Y') : '-' }}</td>
+                    <td>{{ $waktu ? $waktu->format('H:i:s') . ' WIB' : '-' }}</td>
                     <td>{{ $tgh->pedagang->no_kios ?? '-' }}</td>
                     <td>{{ $tgh->pedagang->nama_pedagang ?? '-' }}</td>
                     <td>{{ $tgh->jenis_iuran ?? 'Iuran Harian' }}</td>
@@ -66,7 +71,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" style="text-align: center;">Tidak ada data laporan.</td>
+                    <td colspan="10" style="text-align: center;">Tidak ada data laporan.</td>
                 </tr>
             @endforelse
         </tbody>

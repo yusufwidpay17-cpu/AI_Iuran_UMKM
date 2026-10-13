@@ -7,7 +7,7 @@
     <title>@yield('title', 'Amanah Ledger') - SI Iuran UMKM</title>
     
     <!-- Design System CSS -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     
     <!-- Fast Theme Initialization (Prevents Light Flash) -->
     <script>

@@ -22,6 +22,10 @@ use App\Http\Controllers\PenggunaController;
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/lupa-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
+Route::post('/lupa-password', [AuthController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token?}', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected Routes (Authentication Required)
@@ -93,4 +97,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
     Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
     Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+    Route::post('/pengguna/{id}/reset-password', [PenggunaController::class, 'sendResetLink'])->name('pengguna.reset-password');
 });

@@ -278,8 +278,7 @@
         </div>
         <form action="{{ route('tagihan.store-manual') }}" method="POST">
             @csrf
-            <input type="hidden" name="status_pembayaran" value="lunas">
-            <input type="hidden" name="langsung_lunas" value="1">
+            <!-- removed hidden status_pembayaran -->
             <div class="modal-body">
                 <div class="form-group" style="margin-bottom: 14px;">
                     <label class="form-label" style="font-weight: 700;">Pilih Pedagang *</label>
@@ -307,12 +306,14 @@
                     <input type="number" name="nominal_tagihan" class="form-input" required min="0" value="5000" step="500" style="border-radius: 8px; font-weight: 800; color: #047857; font-size: 1.125rem;">
                 </div>
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label class="form-label" style="font-weight: 700;">Metode Pembayaran *</label>
-                    <select name="metode_bayar" class="form-select" required style="border-radius: 8px; min-height: 42px;">
-                        <option value="tunai">Tunai / Cash</option>
-                        <option value="qris">QRIS (Digital)</option>
-                        <option value="transfer">Transfer Bank</option>
+                    <label class="form-label" style="font-weight: 700;">Status Pembayaran *</label>
+                    <select name="status_pembayaran" class="form-select" required style="border-radius: 8px; min-height: 42px;">
+                        <option value="lunas">SUDAH BAYAR</option>
+                        <option value="belum_bayar">BELUM BAYAR</option>
+                        <option value="bayar_sebagian">CICIL</option>
                     </select>
+                    <!-- Default method kept for database integrity -->
+                    <input type="hidden" name="metode_bayar" value="tunai">
                 </div>
                 <div class="form-group" style="margin-bottom: 14px;">
                     <label class="form-label" style="font-weight: 700;">Catatan / Keterangan Transaksi</label>
@@ -321,7 +322,7 @@
             </div>
             <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button type="button" class="btn btn-secondary" onclick="closeTambahIuranModal()" style="border-radius: 8px;">Batal</button>
-                <button type="submit" class="btn btn-primary" style="border-radius: 8px; background: #047857; border-color: #047857; font-weight: 700;">✔ Simpan Pembayaran (LUNAS)</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 8px; background: #047857; border-color: #047857; font-weight: 700;">✔ Simpan Pembayaran</button>
             </div>
         </form>
     </div>
@@ -382,9 +383,14 @@
                     </select>
                 </div>
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label class="form-label" style="font-weight: 700;">Nomor Struk / Bukti Transaksi</label>
-                    <input type="text" name="no_bukti" class="form-input" placeholder="Opsional (Kosongkan untuk otomatis)" style="border-radius: 8px;">
+                    <label class="form-label" style="font-weight: 700;">Status Pembayaran *</label>
+                    <select name="status_pembayaran" class="form-select" required style="border-radius: 8px; min-height: 42px;">
+                        <option value="lunas">SUDAH BAYAR</option>
+                        <option value="belum_bayar">BELUM BAYAR</option>
+                        <option value="bayar_sebagian">CICIL</option>
+                    </select>
                 </div>
+                <!-- removed Nomor Struk input to use automatic generation -->
                 <div class="form-group" style="margin-bottom: 14px;">
                     <label class="form-label" style="font-weight: 700;">Catatan Transaksi</label>
                     <input type="text" name="catatan" class="form-input" placeholder="Opsional (Catatan tambahan)" style="border-radius: 8px;">
@@ -392,7 +398,7 @@
             </div>
             <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button type="button" class="btn btn-secondary" onclick="closeBayarModal()" style="border-radius: 8px;">Batal</button>
-                <button type="submit" class="btn btn-primary" style="border-radius: 8px; font-weight: 700; background: #047857; border-color: #047857;">✔ Simpan Pembayaran (LUNAS)</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 8px; font-weight: 700; background: #047857; border-color: #047857;">✔ Simpan Pembayaran</button>
             </div>
         </form>
     </div>

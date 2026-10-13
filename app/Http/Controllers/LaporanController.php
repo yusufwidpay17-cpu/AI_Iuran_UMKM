@@ -45,18 +45,34 @@ class LaporanController extends Controller
             $query->where('nominal_dibayar', '>', 0);
         }
 
-        $tagihans = $query->orderBy('tanggal_tagihan', 'desc')->get();
+        if ($request->has('reset')) {
+            $tagihans = collect();
+            $summary = [
+                'total_tagihan' => 0,
+                'total_dibayar' => 0,
+                'total_tunggakan' => 0,
+                'jumlah_transaksi' => 0,
+                'lunas_count' => 0,
+                'sebagian_count' => 0,
+                'belum_count' => 0,
+            ];
+        } else {
+            $tagihans = $query->orderBy('updated_at', 'desc')
+                              ->orderBy('created_at', 'desc')
+                              ->orderBy('tanggal_tagihan', 'desc')
+                              ->get();
 
-        // Summary Calculations
-        $summary = [
-            'total_tagihan' => $tagihans->sum('nominal_tagihan'),
-            'total_dibayar' => $tagihans->sum('nominal_dibayar'),
-            'total_tunggakan' => $tagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'),
-            'jumlah_transaksi' => $tagihans->count(),
-            'lunas_count' => $tagihans->where('status_bayar', 'lunas')->count(),
-            'sebagian_count' => $tagihans->where('status_bayar', 'bayar_sebagian')->count(),
-            'belum_count' => $tagihans->where('status_bayar', 'belum_bayar')->count(),
-        ];
+            // Summary Calculations
+            $summary = [
+                'total_tagihan' => $tagihans->sum('nominal_tagihan'),
+                'total_dibayar' => $tagihans->sum('nominal_dibayar'),
+                'total_tunggakan' => $tagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'),
+                'jumlah_transaksi' => $tagihans->count(),
+                'lunas_count' => $tagihans->where('status_bayar', 'lunas')->count(),
+                'sebagian_count' => $tagihans->where('status_bayar', 'bayar_sebagian')->count(),
+                'belum_count' => $tagihans->where('status_bayar', 'belum_bayar')->count(),
+            ];
+        }
 
         $pedagangs = Pedagang::orderBy('nama_pedagang', 'asc')->get();
         $lapaks = Lapak::orderBy('kode_lapak', 'asc')->get();
@@ -110,7 +126,10 @@ class LaporanController extends Controller
             $query->where('nominal_dibayar', '>', 0);
         }
 
-        $tagihans = $query->orderBy('tanggal_tagihan', 'asc')->get();
+        $tagihans = $query->orderBy('updated_at', 'desc')
+                          ->orderBy('created_at', 'desc')
+                          ->orderBy('tanggal_tagihan', 'desc')
+                          ->get();
 
         $summary = [
             'total_tagihan' => $tagihans->sum('nominal_tagihan'),
