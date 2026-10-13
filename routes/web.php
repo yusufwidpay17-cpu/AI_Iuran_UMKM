@@ -28,58 +28,6 @@ Route::get('/reset-password/{token?}', [AuthController::class, 'showResetForm'])
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/sync-db', function () {
-    try {
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'email')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->string('email', 150)->nullable()->unique()->after('username');
-            });
-        }
-        
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $output = \Illuminate\Support\Facades\Artisan::output();
-
-        // Sinkronkan akun yusuf123
-        $yusuf = \App\Models\User::where('username', 'yusuf123')->first();
-        if ($yusuf) {
-            $yusuf->email = 'yusufngeblar17@gmail.com';
-            $yusuf->password = \Illuminate\Support\Facades\Hash::make('admin123');
-            $yusuf->save();
-        }
-
-        return response("
-            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;'>
-                <h2 style='color: #166534; margin-top: 0;'>DATABASE AIVEN BERHASIL DISINKRONKAN! ✅</h2>
-                <p style='color: #1e293b; font-size: 15px;'>Kolom <b>email</b> dan seluruh migrasi database online sudah sukses dibuat.</p>
-                <div style='text-align: left; background: #ffffff; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 12px; border: 1px solid #e2e8f0; margin: 16px 0;'>
-                    " . nl2br(e($output ?: 'Kolom email pada tabel users berhasil ditambahkan.')) . "
-                </div>
-                <a href='/pengguna' style='display: inline-block; background: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;'>👉 Kembali ke Manajemen Pengguna</a>
-            </div>
-        ", 200, ['Content-Type' => 'text/html']);
-    } catch (\Exception $e) {
-        return response("Gagal sinkronisasi: " . $e->getMessage(), 500);
-    }
-});
-
-Route::get('/sync-superadmin-password', function () {
-    $user = \App\Models\User::where('username', 'yusuf123')->first();
-    if ($user) {
-        $user->password = \Illuminate\Support\Facades\Hash::make('admin123');
-        $user->save();
-        return response("
-            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;'>
-                <h2 style='color: #166534; margin-top: 0;'>BERHASIL! ✅</h2>
-                <p style='color: #1e293b; font-size: 15px;'>Password akun Superadmin <b>yusuf123</b> di database Aiven online sudah berhasil diperbarui menjadi:</p>
-                <div style='background: #ffffff; padding: 10px; border-radius: 8px; font-size: 20px; font-weight: bold; color: #0284c7; letter-spacing: 2px; margin: 16px 0; border: 1px solid #bae6fd;'>
-                    admin123
-                </div>
-                <a href='/login' style='display: inline-block; background: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;'>👉 Klik Di Sini Untuk Langsung Login</a>
-            </div>
-        ", 200, ['Content-Type' => 'text/html']);
-    }
-    return response("User yusuf123 tidak ditemukan di database.", 404);
-});
 
 // Protected Routes (Authentication Required)
 Route::middleware(['auth'])->group(function () {
@@ -150,5 +98,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
     Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
     Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
-    Route::post('/pengguna/{id}/reset-password', [PenggunaController::class, 'sendResetLink'])->name('pengguna.reset-password');
 });

@@ -25,7 +25,6 @@
                 <tr>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">NAMA PENGGUNA</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">USERNAME</th>
-                    <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">EMAIL</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">PERAN (ROLE)</th>
                     <th style="padding: 16px; text-align: left; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px;">DITAMBAHKAN PADA</th>
                     <th style="padding: 16px; text-align: center; font-size: 0.8125rem; font-weight: 700; color: var(--outline); letter-spacing: 0.5px; width: 150px;">AKSI</th>
@@ -39,9 +38,6 @@
                     </td>
                     <td style="padding: 16px; vertical-align: middle; color: var(--on-surface-variant);">
                         {{ $user->username }}
-                    </td>
-                    <td style="padding: 16px; vertical-align: middle; color: var(--on-surface-variant);">
-                        {{ $user->email }}
                     </td>
                     <td style="padding: 16px; vertical-align: middle;">
                         @if($user->role == 'superadmin')
@@ -57,11 +53,7 @@
                     </td>
                     <td style="padding: 16px; vertical-align: middle; text-align: center;">
                         <div style="display: flex; gap: 8px; justify-content: center;">
-                            <form action="{{ route('pengguna.reset-password', $user->id) }}" method="POST" style="margin:0;">
-                                @csrf
-                                <button type="submit" class="btn btn-sm" style="padding: 6px 12px; min-height: 32px; background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1;" title="Kirim Link Reset Password" onclick="return confirm('Kirim link reset password ke email pengguna ini?')">Reset Pass</button>
-                            </form>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $user->id }}', '{{ $user->nama }}', '{{ $user->username }}', '{{ $user->email }}', '{{ $user->role }}')" style="padding: 6px 12px; min-height: 32px;">Edit</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $user->id }}', '{{ $user->nama }}', '{{ $user->username }}', '{{ $user->role }}')" style="padding: 6px 12px; min-height: 32px;">Edit</button>
                             @if(auth()->id() != $user->id)
                             <button type="button" class="btn btn-danger btn-sm" onclick="deleteUser('{{ $user->id }}')" style="padding: 6px 12px; min-height: 32px; background-color: #d32f2f; color: white;">Hapus</button>
                             @endif
@@ -72,7 +64,7 @@
                 
                 @if($pengguna->isEmpty())
                 <tr>
-                    <td colspan="6" class="text-center" style="padding: 40px; color: var(--outline);">
+                    <td colspan="5" class="text-center" style="padding: 40px; color: var(--outline);">
                         Belum ada data pengguna.
                     </td>
                 </tr>
@@ -92,15 +84,23 @@
             @csrf
             <div class="form-group">
                 <label class="form-label">Nama Lengkap</label>
-                <input type="text" name="nama" class="form-control" required>
+                <input type="text" name="nama" class="form-control" required placeholder="Masukkan nama lengkap">
             </div>
             <div class="form-group">
                 <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" required>
+                <input type="text" name="username" class="form-control" required placeholder="Masukkan username untuk login">
             </div>
             <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-control" required>
+                <label class="form-label">Password</label>
+                <div style="position: relative;">
+                    <input type="password" name="password" id="tambah_password" class="form-control" required minlength="6" placeholder="Minimal 6 karakter" style="padding-right: 40px;">
+                    <span onclick="togglePassword('tambah_password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; display: flex; align-items: center;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+                </div>
             </div>
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label">Peran (Role)</label>
@@ -136,8 +136,16 @@
                 <input type="text" name="username" id="edit_username" class="form-control" required>
             </div>
             <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" id="edit_email" class="form-control" required>
+                <label class="form-label">Password <small style="font-weight:normal; color:#718096;">(Kosongkan jika tidak ingin mengubah password)</small></label>
+                <div style="position: relative;">
+                    <input type="password" name="password" id="edit_password" class="form-control" minlength="6" placeholder="Masukkan password baru jika ingin diganti" style="padding-right: 40px;">
+                    <span onclick="togglePassword('edit_password')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #64748b; display: flex; align-items: center;">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </span>
+                </div>
             </div>
             <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label">Peran (Role)</label>
@@ -162,11 +170,11 @@
 </form>
 
 <script>
-    function editUser(id, nama, username, email, role) {
+    function editUser(id, nama, username, role) {
         document.getElementById('formEdit').action = "{{ url('pengguna') }}/" + id;
         document.getElementById('edit_nama').value = nama;
         document.getElementById('edit_username').value = username;
-        document.getElementById('edit_email').value = email;
+        document.getElementById('edit_password').value = '';
         document.getElementById('edit_role').value = role;
         document.getElementById('modalEdit').style.display = 'flex';
     }
@@ -178,5 +186,15 @@
             form.submit();
         }
     }
+
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+        } else {
+            input.type = 'password';
+        }
+    }
 </script>
 @endsection
+
