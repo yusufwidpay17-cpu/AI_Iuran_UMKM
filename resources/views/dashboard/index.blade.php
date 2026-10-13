@@ -689,8 +689,8 @@
                 'Safar',
                 'Rabiul Awal',
                 'Rabiul Akhir',
-                'Jumadil Awal',
-                'Jumadil Akhir',
+                'Jumadilawal',
+                'Jumadilakhir',
                 'Rajab',
                 'Sya\'ban',
                 'Ramadhan',
@@ -700,39 +700,57 @@
             ];
 
             const nameFixMap = {
-                'januari': 'Muharram', 'january': 'Muharram',
-                'februari': 'Safar', 'february': 'Safar',
-                'maret': 'Rabiul Awal', 'march': 'Rabiul Awal',
-                'april': 'Rabiul Akhir',
-                'mei': 'Jumadil Awal', 'may': 'Jumadil Awal',
-                'juni': 'Jumadil Akhir', 'june': 'Jumadil Akhir',
-                'juli': 'Rajab', 'july': 'Rajab',
-                'agustus': 'Sya\'ban', 'august': 'Sya\'ban',
-                'september': 'Ramadhan',
-                'oktober': 'Syawal', 'october': 'Syawal',
-                'november': 'Dzulqa\'dah',
-                'desember': 'Dzulhijjah', 'december': 'Dzulhijjah',
-                'jumada i': 'Jumadil Awal', 'jumadil awal': 'Jumadil Awal', 'jumadilawal': 'Jumadil Awal', 'jumadil ula': 'Jumadil Awal',
-                'jumada ii': 'Jumadil Akhir', 'jumadil akhir': 'Jumadil Akhir', 'jumadilakhir': 'Jumadil Akhir',
+                'januari': 'Muharram', 'january': 'Muharram', '1': 'Muharram',
+                'februari': 'Safar', 'february': 'Safar', '2': 'Safar',
+                'maret': 'Rabiul Awal', 'march': 'Rabiul Awal', '3': 'Rabiul Awal',
+                'april': 'Rabiul Akhir', '4': 'Rabiul Akhir',
+                'mei': 'Jumadilawal', 'may': 'Jumadilawal', '5': 'Jumadilawal',
+                'juni': 'Jumadilakhir', 'june': 'Jumadilakhir', '6': 'Jumadilakhir',
+                'juli': 'Rajab', 'july': 'Rajab', '7': 'Rajab',
+                'agustus': 'Sya\'ban', 'august': 'Sya\'ban', '8': 'Sya\'ban',
+                'september': 'Ramadhan', '9': 'Ramadhan',
+                'oktober': 'Syawal', 'october': 'Syawal', '10': 'Syawal',
+                'november': 'Dzulqa\'dah', '11': 'Dzulqa\'dah',
+                'desember': 'Dzulhijjah', 'december': 'Dzulhijjah', '12': 'Dzulhijjah',
+                'jumada i': 'Jumadilawal', 'jumadil awal': 'Jumadilawal', 'jumadilawal': 'Jumadilawal', 'jumadil ula': 'Jumadilawal',
+                'jumada ii': 'Jumadilakhir', 'jumadil akhir': 'Jumadilakhir', 'jumadilakhir': 'Jumadilakhir',
                 'rabiʻ i': 'Rabiul Awal', 'rabiʻ ii': 'Rabiul Akhir',
                 'shaʻban': 'Sya\'ban', 'dhuʻl-qiʻdah': 'Dzulqa\'dah', 'dhuʻl-hijjah': 'Dzulhijjah'
             };
 
             try {
                 const now = new Date();
-                // Mengambil bulan numerik (1-12) untuk menghindari bug terjemahan Android ICU ("Mei")
-                const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
-                    day: 'numeric',
-                    month: 'numeric',
-                    year: 'numeric'
-                });
-                const parts = formatter.formatToParts(now);
                 let day = '', rawMonth = '', year = '';
-                parts.forEach(p => {
-                    if (p.type === 'day') day = p.value;
-                    if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
-                    if (p.type === 'year') year = p.value;
-                });
+
+                // Coba ambil format numerik terlebih dahulu untuk mengatasi bug ICU Android ("Mei")
+                try {
+                    const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
+                        day: 'numeric',
+                        month: 'numeric',
+                        year: 'numeric'
+                    });
+                    const parts = formatter.formatToParts(now);
+                    parts.forEach(p => {
+                        if (p.type === 'day') day = p.value;
+                        if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
+                        if (p.type === 'year') year = p.value;
+                    });
+                } catch(e) {}
+
+                // Jika formatter pertama belum menghasilkan, gunakan formatter lokal
+                if (!day || !rawMonth || !year) {
+                    const locFormatter = new Intl.DateTimeFormat('id-u-ca-islamic', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                    const parts = locFormatter.formatToParts(now);
+                    parts.forEach(p => {
+                        if (p.type === 'day') day = p.value;
+                        if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
+                        if (p.type === 'year') year = p.value;
+                    });
+                }
 
                 const mIndex = parseInt(rawMonth, 10);
                 let finalMonth = '';
@@ -740,6 +758,13 @@
                     finalMonth = hijriMonthNames[mIndex];
                 } else if (nameFixMap[rawMonth]) {
                     finalMonth = nameFixMap[rawMonth];
+                } else {
+                    finalMonth = rawMonth;
+                }
+
+                // Proteksi mutlak bug Android: ubah 'mei' / 'may' / 'Jumadil Awal' menjadi 'Jumadilawal'
+                if (finalMonth.toLowerCase() === 'mei' || finalMonth.toLowerCase() === 'may' || finalMonth === 'Jumadil Awal') {
+                    finalMonth = 'Jumadilawal';
                 }
 
                 if (day && finalMonth && year) {
@@ -748,7 +773,7 @@
                 }
             } catch(e) {}
 
-            hijriText.textContent = '2 Jumadil Awal 1448 H';
+            hijriText.textContent = '4 Jumadilawal 1448 H';
         }
 
         // 3. Highlight Active Prayer Time Pill
