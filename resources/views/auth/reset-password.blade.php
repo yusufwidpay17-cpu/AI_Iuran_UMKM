@@ -100,6 +100,14 @@
     </div>
 @endif
 
+@if(session('demo_code'))
+    <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-bottom: 18px; line-height: 1.5;">
+        <div style="font-weight: 700; margin-bottom: 4px;">💡 Mode Simulasi Pengujian Aktif:</div>
+        <div style="margin: 4px 0;">Kode verifikasi OTP 6-digit Anda adalah: <strong style="font-size: 1.25rem; letter-spacing: 2px; font-family: monospace; background: #ffffff; padding: 2px 8px; border-radius: 6px; border: 1px solid #93c5fd; color: #1d4ed8;">{{ session('demo_code') }}</strong></div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">(Ketikkan kode di atas ke kolom isian kode verifikasi di bawah)</div>
+    </div>
+@endif
+
 @if(session('warning'))
     <div style="background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-size: 13px; padding: 10px 14px; border-radius: 10px; margin-bottom: 18px; line-height: 1.5;">
         {{ session('warning') }}

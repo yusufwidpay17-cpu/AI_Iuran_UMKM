@@ -133,9 +133,16 @@ class AuthController extends Controller
             ]);
         }
 
-        // Jangan kirimkan kode verifikasi ke browser/session
-        return redirect()->route('password.reset', ['email' => $email])
+        // Redirect ke form reset password
+        $redirect = redirect()->route('password.reset', ['email' => $email])
             ->with('success', $genericSuccessMessage);
+
+        // Jika dalam mode pengujian lokal / driver log, kirimkan demo_code untuk kemudahan testing
+        if (config('mail.default') === 'log' || config('app.env') === 'local') {
+            $redirect->with('demo_code', $code);
+        }
+
+        return $redirect;
     }
 
     public function showResetForm(Request $request, $token = null)
