@@ -17,10 +17,27 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
+        ], [
+            'username.required' => 'Username atau email wajib diisi.',
+            'password.required' => 'Kata sandi wajib diisi.',
         ]);
+
+        $loginInput = trim($request->username);
+        $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        // Cek jika akun ada tapi belum diaktivasi kata sandinya
+        $targetUser = \App\Models\User::where($fieldType, $loginInput)->first();
+        if ($targetUser && $targetUser->status_aktivasi === 'pending') {
+            return back()->with('error', 'Akun Anda belum diaktivasi. Silakan periksa email undangan Anda untuk menentukan kata sandi pertama kali, atau hubungi administrator pengelola.')->withInput($request->only('username'));
+        }
+
+        $credentials = [
+            $fieldType => $loginInput,
+            'password' => $request->password,
+        ];
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -31,14 +48,14 @@ class AuthController extends Controller
                 'id' => (string) \Illuminate\Support\Str::uuid(),
                 'user_id' => $user->id,
                 'aksi' => 'LOGIN',
-                'deskripsi' => 'Pengguna ' . $user->nama . ' berhasil masuk ke sistem.',
+                'deskripsi' => 'Pengguna ' . $user->nama . ' (' . $user->role . ') berhasil masuk ke sistem.',
                 'created_at' => now(),
             ]);
 
             return redirect()->intended(route('dashboard'));
         }
 
-        return back()->with('error', 'Username atau password salah. Silakan coba lagi.')->withInput($request->only('username'));
+        return back()->with('error', 'Username/Email atau password salah. Silakan coba lagi.')->withInput($request->only('username'));
     }
 
     public function logout(Request $request)

@@ -4,43 +4,181 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Pedagang;
+use App\Models\AuditLog;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class PenggunaController extends Controller
 {
     public function index()
     {
-        $pengguna = User::orderBy('created_at', 'desc')->get();
-        return view('pengguna.index', compact('pengguna'));
+        $pengguna = User::with('pedagang')->orderBy('created_at', 'desc')->get();
+        // Ambil data pedagang yang belum memiliki akun user tertaut
+        $pedagangList = Pedagang::whereDoesntHave('user')->orderBy('nama_pedagang', 'asc')->get();
+        $semuaPedagang = Pedagang::orderBy('nama_pedagang', 'asc')->get();
+
+        return view('pengguna.index', compact('pengguna', 'pedagangList', 'semuaPedagang'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $metode = $request->input('metode_pembuatan', 'aktivasi_email');
+
+        $rules = [
             'nama' => 'required|string|max:100',
             'username' => 'required|string|max:50|unique:users,username',
-            'password' => 'required|string|min:6',
-            'role' => 'required|in:superadmin,admin,petugas',
-        ]);
-
-        $userData = [
-            'id' => (string) Str::uuid(),
-            'nama' => $request->nama,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'role' => 'required|in:superadmin,admin,petugas,pedagang',
+            'pedagang_id' => 'nullable|required_if:role,pedagang|exists:pedagang,id',
+            'metode_pembuatan' => 'required|in:aktivasi_email,manual_password',
         ];
 
-        // Jika tabel users memiliki kolom email dan email diisi
-        if (Schema::hasColumn('users', 'email') && $request->filled('email')) {
-            $userData['email'] = $request->email;
+        if ($metode === 'aktivasi_email') {
+            $rules['email'] = 'required|email|max:150|unique:users,email';
+        } else {
+            $rules['email'] = 'nullable|email|max:150|unique:users,email';
+            $rules['password'] = 'required|string|min:6';
         }
 
-        User::create($userData);
+        $messages = [
+            'username.unique' => 'Username ini sudah terdaftar. Gunakan username lain.',
+            'email.required' => 'Alamat email wajib diisi untuk pengiriman tautan aktivasi privat.',
+            'email.unique' => 'Email ini sudah terdaftar pada akun lain.',
+            'pedagang_id.required_if' => 'Untuk role Pedagang, Anda wajib memilih data pedagang yang tertaut.',
+            'password.required' => 'Kata sandi wajib diisi jika memilih pembuatan manual.',
+            'password.min' => 'Kata sandi minimal 6 karakter.',
+        ];
 
-        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil ditambahkan. Pengguna dapat langsung login.');
+        $request->validate($rules, $messages);
+
+        $userId = (string) Str::uuid();
+        $token = Str::random(60);
+        $expiresAt = Carbon::now()->addHours(24);
+
+        $userData = [
+            'id' => $userId,
+            'nama' => $request->nama,
+            'username' => strtolower(trim($request->username)),
+            'email' => $request->email ? strtolower(trim($request->email)) : null,
+            'role' => $request->role,
+            'pedagang_id' => $request->role === 'pedagang' ? $request->pedagang_id : null,
+        ];
+
+        if ($metode === 'aktivasi_email') {
+            // Password acak sementara terkunci, menunggu user membuat password sendiri
+            $userData['password'] = Hash::make(Str::random(32));
+            $userData['status_aktivasi'] = 'pending';
+            $userData['activation_token'] = $token;
+            $userData['activation_expires_at'] = $expiresAt;
+        } else {
+            $userData['password'] = Hash::make($request->password);
+            $userData['status_aktivasi'] = 'aktif';
+            $userData['activation_token'] = null;
+            $userData['activation_expires_at'] = null;
+        }
+
+        $newUser = User::create($userData);
+
+        // Catat Audit Log
+        AuditLog::create([
+            'id' => (string) Str::uuid(),
+            'user_id' => auth()->id() ?? $newUser->id,
+            'aksi' => 'TAMBAH_PENGGUNA',
+            'deskripsi' => 'Menambahkan akun ' . $newUser->nama . ' (Role: ' . $newUser->role . ', Metode: ' . $metode . ').',
+            'created_at' => now(),
+        ]);
+
+        // Jika metode aktivasi email, kirimkan email tautan aktivasi
+        if ($metode === 'aktivasi_email' && $newUser->email) {
+            $baseUrl = rtrim(config('app.url', 'https://ai-iuran-umkm.vercel.app'), '/');
+            $activationUrl = $baseUrl . route('aktivasi.form', [
+                'token' => $token,
+                'email' => $newUser->email,
+            ], false);
+
+            try {
+                $appName = config('app.name', 'AmanahLedger');
+                Mail::send('emails.aktivasi-akun', [
+                    'user' => $newUser,
+                    'activationUrl' => $activationUrl,
+                ], function ($message) use ($newUser, $appName) {
+                    $message->to($newUser->email, $newUser->nama)
+                            ->subject("Undangan Akses & Aktivasi Akun - {$appName}");
+                });
+
+                $redirect = redirect()->route('pengguna.index')
+                    ->with('success', 'Akun pengguna berhasil dibuat! Tautan aktivasi privat telah dikirimkan ke email: ' . $newUser->email);
+
+                // Jika mailer driver adalah log/local, tampilkan tautan di flash message untuk kemudahan pengujian
+                if (config('mail.default') === 'log' || config('app.env') === 'local') {
+                    $redirect->with('activation_preview_link', $activationUrl);
+                }
+
+                return $redirect;
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim email aktivasi: ' . $e->getMessage());
+                return redirect()->route('pengguna.index')
+                    ->with('warning', 'Akun berhasil dibuat dengan status pending, namun pengiriman email mengalami kendala SMTP (' . $e->getMessage() . '). Tautan aktivasi manual: ' . $activationUrl)
+                    ->with('activation_preview_link', $activationUrl);
+            }
+        }
+
+        return redirect()->route('pengguna.index')
+            ->with('success', 'Pengguna baru berhasil ditambahkan dan dapat langsung login menggunakan password yang telah Anda buat.');
+    }
+
+    public function resendActivation($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->status_aktivasi === 'aktif') {
+            return redirect()->route('pengguna.index')->with('error', 'Akun pengguna ini sudah berstatus aktif.');
+        }
+
+        if (empty($user->email)) {
+            return redirect()->route('pengguna.index')->with('error', 'Pengguna ini tidak memiliki email terdaftar untuk pengiriman tautan aktivasi.');
+        }
+
+        // Generate token baru dengan masa aktif 24 jam baru
+        $newToken = Str::random(60);
+        $user->forceFill([
+            'activation_token' => $newToken,
+            'activation_expires_at' => Carbon::now()->addHours(24),
+        ])->save();
+
+        $baseUrl = rtrim(config('app.url', 'https://ai-iuran-umkm.vercel.app'), '/');
+        $activationUrl = $baseUrl . route('aktivasi.form', [
+            'token' => $newToken,
+            'email' => $user->email,
+        ], false);
+
+        try {
+            $appName = config('app.name', 'AmanahLedger');
+            Mail::send('emails.aktivasi-akun', [
+                'user' => $user,
+                'activationUrl' => $activationUrl,
+            ], function ($message) use ($user, $appName) {
+                $message->to($user->email, $user->nama)
+                        ->subject("Undangan Akses & Aktivasi Akun - {$appName}");
+            });
+
+            $redirect = redirect()->route('pengguna.index')
+                ->with('success', 'Tautan aktivasi baru berhasil dikirimkan ulang ke email: ' . $user->email);
+
+            if (config('mail.default') === 'log' || config('app.env') === 'local') {
+                $redirect->with('activation_preview_link', $activationUrl);
+            }
+
+            return $redirect;
+        } catch (\Exception $e) {
+            Log::error('Gagal kirim ulang email aktivasi: ' . $e->getMessage());
+            return redirect()->route('pengguna.index')
+                ->with('warning', 'Tautan baru berhasil diperbarui, namun pengiriman SMTP gagal. Tautan aktivasi: ' . $activationUrl)
+                ->with('activation_preview_link', $activationUrl);
+        }
     }
 
     public function update(Request $request, $id)
@@ -50,27 +188,36 @@ class PenggunaController extends Controller
         $request->validate([
             'nama' => 'required|string|max:100',
             'username' => 'required|string|max:50|unique:users,username,' . $id,
+            'email' => 'nullable|email|max:150|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
-            'role' => 'required|in:superadmin,admin,petugas',
+            'role' => 'required|in:superadmin,admin,petugas,pedagang',
+            'pedagang_id' => $request->role === 'pedagang' ? 'required|exists:pedagang,id' : 'nullable',
+            'status_aktivasi' => 'required|in:aktif,pending',
+        ], [
+            'pedagang_id.required' => 'Untuk role Pedagang, data lapak wajib dipilih.',
+            'password.min' => 'Kata sandi baru minimal 6 karakter.',
         ]);
 
         $data = [
             'nama' => $request->nama,
-            'username' => $request->username,
+            'username' => strtolower(trim($request->username)),
+            'email' => $request->email ? strtolower(trim($request->email)) : null,
             'role' => $request->role,
+            'pedagang_id' => $request->role === 'pedagang' ? $request->pedagang_id : null,
+            'status_aktivasi' => $request->status_aktivasi,
         ];
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
-        }
-
-        if (Schema::hasColumn('users', 'email') && $request->filled('email')) {
-            $data['email'] = $request->email;
+            // Jika admin mengisi password secara manual, set status aktif
+            $data['status_aktivasi'] = 'aktif';
+            $data['activation_token'] = null;
+            $data['activation_expires_at'] = null;
         }
 
         $user->update($data);
 
-        return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil diperbarui.');
+        return redirect()->route('pengguna.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -85,4 +232,3 @@ class PenggunaController extends Controller
         return redirect()->route('pengguna.index')->with('success', 'Pengguna berhasil dihapus.');
     }
 }
-

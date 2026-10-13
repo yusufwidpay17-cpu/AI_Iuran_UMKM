@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AktivasiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PedagangController;
 use App\Http\Controllers\PendaftaranController;
@@ -19,7 +20,9 @@ use App\Http\Controllers\PenggunaController;
 |--------------------------------------------------------------------------
 */
 
-// Authentication Routes
+// ==========================================
+// 1. PUBLIC AUTHENTICATION & ACTIVATION ROUTES
+// ==========================================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/lupa-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
@@ -28,74 +31,227 @@ Route::get('/reset-password/{token?}', [AuthController::class, 'showResetForm'])
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Tautan Aktivasi Akun Privat (Pengguna / Pedagang Menentukan Password Mandiri)
+Route::get('/aktivasi-akun/{token}', [AktivasiController::class, 'showActivationForm'])->name('aktivasi.form');
+Route::post('/aktivasi-akun', [AktivasiController::class, 'activateAccount'])->name('aktivasi.process');
 
-// Protected Routes (Authentication Required)
+// ==========================================
+// ROUTE SINKRONISASI DATABASE ONLINE (AIVEN / VERCEL)
+// ==========================================
+Route::get('/sync-db', function () {
+    try {
+        // 1. Pastikan kolom dasar email dan enum role mendukung pedagang
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'email')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->string('email', 150)->nullable()->unique()->after('username');
+            });
+        }
+
+        // 2. Jalankan migrasi database otomatis
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+
+        // 3. Fallback pastikan kolom RBAC Pedagang ada jika migrasi belum tercatat
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'pedagang_id')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->string('pedagang_id', 36)->nullable()->after('role');
+                $table->index('pedagang_id');
+            });
+        }
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'status_aktivasi')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->enum('status_aktivasi', ['aktif', 'pending'])->default('aktif')->after('pedagang_id');
+            });
+        }
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'activation_token')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->string('activation_token', 100)->nullable()->after('status_aktivasi');
+            });
+        }
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'activation_expires_at')) {
+            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
+                $table->timestamp('activation_expires_at')->nullable()->after('activation_token');
+            });
+        }
+
+        // Ubah enum role users
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('superadmin', 'admin', 'petugas', 'pedagang') NOT NULL DEFAULT 'petugas'");
+        } catch (\Exception $e) {
+            // Abaikan jika database non-MySQL atau sudah sama
+        }
+
+        // 4. Sinkronkan Akun Superadmin yusuf123
+        $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
+        if ($superadmin) {
+            $superadmin->nama = 'Yusuf';
+            $superadmin->role = 'superadmin';
+            $superadmin->email = 'yusufwidpay17@gmail.com';
+            $superadmin->status_aktivasi = 'aktif';
+            $superadmin->password = \Illuminate\Support\Facades\Hash::make('password123');
+            $superadmin->save();
+        } else {
+            \App\Models\User::create([
+                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'nama' => 'Yusuf',
+                'username' => 'yusuf123',
+                'email' => 'yusufwidpay17@gmail.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'superadmin',
+                'status_aktivasi' => 'aktif',
+            ]);
+        }
+
+        // 5. Sinkronkan Akun Contoh Mitra Pedagang (erin) agar bisa langsung dites di HP
+        $pedagangSample = \App\Models\Pedagang::first();
+        $merchantUser = \App\Models\User::where('username', 'erin')->first();
+        if (!$merchantUser && $pedagangSample) {
+            \App\Models\User::create([
+                'id' => (string) \Illuminate\Support\Str::uuid(),
+                'nama' => $pedagangSample->nama_pedagang ?: 'Sinta Erina Faradhila',
+                'username' => 'erin',
+                'email' => 'erin.pedagang@gmail.com',
+                'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'role' => 'pedagang',
+                'pedagang_id' => $pedagangSample->id,
+                'status_aktivasi' => 'aktif',
+            ]);
+        } elseif ($merchantUser && $pedagangSample) {
+            $merchantUser->pedagang_id = $pedagangSample->id;
+            $merchantUser->role = 'pedagang';
+            $merchantUser->status_aktivasi = 'aktif';
+            $merchantUser->password = \Illuminate\Support\Facades\Hash::make('password123');
+            $merchantUser->save();
+        }
+
+        $dbConnection = config('database.default');
+        $dbHost = config("database.connections.{$dbConnection}.host");
+        $dbName = config("database.connections.{$dbConnection}.database");
+
+        return response("
+            <div style='font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif; max-width: 580px; margin: 40px auto; padding: 32px; border-radius: 16px; background: #ffffff; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.06);'>
+                <div style='font-size: 48px; margin-bottom: 12px;'>✨</div>
+                <h2 style='color: #059669; margin: 0 0 8px 0; font-size: 24px; font-weight: 800;'>DATABASE AIVEN SUKSES DISINKRONKAN!</h2>
+                <p style='color: #475569; font-size: 14px; margin-bottom: 20px;'>Semua fitur terbaru: <b>Role Pedagang</b>, <b>Aktivasi Akun Mandiri</b>, dan <b>Tampilan Dashboard Pedagang</b> sudah aktif di server online!</p>
+                
+                <div style='text-align: left; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; font-size: 13px; margin-bottom: 16px;'>
+                    <div style='font-weight: 700; color: #1e293b; margin-bottom: 8px;'>📋 Akun yang Siap Digunakan untuk Uji Coba:</div>
+                    <div style='background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 8px;'>
+                        <span style='background: #dbeafe; color: #1e40af; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 11px;'>SUPERADMIN / PENGELOLA</span><br>
+                        Username: <b>yusuf123</b><br>
+                        Password: <b>password123</b><br>
+                        Email: <b>yusufwidpay17@gmail.com</b>
+                    </div>
+                    <div style='background: #ffffff; padding: 10px; border-radius: 6px; border: 1px solid #cbd5e1;'>
+                        <span style='background: #dcfce7; color: #166534; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 11px;'>MITRA PEDAGANG (MOBILE READY)</span><br>
+                        Username: <b>erin</b><br>
+                        Password: <b>password123</b>
+                    </div>
+                </div>
+
+                <div style='text-align: left; background: #0f172a; color: #10b981; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; margin-bottom: 20px; max-height: 120px; overflow-y: auto;'>
+                    Status Host: {$dbHost} | DB: {$dbName}<br>
+                    " . nl2br(e($migrateOutput ?: 'Semua skema database up-to-date!')) . "
+                </div>
+
+                <a href='/login' style='display: block; background: #10b981; color: #ffffff; padding: 14px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 15px; box-shadow: 0 4px 12px rgba(16,185,129,0.3);'>
+                    🚀 Masuk ke Aplikasi Sekarang
+                </a>
+            </div>
+        ", 200, ['Content-Type' => 'text/html']);
+    } catch (\Exception $e) {
+        return response("
+            <div style='font-family: Arial; max-width: 500px; margin: 40px auto; padding: 20px; border-radius: 12px; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b;'>
+                <h3>Gagal Sinkronisasi Database</h3>
+                <p>" . e($e->getMessage()) . "</p>
+            </div>
+        ", 500, ['Content-Type' => 'text/html']);
+    }
+});
+
+
+// ==========================================
+// 2. PROTECTED ROUTES (LOGIN REQUIRED)
+// ==========================================
 Route::middleware(['auth'])->group(function () {
     
-    // 1. Dashboard Utama
+    // A. Dashboard Utama (Tampilan disesuaikan otomatis untuk Pengelola vs Pedagang)
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // 2. Data Pedagang
-    Route::get('/pedagang', [PedagangController::class, 'index'])->name('pedagang.index');
-    Route::get('/pedagang/create', [PedagangController::class, 'create'])->name('pedagang.create');
-    Route::post('/pedagang', [PedagangController::class, 'store'])->name('pedagang.store');
-    Route::get('/pedagang/{id}', [PedagangController::class, 'show'])->name('pedagang.show');
-    Route::get('/pedagang/{id}/edit', [PedagangController::class, 'edit'])->name('pedagang.edit');
-    Route::put('/pedagang/{id}', [PedagangController::class, 'update'])->name('pedagang.update');
-    Route::delete('/pedagang/{id}', [PedagangController::class, 'destroy'])->name('pedagang.destroy');
-    Route::get('/api/next-kios', [PedagangController::class, 'getNextKios'])->name('pedagang.next-kios');
-
-    // 3. Pendaftaran Pedagang
-    Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
-    Route::get('/pendaftaran/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
-    Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
-    Route::get('/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
-    Route::get('/pendaftaran/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
-    Route::put('/pendaftaran/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
-    Route::post('/pendaftaran/{id}/setujui', [PendaftaranController::class, 'setujui'])->name('pendaftaran.setujui');
-    Route::post('/pendaftaran/{id}/tolak', [PendaftaranController::class, 'tolak'])->name('pendaftaran.tolak');
-    Route::delete('/pendaftaran/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
-
-    // 4. Data Lapak
-    Route::get('/lapak', [LapakController::class, 'index'])->name('lapak.index');
-    Route::post('/lapak', [LapakController::class, 'store'])->name('lapak.store');
-    Route::put('/lapak/{id}', [LapakController::class, 'update'])->name('lapak.update');
-    Route::delete('/lapak/{id}', [LapakController::class, 'destroy'])->name('lapak.destroy');
-
-    // 5. Iuran / Tagihan
-    Route::get('/tagihan/input', [TagihanController::class, 'input'])->name('tagihan.input');
-    Route::post('/tagihan/tambah-manual', [TagihanController::class, 'storeManual'])->name('tagihan.store-manual');
-    Route::post('/tagihan/generate', [TagihanController::class, 'generate'])->name('tagihan.generate');
-    Route::post('/tagihan/{id}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
-    Route::post('/tagihan/{id}/tidak-ada', [TagihanController::class, 'tidakAda'])->name('tagihan.tidak-ada');
-
-    // 6. Riwayat Transaksi
+    // B. Riwayat Transaksi & Cetak Bukti (Tersedia untuk Pengelola dan Pedagang untuk bukti lapaknya)
     Route::get('/riwayat-transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat-transaksi/{id}/cetak', [RiwayatTransaksiController::class, 'cetak'])->name('riwayat.cetak');
 
-    // 7. Laporan
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-    Route::get('/laporan/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
 
-    // 8. Export Excel
-    Route::prefix('export')->name('export.')->group(function () {
-        Route::get('/pedagang', [ExportExcelController::class, 'pedagang'])->name('pedagang');
-        Route::get('/pendaftaran', [ExportExcelController::class, 'pendaftaran'])->name('pendaftaran');
-        Route::get('/lapak', [ExportExcelController::class, 'lapak'])->name('lapak');
-        Route::get('/tagihan', [ExportExcelController::class, 'tagihan'])->name('tagihan');
-        Route::get('/riwayat', [ExportExcelController::class, 'riwayat'])->name('riwayat');
-        Route::get('/laporan', [ExportExcelController::class, 'laporan'])->name('laporan');
-        Route::get('/pedagang/{id}', [ExportExcelController::class, 'detailPedagang'])->name('detail-pedagang');
+    // ==========================================
+    // 3. OPERASIONAL PETUGAS & ADMIN (Iuran / Tagihan Lapangan)
+    // ==========================================
+    Route::middleware(['role:superadmin,admin,petugas'])->group(function () {
+        Route::get('/tagihan/input', [TagihanController::class, 'input'])->name('tagihan.input');
+        Route::post('/tagihan/tambah-manual', [TagihanController::class, 'storeManual'])->name('tagihan.store-manual');
+        Route::post('/tagihan/generate', [TagihanController::class, 'generate'])->name('tagihan.generate');
+        Route::post('/tagihan/{id}/bayar', [TagihanController::class, 'bayar'])->name('tagihan.bayar');
+        Route::post('/tagihan/{id}/tidak-ada', [TagihanController::class, 'tidakAda'])->name('tagihan.tidak-ada');
     });
 
-    // 9. AI / Segmentasi Analitik
-    Route::get('/segmentasi', [SegmentasiController::class, 'index'])->name('segmentasi.index');
-    Route::post('/segmentasi/train', [SegmentasiController::class, 'train'])->name('segmentasi.train');
-    Route::get('/segmentasi/cek', [SegmentasiController::class, 'cek'])->name('segmentasi.cek');
 
-    // 10. Manajemen Pengguna
-    Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
-    Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
-    Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
-    Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+    // ==========================================
+    // 4. MODUL KHUSUS PENGELOLA (SUPERADMIN & ADMIN)
+    // ==========================================
+    Route::middleware(['role:superadmin,admin'])->group(function () {
+        
+        // Data Pedagang
+        Route::get('/pedagang', [PedagangController::class, 'index'])->name('pedagang.index');
+        Route::get('/pedagang/create', [PedagangController::class, 'create'])->name('pedagang.create');
+        Route::post('/pedagang', [PedagangController::class, 'store'])->name('pedagang.store');
+        Route::get('/pedagang/{id}', [PedagangController::class, 'show'])->name('pedagang.show');
+        Route::get('/pedagang/{id}/edit', [PedagangController::class, 'edit'])->name('pedagang.edit');
+        Route::put('/pedagang/{id}', [PedagangController::class, 'update'])->name('pedagang.update');
+        Route::delete('/pedagang/{id}', [PedagangController::class, 'destroy'])->name('pedagang.destroy');
+        Route::get('/api/next-kios', [PedagangController::class, 'getNextKios'])->name('pedagang.next-kios');
+
+        // Pendaftaran Pedagang
+        Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftaran.index');
+        Route::get('/pendaftaran/create', [PendaftaranController::class, 'create'])->name('pendaftaran.create');
+        Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
+        Route::get('/pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('pendaftaran.show');
+        Route::get('/pendaftaran/{id}/edit', [PendaftaranController::class, 'edit'])->name('pendaftaran.edit');
+        Route::put('/pendaftaran/{id}', [PendaftaranController::class, 'update'])->name('pendaftaran.update');
+        Route::post('/pendaftaran/{id}/setujui', [PendaftaranController::class, 'setujui'])->name('pendaftaran.setujui');
+        Route::post('/pendaftaran/{id}/tolak', [PendaftaranController::class, 'tolak'])->name('pendaftaran.tolak');
+        Route::delete('/pendaftaran/{id}', [PendaftaranController::class, 'destroy'])->name('pendaftaran.destroy');
+
+        // Data Lapak
+        Route::get('/lapak', [LapakController::class, 'index'])->name('lapak.index');
+        Route::post('/lapak', [LapakController::class, 'store'])->name('lapak.store');
+        Route::put('/lapak/{id}', [LapakController::class, 'update'])->name('lapak.update');
+        Route::delete('/lapak/{id}', [LapakController::class, 'destroy'])->name('lapak.destroy');
+
+        // Laporan Rekapitulasi
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
+
+        // Export Excel
+        Route::prefix('export')->name('export.')->group(function () {
+            Route::get('/pedagang', [ExportExcelController::class, 'pedagang'])->name('pedagang');
+            Route::get('/pendaftaran', [ExportExcelController::class, 'pendaftaran'])->name('pendaftaran');
+            Route::get('/lapak', [ExportExcelController::class, 'lapak'])->name('lapak');
+            Route::get('/tagihan', [ExportExcelController::class, 'tagihan'])->name('tagihan');
+            Route::get('/riwayat', [ExportExcelController::class, 'riwayat'])->name('riwayat');
+            Route::get('/laporan', [ExportExcelController::class, 'laporan'])->name('laporan');
+            Route::get('/pedagang/{id}', [ExportExcelController::class, 'detailPedagang'])->name('detail-pedagang');
+        });
+
+        // AI / Segmentasi Analitik
+        Route::get('/segmentasi', [SegmentasiController::class, 'index'])->name('segmentasi.index');
+        Route::post('/segmentasi/train', [SegmentasiController::class, 'train'])->name('segmentasi.train');
+        Route::get('/segmentasi/cek', [SegmentasiController::class, 'cek'])->name('segmentasi.cek');
+
+        // Manajemen Pengguna & Hak Akses
+        Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
+        Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
+        Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
+        Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
+        Route::post('/pengguna/{id}/kirim-ulang-aktivasi', [PenggunaController::class, 'resendActivation'])->name('pengguna.resend-activation');
+    });
 });

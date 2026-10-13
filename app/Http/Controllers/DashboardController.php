@@ -14,6 +14,58 @@ class DashboardController extends Controller
     public function index()
     {
         $today = Carbon::today()->format('Y-m-d');
+        $user = auth()->user();
+
+        // JIKA PENGGUNA ADALAH PEDAGANG: Tampilkan Dashboard Khusus Pedagang
+        if ($user && $user->role === 'pedagang') {
+            $pedagang = $user->pedagang ?? ($user->pedagang_id ? Pedagang::with('tarif')->find($user->pedagang_id) : null);
+
+            $tagihanHariIni = null;
+            $totalTunggakanPedagang = 0;
+            $jumlahHariMenunggak = 0;
+            $totalDibayarBulanIni = 0;
+            $tagihanBelumLunas = collect([]);
+            $riwayatPembayaran = collect([]);
+
+            if ($pedagang) {
+                $tagihanHariIni = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->where('tanggal_tagihan', $today)
+                    ->first();
+
+                $unpaidBills = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->where('status_bayar', '!=', 'lunas')
+                    ->orderBy('tanggal_tagihan', 'desc')
+                    ->get();
+
+                $totalTunggakanPedagang = $unpaidBills->sum(function($item) {
+                    return $item->nominal_tagihan - $item->nominal_dibayar;
+                });
+                $jumlahHariMenunggak = $unpaidBills->count();
+                $tagihanBelumLunas = $unpaidBills;
+
+                $startThisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
+                $endThisMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+                $totalDibayarBulanIni = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->whereBetween('tanggal_tagihan', [$startThisMonth, $endThisMonth])
+                    ->sum('nominal_dibayar');
+
+                $riwayatPembayaran = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->where('nominal_dibayar', '>', 0)
+                    ->orderBy('waktu_bayar', 'desc')
+                    ->limit(10)
+                    ->get();
+            }
+
+            return view('dashboard.pedagang', compact(
+                'pedagang',
+                'tagihanHariIni',
+                'totalTunggakanPedagang',
+                'jumlahHariMenunggak',
+                'totalDibayarBulanIni',
+                'tagihanBelumLunas',
+                'riwayatPembayaran'
+            ));
+        }
 
         // 1. Merchant & Lapak Operational Stats
         $totalPedagang = Pedagang::count();

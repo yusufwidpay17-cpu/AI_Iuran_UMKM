@@ -34,7 +34,7 @@
             </div>
             
             <nav class="sidebar-nav" style="gap: 4px;">
-                <!-- 1. Dashboard -->
+                <!-- 1. Dashboard (Semua Role) -->
                 <a href="{{ route('dashboard') }}" class="sidebar-nav-item {{ Route::is('dashboard') ? 'active' : '' }}">
                     <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path>
@@ -42,62 +42,67 @@
                     Dashboard
                 </a>
 
-                <!-- 2. Data Pedagang -->
-                <a href="{{ route('pedagang.index') }}" class="sidebar-nav-item {{ Route::is('pedagang.*') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                    Data Pedagang
-                </a>
+                @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin']))
+                    <!-- 2. Data Pedagang (Khusus Superadmin & Admin) -->
+                    <a href="{{ route('pedagang.index') }}" class="sidebar-nav-item {{ Route::is('pedagang.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Data Pedagang
+                    </a>
 
+                    <!-- 4. Data Lapak (Khusus Superadmin & Admin) -->
+                    <a href="{{ route('lapak.index') }}" class="sidebar-nav-item {{ Route::is('lapak.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11h4v10m-4-10H7v10"></path>
+                        </svg>
+                        Data Lapak
+                    </a>
+                @endif
 
-                <!-- 4. Data Lapak -->
-                <a href="{{ route('lapak.index') }}" class="sidebar-nav-item {{ Route::is('lapak.*') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11h4v10m-4-10H7v10"></path>
-                    </svg>
-                    Data Lapak
-                </a>
+                @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin', 'petugas']))
+                    <!-- 5. Iuran / Tagihan (Pengelola & Petugas Lapangan) -->
+                    <a href="{{ route('tagihan.input') }}" class="sidebar-nav-item {{ Route::is('tagihan.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                        Transaksi Pembayaran
+                    </a>
+                @endif
 
-                <!-- 5. Iuran / Tagihan -->
-                <a href="{{ route('tagihan.input') }}" class="sidebar-nav-item {{ Route::is('tagihan.*') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
-                    Transaksi Pembayaran
-                </a>
-
-                <!-- 6. Riwayat Transaksi -->
+                <!-- 6. Riwayat Transaksi (Pengelola & Pedagang) -->
                 <a href="{{ route('riwayat.index') }}" class="sidebar-nav-item {{ Route::is('riwayat.*') ? 'active' : '' }}">
                     <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
-                    Riwayat Transaksi
+                    {{ (Auth::user()->role ?? '') === 'pedagang' ? 'Riwayat Pembayaran Saya' : 'Riwayat Transaksi' }}
                 </a>
 
-                <!-- 7. Laporan -->
-                <a href="{{ route('laporan.index') }}" class="sidebar-nav-item {{ Route::is('laporan.*') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    Laporan
-                </a>
+                @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin']))
+                    <!-- 7. Laporan (Khusus Superadmin & Admin) -->
+                    <a href="{{ route('laporan.index') }}" class="sidebar-nav-item {{ Route::is('laporan.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Laporan
+                    </a>
 
+                    <!-- 9. Deteksi Pedagang AI (Khusus Superadmin & Admin) -->
+                    <a href="{{ route('segmentasi.cek') }}" class="sidebar-nav-item {{ Route::is('segmentasi.cek') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Cek Deteksi Pedagang
+                    </a>
 
-                <!-- 9. Deteksi Pedagang AI -->
-                <a href="{{ route('segmentasi.cek') }}" class="sidebar-nav-item {{ Route::is('segmentasi.cek') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    Cek Deteksi Pedagang
-                </a>
-                <!-- 10. Manajemen Pengguna -->
-                <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
-                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    Manajemen Pengguna
-                </a>
+                    <!-- 10. Manajemen Pengguna (Khusus Superadmin & Admin) -->
+                    <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        Manajemen Pengguna
+                    </a>
+                @endif
             </nav>
             
             <div class="sidebar-footer">
@@ -165,35 +170,44 @@
                                 <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path></svg>
                                 Dashboard
                             </a>
-                            <a href="{{ route('pedagang.index') }}" class="sidebar-nav-item {{ Route::is('pedagang.*') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                                Data Pedagang
-                            </a>
-                            <a href="{{ route('lapak.index') }}" class="sidebar-nav-item {{ Route::is('lapak.*') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11h4v10m-4-10H7v10"></path></svg>
-                                Data Lapak
-                            </a>
-                            <a href="{{ route('tagihan.input') }}" class="sidebar-nav-item {{ Route::is('tagihan.*') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
-                                Transaksi Pembayaran
-                            </a>
+
+                            @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin']))
+                                <a href="{{ route('pedagang.index') }}" class="sidebar-nav-item {{ Route::is('pedagang.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                    Data Pedagang
+                                </a>
+                                <a href="{{ route('lapak.index') }}" class="sidebar-nav-item {{ Route::is('lapak.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11h4v10m-4-10H7v10"></path></svg>
+                                    Data Lapak
+                                </a>
+                            @endif
+
+                            @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin', 'petugas']))
+                                <a href="{{ route('tagihan.input') }}" class="sidebar-nav-item {{ Route::is('tagihan.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                                    Transaksi Pembayaran
+                                </a>
+                            @endif
+
                             <a href="{{ route('riwayat.index') }}" class="sidebar-nav-item {{ Route::is('riwayat.*') ? 'active' : '' }}">
                                 <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                Riwayat Transaksi
+                                {{ (Auth::user()->role ?? '') === 'pedagang' ? 'Riwayat Pembayaran Saya' : 'Riwayat Transaksi' }}
                             </a>
-                            <a href="{{ route('laporan.index') }}" class="sidebar-nav-item {{ Route::is('laporan.*') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Laporan
-                            </a>
-                            <a href="{{ route('segmentasi.cek') }}" class="sidebar-nav-item {{ Route::is('segmentasi.cek') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                Cek Deteksi Pedagang
-                            </a>
-                            <!-- 10. Manajemen Pengguna -->
-                            <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
-                                <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                                Manajemen Pengguna
-                            </a>
+
+                            @if(in_array(Auth::user()->role ?? '', ['superadmin', 'admin']))
+                                <a href="{{ route('laporan.index') }}" class="sidebar-nav-item {{ Route::is('laporan.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    Laporan
+                                </a>
+                                <a href="{{ route('segmentasi.cek') }}" class="sidebar-nav-item {{ Route::is('segmentasi.cek') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                    Cek Deteksi Pedagang
+                                </a>
+                                <a href="{{ route('pengguna.index') }}" class="sidebar-nav-item {{ Route::is('pengguna.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                                    Manajemen Pengguna
+                                </a>
+                            @endif
                         </nav>
                         <div style="margin-top: var(--space-md);">
                             <div class="user-profile-widget" style="margin-bottom: var(--space-md);">

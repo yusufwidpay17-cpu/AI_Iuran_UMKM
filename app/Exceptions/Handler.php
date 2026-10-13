@@ -46,5 +46,10 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+        // Tangani 419 Page Expired agar pengguna tidak tersangkut di layar putih error
+        $this->renderable(function (\Illuminate\Session\TokenMismatchException $e, $request) {
+            return redirect()->back()->with('error', 'Sesi keamanan halaman telah diperbarui otomatis. Silakan klik "Simpan Perubahan" kembali.');
+        });
     }
 }

@@ -26,6 +26,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'pedagang_id',
+        'status_aktivasi',
+        'activation_token',
+        'activation_expires_at',
     ];
 
     /**
@@ -35,11 +39,17 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'activation_token',
     ];
 
     public function tagihan()
     {
         return $this->hasMany(Tagihan::class, 'petugas_id', 'id');
+    }
+
+    public function pedagang()
+    {
+        return $this->belongsTo(Pedagang::class, 'pedagang_id', 'id');
     }
 
     public function auditLogs()
@@ -60,5 +70,10 @@ class User extends Authenticatable
     public function isPetugas()
     {
         return $this->role === 'petugas';
+    }
+
+    public function isPedagang()
+    {
+        return $this->role === 'pedagang';
     }
 }

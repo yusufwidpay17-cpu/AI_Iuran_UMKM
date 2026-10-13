@@ -10,8 +10,14 @@ class RiwayatTransaksiController extends Controller
 {
     public function index(Request $request)
     {
+        $user = auth()->user();
         $query = Tagihan::with(['pedagang.tarif', 'petugas'])
             ->where('nominal_dibayar', '>', 0);
+
+        // Jika user adalah pedagang, hanya tampilkan riwayat pembayaran miliknya sendiri
+        if ($user && $user->role === 'pedagang') {
+            $query->where('pedagang_id', $user->pedagang_id);
+        }
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -30,7 +36,7 @@ class RiwayatTransaksiController extends Controller
         if ($request->filled('end_date')) {
             $query->whereDate('tanggal_tagihan', '<=', $request->input('end_date'));
         }
-        if ($request->filled('pedagang_id')) {
+        if ($request->filled('pedagang_id') && (!$user || $user->role !== 'pedagang')) {
             $query->where('pedagang_id', $request->input('pedagang_id'));
         }
         if ($request->filled('metode_bayar')) {
@@ -46,14 +52,25 @@ class RiwayatTransaksiController extends Controller
         } else {
             $transaksis = $query->orderBy('waktu_bayar', 'desc')->paginate(15)->withQueryString();
         }
-        $pedagangs = Pedagang::orderBy('nama_pedagang', 'asc')->get();
+
+        // Jika pedagang, tidak perlu kirim daftar seluruh pedagang
+        $pedagangs = ($user && $user->role === 'pedagang') 
+            ? collect([]) 
+            : Pedagang::orderBy('nama_pedagang', 'asc')->get();
 
         return view('riwayat.index', compact('transaksis', 'pedagangs'));
     }
 
     public function cetak($id)
     {
+        $user = auth()->user();
         $tagihan = Tagihan::with(['pedagang.tarif', 'petugas'])->findOrFail($id);
+
+        // Keamanan: cegah pedagang mencetak kuitansi pedagang lain
+        if ($user && $user->role === 'pedagang' && $tagihan->pedagang_id !== $user->pedagang_id) {
+            abort(403, 'Akses Ditolak: Anda tidak diizinkan mencetak bukti pembayaran milik pedagang lain.');
+        }
+
         return view('riwayat.cetak', compact('tagihan'));
     }
 }

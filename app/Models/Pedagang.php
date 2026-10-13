@@ -60,4 +60,10 @@ class Pedagang extends Model
     {
         return $this->hasOne(SegmentasiPedagang::class, 'pedagang_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'pedagang_id', 'id');
+    }
 }
+
