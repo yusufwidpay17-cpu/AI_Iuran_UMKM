@@ -40,46 +40,36 @@ Route::post('/aktivasi-akun', [AktivasiController::class, 'activateAccount'])->n
 // ==========================================
 Route::get('/sync-db', function () {
     try {
-        // 1. Pastikan kolom dasar email dan enum role mendukung pedagang
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'email')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->string('email', 150)->nullable()->unique()->after('username');
-            });
+        // 1. Jalankan migrasi database otomatis terlebih dahulu
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+        } catch (\Exception $e) {
+            $migrateOutput = $e->getMessage();
         }
 
-        // 2. Jalankan migrasi database otomatis
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
-
-        // 3. Fallback pastikan kolom RBAC Pedagang ada jika migrasi belum tercatat
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'pedagang_id')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->string('pedagang_id', 36)->nullable()->after('role');
-                $table->index('pedagang_id');
-            });
-        }
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'status_aktivasi')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->enum('status_aktivasi', ['aktif', 'pending'])->default('aktif')->after('pedagang_id');
-            });
-        }
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'activation_token')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->string('activation_token', 100)->nullable()->after('status_aktivasi');
-            });
-        }
-        if (!\Illuminate\Support\Facades\Schema::hasColumn('users', 'activation_expires_at')) {
-            \Illuminate\Support\Facades\Schema::table('users', function ($table) {
-                $table->timestamp('activation_expires_at')->nullable()->after('activation_token');
-            });
-        }
-
-        // Ubah enum role users
+        // 2. Pastikan enum role mendukung pedagang
         try {
             \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('superadmin', 'admin', 'petugas', 'pedagang') NOT NULL DEFAULT 'petugas'");
-        } catch (\Exception $e) {
-            // Abaikan jika database non-MySQL atau sudah sama
-        }
+        } catch (\Exception $e) {}
+
+        // 3. Fallback aman penambahan kolom baru jika belum ada
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN pedagang_id VARCHAR(36) NULL AFTER role");
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD INDEX (pedagang_id)");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN status_aktivasi ENUM('aktif', 'pending') NOT NULL DEFAULT 'aktif' AFTER pedagang_id");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN activation_token VARCHAR(100) NULL AFTER status_aktivasi");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN activation_expires_at TIMESTAMP NULL AFTER activation_token");
+        } catch (\Exception $e) {}
 
         // 4. Sinkronkan Akun Superadmin yusuf123
         $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
