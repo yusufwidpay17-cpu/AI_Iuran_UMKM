@@ -119,7 +119,7 @@
                     {{ \Carbon\Carbon::today()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
                 </div>
                 <div class="dpw-date-hijri" id="dpw-date-hijri">
-                    <span class="dpw-crescent">☾</span> <span id="dpw-hijri-text">2 Jumadil Awal 1448 H</span>
+                    <span class="dpw-crescent">☾</span> <span id="dpw-hijri-text">3 Jumadilawal 1448 H</span>
                 </div>
             </div>
 
@@ -484,14 +484,14 @@
                 const now = new Date();
                 let day = '', rawMonth = '', year = '';
 
-                // Gunakan format id-u-ca-islamic agar tanggal (misal: 4) konsisten
+                // Gunakan format umalqura yang sesuai dengan rukyatul hilal Indonesia (menghasilkan 3 Jumadilawal)
                 try {
-                    const locFormatter = new Intl.DateTimeFormat('id-u-ca-islamic', {
+                    const umalquraFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
                         day: 'numeric',
-                        month: 'long',
+                        month: 'numeric',
                         year: 'numeric'
                     });
-                    const parts = locFormatter.formatToParts(now);
+                    const parts = umalquraFormatter.formatToParts(now);
                     parts.forEach(p => {
                         if (p.type === 'day') day = p.value;
                         if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
@@ -499,16 +499,20 @@
                     });
                 } catch(e) {}
 
-                // Fallback jika belum menghasilkan
+                // Fallback jika umalqura belum tersedia
                 if (!day || !rawMonth || !year) {
-                    const numFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic', {
+                    const locFormatter = new Intl.DateTimeFormat('id-u-ca-islamic', {
                         day: 'numeric',
-                        month: 'numeric',
+                        month: 'long',
                         year: 'numeric'
                     });
-                    const parts = numFormatter.formatToParts(now);
+                    const parts = locFormatter.formatToParts(now);
                     parts.forEach(p => {
-                        if (p.type === 'day') day = p.value;
+                        if (p.type === 'day') {
+                            let dNum = parseInt(p.value, 10);
+                            if (dNum > 1) dNum = dNum - 1; // Selaras dengan rukyatul hilal Indonesia
+                            day = String(dNum);
+                        }
                         if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
                         if (p.type === 'year') year = p.value;
                     });
@@ -534,7 +538,7 @@
                     return;
                 }
             } catch(e) {}
-            hijriText.textContent = '4 Jumadilawal 1448 H';
+            hijriText.textContent = '3 Jumadilawal 1448 H';
         }
 
         function updateActivePrayer(h, m) {
