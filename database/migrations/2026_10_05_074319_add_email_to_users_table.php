@@ -13,9 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('email', 150)->nullable()->unique()->after('username');
-        });
+        try {
+            if (!Schema::hasColumn('users', 'email')) {
+                Schema::table('users', function (Blueprint $table) {
+                    $table->string('email', 150)->nullable()->unique()->after('username');
+                });
+            }
+        } catch (\Exception $e) {
+            // Kolom email mungkin sudah dibuat sebelumnya
+        }
     }
 
     /**
