@@ -484,14 +484,14 @@
                 const now = new Date();
                 let day = '', rawMonth = '', year = '';
 
-                // Coba ambil format numerik terlebih dahulu untuk mengatasi bug ICU Android ("Mei")
+                // Gunakan format id-u-ca-islamic agar tanggal (misal: 4) konsisten
                 try {
-                    const numFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
+                    const locFormatter = new Intl.DateTimeFormat('id-u-ca-islamic', {
                         day: 'numeric',
-                        month: 'numeric',
+                        month: 'long',
                         year: 'numeric'
                     });
-                    const parts = numFormatter.formatToParts(now);
+                    const parts = locFormatter.formatToParts(now);
                     parts.forEach(p => {
                         if (p.type === 'day') day = p.value;
                         if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
@@ -499,14 +499,14 @@
                     });
                 } catch(e) {}
 
-                // Jika formatter pertama belum menghasilkan, gunakan formatter lokal
+                // Fallback jika belum menghasilkan
                 if (!day || !rawMonth || !year) {
-                    const locFormatter = new Intl.DateTimeFormat('id-u-ca-islamic', {
+                    const numFormatter = new Intl.DateTimeFormat('en-US-u-ca-islamic', {
                         day: 'numeric',
-                        month: 'long',
+                        month: 'numeric',
                         year: 'numeric'
                     });
-                    const parts = locFormatter.formatToParts(now);
+                    const parts = numFormatter.formatToParts(now);
                     parts.forEach(p => {
                         if (p.type === 'day') day = p.value;
                         if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
@@ -524,8 +524,8 @@
                     finalMonth = rawMonth;
                 }
 
-                // Proteksi mutlak bug Android: ubah 'mei' / 'may' / 'Jumadil Awal' menjadi 'Jumadilawal'
-                if (finalMonth.toLowerCase() === 'mei' || finalMonth.toLowerCase() === 'may' || finalMonth === 'Jumadil Awal') {
+                // Proteksi mutlak bug ICU Android: jika menghasilkan kata 'mei' / 'may' / dll, ganti menjadi 'Jumadilawal'
+                if (finalMonth.toLowerCase() === 'mei' || finalMonth.toLowerCase() === 'may' || finalMonth.toLowerCase() === 'jumadil awal') {
                     finalMonth = 'Jumadilawal';
                 }
 
