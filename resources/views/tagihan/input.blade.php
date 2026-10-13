@@ -2,6 +2,29 @@
 
 @section('title', 'Transaksi Pembayaran Iuran')
 
+@section('head')
+<style>
+    .transaction-row {
+        transition: background-color 0.15s ease;
+    }
+    .transaction-row:hover {
+        background-color: #f8fafc !important;
+    }
+    .transaction-row td {
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .transaction-row:last-child td {
+        border-bottom: none;
+    }
+    [data-theme="dark"] .transaction-row:hover {
+        background-color: #1e293b !important;
+    }
+    [data-theme="dark"] .transaction-row td {
+        border-bottom-color: #334155;
+    }
+</style>
+@endsection
+
 @section('content')
 @php
     $carbonDate = \Carbon\Carbon::parse($tanggal);
@@ -129,16 +152,16 @@
 </div>
 
 <!-- TRANSACTIONS TABLE -->
-<div class="card" style="padding: 0; overflow: hidden; border-radius: 14px; border: 1px solid #e2e8f0; background: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+<div class="card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid #cbd5e1; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
     <div class="table-responsive">
         <table class="data-table" style="width: 100%; border-collapse: collapse; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
             <thead>
-                <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 0.725rem; color: #475569; letter-spacing: 0.6px; font-weight: 800;">
-                    <th style="padding: 14px 18px; text-align: left; width: 250px;">Kios & Nama Pedagang</th>
-                    <th style="padding: 14px 18px; text-align: left;">Deskripsi & Keterangan Status</th>
-                    <th style="padding: 14px 18px; text-align: left; width: 190px;">Nominal Tagihan / Dibayar</th>
-                    <th style="padding: 14px 18px; text-align: center; width: 140px;">Status Bayar</th>
-                    <th style="padding: 14px 18px; text-align: right; width: 180px;">Aksi Pembayaran</th>
+                <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-transform: uppercase; font-size: 0.75rem; color: #334155; letter-spacing: 0.05em; font-weight: 700;">
+                    <th style="padding: 12px 16px; text-align: left; width: 260px;">Kios & Nama Pedagang</th>
+                    <th style="padding: 12px 16px; text-align: left;">Rincian Iuran & Keterangan</th>
+                    <th style="padding: 12px 16px; text-align: left; width: 180px;">Nominal Tagihan</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 130px;">Status</th>
+                    <th style="padding: 12px 16px; text-align: right; width: 170px;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -149,105 +172,114 @@
                         $isTidakBerdagang = str_contains($tgh->catatan ?? '', '[TIDAK BERDAGANG]');
                         
                         $rowStatusClass = $isLunas ? 'row-lunas' : ($isSebagian ? 'row-sebagian' : 'row-belum');
-
-                        $colorDibayar = '#ef4444';
-                        if ($isLunas) {
-                            $colorDibayar = '#10b981';
-                        } elseif ($isSebagian) {
-                            $colorDibayar = '#d97706';
-                        } elseif ($isTidakBerdagang) {
-                            $colorDibayar = '#64748b';
-                        }
-
-                        $catatanLunasText = $tgh->catatan ?? ('Pembayaran iuran harian pada ' . $tanggalLengkapIndo . ' telah diterima secara sah.');
                     @endphp
-                    <tr class="transaction-row {{ $rowStatusClass }}" style="border-bottom: 1px solid #f1f5f9; transition: background 0.15s ease;">
+                    <tr class="transaction-row {{ $rowStatusClass }}" style="border-bottom: 1px solid #e2e8f0; transition: background 0.15s ease;">
                         <!-- Kios & Nama Pedagang -->
-                        <td style="padding: 14px 18px; vertical-align: top;">
-                            <div style="display: flex; align-items: flex-start; gap: 10px;">
-                                <div style="background: #2563eb; color: #ffffff; font-weight: 800; font-size: 0.8125rem; padding: 6px 10px; border-radius: 8px; white-space: nowrap; box-shadow: 0 2px 4px rgba(37,99,235,0.15); font-family: monospace;">
+                        <td style="padding: 12px 16px; vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 700; font-size: 0.775rem; padding: 4px 8px; border-radius: 6px; white-space: nowrap; font-family: monospace;">
                                     {{ $tgh->pedagang->no_kios ?? '-' }}
-                                </div>
+                                </span>
                                 <div>
                                     @if ($tgh->pedagang)
-                                        <a href="{{ route('pedagang.show', $tgh->pedagang_id) }}" style="font-weight: 700; color: #0f172a; text-decoration: none; font-size: 0.9375rem; display: block; line-height: 1.3;">
+                                        <a href="{{ route('pedagang.show', $tgh->pedagang_id) }}" style="font-weight: 700; color: #0f172a; text-decoration: none; font-size: 0.9rem; display: block; line-height: 1.3;">
                                             {{ $tgh->pedagang->nama_pedagang }}
                                         </a>
-                                        <div style="font-size: 0.775rem; color: #64748b; margin-top: 3px; font-weight: 500;">
-                                            {{ $tgh->pedagang->nama_usaha ?? 'Usaha Lapak Pasar' }} <span style="color: #cbd5e1;">•</span> <strong style="color: #475569;">{{ str_starts_with($tgh->pedagang->blok_kios ?? '', 'Blok') ? ($tgh->pedagang->blok_kios ?? '-') : 'Blok ' . ($tgh->pedagang->blok_kios ?? '-') }}</strong>
+                                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                            {{ $tgh->pedagang->nama_usaha ?? 'Lapak Pasar' }} <span style="color: #cbd5e1;">•</span> <strong style="color: #475569;">{{ str_starts_with($tgh->pedagang->blok_kios ?? '', 'Blok') ? ($tgh->pedagang->blok_kios ?? '-') : 'Blok ' . ($tgh->pedagang->blok_kios ?? '-') }}</strong>
                                         </div>
                                     @else
-                                        <span style="color: #94a3b8; font-style: italic;">Data pedagang terhapus</span>
+                                        <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">Data pedagang terhapus</span>
                                     @endif
                                 </div>
                             </div>
                         </td>
 
-                        <!-- Deskripsi & Keterangan Status -->
-                        <td style="padding: 14px 18px; vertical-align: top;">
-                            <div style="font-size: 0.8125rem; color: #1e293b; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 6px;">
-                                <span>{{ $tgh->jenis_iuran ?? 'Iuran Harian Pasar' }}</span>
-                                @if($tgh->waktu_bayar && ($isLunas || $isSebagian))
-                                    <span style="background: #e2e8f0; color: #334155; font-size: 0.7rem; padding: 2px 7px; border-radius: 4px; font-weight: 600;">🕒 {{ $tgh->waktu_bayar->format('H:i') }} WIB</span>
-                                @endif
+                        <!-- Rincian Iuran & Keterangan -->
+                        <td style="padding: 12px 16px; vertical-align: middle;">
+                            <div style="font-size: 0.825rem; font-weight: 600; color: #0f172a;">
+                                {{ $tgh->jenis_iuran ?? 'Iuran Harian Pasar' }}
                             </div>
                             @if ($isLunas)
-                                <div style="font-size: 0.775rem; color: #047857; background: #f0fdf4; padding: 6px 10px; border-radius: 6px; border: 1px solid #bbf7d0; display: inline-flex; align-items: center; gap: 6px;">
-                                    ✔ <strong>LUNAS:</strong> Setoran iuran harian diterima secara sah.
+                                <div style="font-size: 0.75rem; color: #059669; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                                    <span>✔ Diterima sah</span>
+                                    @if($tgh->waktu_bayar)
+                                        <span style="color: #64748b;">({{ $tgh->waktu_bayar->format('H:i') }} WIB)</span>
+                                    @endif
                                 </div>
                             @elseif ($isSebagian)
-                                <div style="font-size: 0.775rem; color: #b45309; background: #fffbeb; padding: 6px 10px; border-radius: 6px; border: 1px solid #fde68a; display: inline-flex; align-items: center; gap: 6px;">
-                                    ⚠ <strong>BAYAR SEBAGIAN:</strong> Terbayar Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }} (Sisa Rp {{ number_format($tgh->nominal_tagihan - $tgh->nominal_dibayar, 0, ',', '.') }})
+                                <div style="font-size: 0.75rem; color: #d97706; font-weight: 500; margin-top: 2px;">
+                                    ⚠ Terbayar Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}
                                 </div>
                             @elseif ($isTidakBerdagang)
-                                <div style="font-size: 0.775rem; color: #475569; background: #f8fafc; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; gap: 6px;">
-                                    🚫 <strong>TIDAK BERDAGANG:</strong> {{ $tgh->catatan ?? 'Lapak Tutup Hari Ini' }}
+                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px;">
+                                    🚫 {{ $tgh->catatan ?? 'Lapak Libur / Tutup' }}
                                 </div>
                             @else
-                                <div style="font-size: 0.775rem; color: #b91c1c; background: #fef2f2; padding: 6px 10px; border-radius: 6px; border: 1px solid #fecaca; display: inline-flex; align-items: center; gap: 6px;">
-                                    🏪 <strong>BELUM BAYAR:</strong> Belum ada setoran masuk hari ini.
+                                <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 500; margin-top: 2px;">
+                                    Menunggu setoran harian
                                 </div>
                             @endif
                         </td>
 
-                        <!-- Nominal Tagihan & Dibayar -->
-                        <td style="padding: 16px 18px; vertical-align: top;" class="numeric-display">
-                            <div style="font-size: 0.75rem; color: #64748b; font-weight: 500;">Tagihan: <strong style="color: #0f172a; font-weight: 700;">Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}</strong></div>
-                            <div style="font-size: 0.95rem; font-weight: 800; color: {{ $colorDibayar }}; margin-top: 3px;">
-                                Dibayar: Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}
+                        <!-- Nominal Tagihan & Sisa -->
+                        <td style="padding: 12px 16px; vertical-align: middle;" class="numeric-display">
+                            <div style="font-family: 'Inter', monospace; font-size: 0.925rem; font-weight: 700; color: #0f172a;">
+                                Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
                             </div>
+                            @if ($isLunas)
+                                <div style="font-size: 0.725rem; font-weight: 600; color: #10b981; margin-top: 1px;">
+                                    ✔ Lunas
+                                </div>
+                            @elseif ($isSebagian)
+                                <div style="font-size: 0.725rem; font-weight: 600; color: #d97706; margin-top: 1px;">
+                                    Sisa: Rp {{ number_format($tgh->nominal_tagihan - $tgh->nominal_dibayar, 0, ',', '.') }}
+                                </div>
+                            @elseif ($isTidakBerdagang)
+                                <div style="font-size: 0.725rem; font-weight: 600; color: #64748b; margin-top: 1px;">
+                                    Rp 0 (Libur)
+                                </div>
+                            @else
+                                <div style="font-size: 0.725rem; font-weight: 600; color: #dc2626; margin-top: 1px;">
+                                    Sisa: Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
+                                </div>
+                            @endif
                         </td>
 
                         <!-- Status Bayar Badge -->
-                        <td style="padding: 16px 18px; vertical-align: top; text-align: center;">
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: center;">
                             @if ($isLunas)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #dcfce7; color: #15803d; font-size: 0.75rem; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #86efac;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #16a34a;"></span> LUNAS
+                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #047857; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #a7f3d0;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span> Lunas
                                 </span>
                             @elseif ($isSebagian)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fef3c7; color: #b45309; font-size: 0.75rem; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #fde047;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #d97706;"></span> SEBAGIAN
+                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; color: #b45309; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #fde68a;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></span> Sebagian
                                 </span>
                             @elseif ($isTidakBerdagang)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #cbd5e1;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #64748b;"></span> LIBUR / TUTUP
+                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #cbd5e1;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #64748b;"></span> Libur
                                 </span>
                             @else
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fee2e2; color: #b91c1c; font-size: 0.75rem; font-weight: 800; padding: 5px 14px; border-radius: 999px; border: 1px solid #fca5a5;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #dc2626;"></span> BELUM BAYAR
+                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fef2f2; color: #b91c1c; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #fecaca;">
+                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #ef4444;"></span> Belum Bayar
                                 </span>
                             @endif
                         </td>
 
                         <!-- Aksi Pembayaran -->
-                        <td style="padding: 16px 18px; vertical-align: top; text-align: right;">
-                            <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
-                                <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ $tgh->nominal_tagihan - $tgh->nominal_dibayar }}')" style="border-radius: 8px; font-weight: 700; padding: 7px 14px; font-size: 0.8125rem; {{ $isLunas ? 'background: #0284c7; border-color: #0284c7;' : '' }}">
-                                    {{ $isLunas ? '✏️ Edit Transaksi' : '💵 Bayar Sekarang' }}
-                                </button>
-                                @if (!$isLunas)
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 8px; padding: 7px 10px; font-size: 0.75rem; color: #475569; font-weight: 600; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Alasan Tidak Berdagang / Toko Tutup">
-                                        ❌ Tidak Berdagang
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: right;">
+                            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+                                @if ($isLunas)
+                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ $tgh->nominal_tagihan - $tgh->nominal_dibayar }}')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff;">
+                                        ✏️ Edit
+                                    </button>
+                                @else
+                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ $tgh->nominal_tagihan - $tgh->nominal_dibayar }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2);">
+                                        💵 Bayar
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 6px; padding: 5px 8px; font-size: 0.725rem; color: #64748b; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Lapak Tutup / Libur">
+                                        Tutup
                                     </button>
                                 @endif
                             </div>
