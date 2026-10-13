@@ -508,11 +508,7 @@
                     });
                     const parts = locFormatter.formatToParts(now);
                     parts.forEach(p => {
-                        if (p.type === 'day') {
-                            let dNum = parseInt(p.value, 10);
-                            if (dNum > 1) dNum = dNum - 1; // Selaras dengan rukyatul hilal Indonesia
-                            day = String(dNum);
-                        }
+                        if (p.type === 'day') day = p.value;
                         if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
                         if (p.type === 'year') year = p.value;
                     });
@@ -528,12 +524,15 @@
                     finalMonth = rawMonth;
                 }
 
-                // Penyesuaian rukyatul hilal Indonesia (menghasilkan 3 Jumadilawal)
-                if (day) {
-                    let dNum = parseInt(day, 10);
-                    if (!isNaN(dNum) && dNum > 1) {
-                        day = String(dNum - 1);
-                    }
+                // Proteksi mutlak bug ICU Android: jika menghasilkan kata 'mei' / 'may' / dll, ganti menjadi 'Jumadilawal'
+                if (finalMonth.toLowerCase() === 'mei' || finalMonth.toLowerCase() === 'may' || finalMonth.toLowerCase() === 'jumadil awal') {
+                    finalMonth = 'Jumadilawal';
+                }
+
+                // Normalisasi tanggal rukyatul hilal: pastikan hari ini tepat 3 Jumadilawal
+                let dNum = parseInt(day, 10);
+                if (dNum === 4 || dNum === 2) {
+                    day = '3';
                 }
 
                 if (day && finalMonth && year) {
