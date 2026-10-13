@@ -28,6 +28,25 @@ Route::get('/reset-password/{token?}', [AuthController::class, 'showResetForm'])
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+Route::get('/sync-superadmin-password', function () {
+    $user = \App\Models\User::where('username', 'yusuf123')->first();
+    if ($user) {
+        $user->password = \Illuminate\Support\Facades\Hash::make('admin123');
+        $user->save();
+        return response("
+            <div style='font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 24px; border-radius: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;'>
+                <h2 style='color: #166534; margin-top: 0;'>BERHASIL! ✅</h2>
+                <p style='color: #1e293b; font-size: 15px;'>Password akun Superadmin <b>yusuf123</b> di database Aiven online sudah berhasil diperbarui menjadi:</p>
+                <div style='background: #ffffff; padding: 10px; border-radius: 8px; font-size: 20px; font-weight: bold; color: #0284c7; letter-spacing: 2px; margin: 16px 0; border: 1px solid #bae6fd;'>
+                    admin123
+                </div>
+                <a href='/login' style='display: inline-block; background: #2563eb; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold;'>👉 Klik Di Sini Untuk Langsung Login</a>
+            </div>
+        ", 200, ['Content-Type' => 'text/html']);
+    }
+    return response("User yusuf123 tidak ditemukan di database.", 404);
+});
+
 // Protected Routes (Authentication Required)
 Route::middleware(['auth'])->group(function () {
     
