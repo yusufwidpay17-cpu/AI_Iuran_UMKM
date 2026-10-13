@@ -101,23 +101,6 @@
             </nav>
             
             <div class="sidebar-footer">
-                <!-- Live Admin Clock Widget -->
-                <div style="background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: var(--radius-md); padding: 8px 10px; margin-bottom: 10px; text-align: center;">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 0.6875rem; font-weight: 700; color: var(--outline); text-transform: uppercase; letter-spacing: 0.04em;">
-                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <span>WAKTU LOKAL ADMIN</span>
-                    </div>
-                    <div style="font-size: 1.15rem; font-weight: 800; color: var(--primary); font-family: 'Inter', monospace; line-height: 1.2; margin-top: 2px;">
-                        <span class="live-admin-time">00:00:00</span>
-                        <span class="live-admin-tz" style="font-size: 0.7rem; font-weight: 700; color: var(--on-surface-variant); margin-left: 2px;">WIB</span>
-                    </div>
-                    <div class="live-admin-date" style="font-size: 0.6875rem; font-weight: 600; color: var(--on-surface-variant); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        --
-                    </div>
-                </div>
-
                 <!-- Theme Toggle Row -->
                 <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 10px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.03em;">MODETEMA</span>

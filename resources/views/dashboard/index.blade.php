@@ -76,7 +76,98 @@
     </div>
 </div>
 
-<!-- 1. COMPACT STATS GRID (10 Key Operational Indicators) -->
+<!-- WIDGET WAKTU, KALENDER & JADWAL SHOLAT (STYLE PORTAL UNUJA) -->
+<div class="dashboard-prayer-widget" id="dashboard-prayer-widget">
+    <!-- Header: Ucapan Salam, Motivasi & Cuaca -->
+    <div class="dpw-header" id="dpw-header">
+        <div class="dpw-greeting-box">
+            <div class="dpw-greeting-icon" id="dpw-greeting-icon">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 class="dpw-greeting-title" id="dpw-greeting-title">Selamat Siang</h3>
+                <p class="dpw-greeting-sub" id="dpw-greeting-sub">Tetap fokus dan penuh semangat</p>
+            </div>
+        </div>
+        <div class="dpw-weather-box">
+            <div class="dpw-weather-temp" id="dpw-weather-temp">32°C</div>
+            <div class="dpw-weather-cond">
+                <span id="dpw-weather-text">Berawan</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Body: Jam Digital, Tanggal Masehi & Hijriah, dan Jadwal Sholat -->
+    <div class="dpw-body">
+        <div class="dpw-clock-wrapper">
+            <div class="dpw-digital-clock" id="dpw-digital-clock">
+                <span class="dpw-digit" id="dpw-hours">--</span>
+                <span class="dpw-colon">:</span>
+                <span class="dpw-digit" id="dpw-minutes">--</span>
+                <span class="dpw-colon">:</span>
+                <span class="dpw-digit" id="dpw-seconds">--</span>
+            </div>
+            <div class="dpw-date-masehi" id="dpw-date-masehi">
+                {{ \Carbon\Carbon::today()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+            </div>
+            <div class="dpw-date-hijri" id="dpw-date-hijri">
+                <span class="dpw-crescent">☾</span> <span id="dpw-hijri-text">2 Jumadil Awal 1448 H</span>
+            </div>
+        </div>
+
+        <!-- Jadwal Sholat Probolinggo -->
+        <div class="dpw-prayer-section">
+            <div class="dpw-prayer-head">
+                <div class="dpw-prayer-location">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    <span>Jadwal sholat Probolinggo</span>
+                </div>
+                <div class="dpw-prayer-source">myquran.com</div>
+            </div>
+
+            <div class="dpw-prayer-grid" id="dpw-prayer-grid">
+                <div class="dpw-prayer-item" data-prayer="imsak">
+                    <span class="dpw-prayer-name">Imsak</span>
+                    <span class="dpw-prayer-time" id="sholat-imsak">03:39</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="subuh">
+                    <span class="dpw-prayer-name">Subuh</span>
+                    <span class="dpw-prayer-time" id="sholat-subuh">03:49</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="terbit">
+                    <span class="dpw-prayer-name">Terbit</span>
+                    <span class="dpw-prayer-time" id="sholat-terbit">05:02</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="dhuha">
+                    <span class="dpw-prayer-name">Dhuha</span>
+                    <span class="dpw-prayer-time" id="sholat-dhuha">05:29</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="dzuhur">
+                    <span class="dpw-prayer-name">Dzuhur</span>
+                    <span class="dpw-prayer-time" id="sholat-dzuhur">11:16</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="ashar">
+                    <span class="dpw-prayer-name">Ashar</span>
+                    <span class="dpw-prayer-time" id="sholat-ashar">14:17</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="maghrib">
+                    <span class="dpw-prayer-name">Maghrib</span>
+                    <span class="dpw-prayer-time" id="sholat-maghrib">17:23</span>
+                </div>
+                <div class="dpw-prayer-item" data-prayer="isya">
+                    <span class="dpw-prayer-name">Isya</span>
+                    <span class="dpw-prayer-time" id="sholat-isya">18:33</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="stats-grid">
     <!-- Total Pedagang -->
     <div class="stat-card">
@@ -524,5 +615,239 @@
     function closeBayarModal() {
         document.getElementById('modal-quick-bayar').classList.remove('active');
     }
+
+    /* ====================================================================
+       DASHBOARD WIDGET: JAM REALTIME, SALAM DINAMIS, CUACA & JADWAL SHOLAT
+       ==================================================================== */
+    function initDashboardPrayerWidget() {
+        const hoursEl = document.getElementById('dpw-hours');
+        const minutesEl = document.getElementById('dpw-minutes');
+        const secondsEl = document.getElementById('dpw-seconds');
+        const greetingTitle = document.getElementById('dpw-greeting-title');
+        const greetingSub = document.getElementById('dpw-greeting-sub');
+        const greetingIcon = document.getElementById('dpw-greeting-icon');
+        const headerEl = document.getElementById('dpw-header');
+        const hijriText = document.getElementById('dpw-hijri-text');
+        const weatherTemp = document.getElementById('dpw-weather-temp');
+        const weatherText = document.getElementById('dpw-weather-text');
+
+        if (!hoursEl) return;
+
+        // 1. Live Clock & Dynamic Greeting
+        function updateClockAndGreeting() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+
+            hoursEl.textContent = String(h).padStart(2, '0');
+            minutesEl.textContent = String(m).padStart(2, '0');
+            secondsEl.textContent = String(s).padStart(2, '0');
+
+            // Dynamic Greeting & Theme
+            let title = 'Selamat Siang';
+            let sub = 'Tetap fokus dan penuh semangat';
+            let theme = 'theme-siang';
+            let iconSvg = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>';
+
+            if (h >= 4 && h < 11) {
+                title = 'Selamat Pagi';
+                sub = 'Awali hari dengan niat baik & bismillah';
+                theme = 'theme-pagi';
+                iconSvg = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>';
+            } else if (h >= 11 && h < 15) {
+                title = 'Selamat Siang';
+                sub = 'Tetap fokus dan penuh semangat';
+                theme = 'theme-siang';
+            } else if (h >= 15 && h < 18) {
+                title = 'Selamat Sore';
+                sub = 'Evaluasi pencapaian & rapikan penarikan';
+                theme = 'theme-sore';
+                iconSvg = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            } else {
+                title = 'Selamat Malam';
+                sub = 'Waktu rehat berkah bersama keluarga';
+                theme = 'theme-malam';
+                iconSvg = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>';
+            }
+
+            if (greetingTitle && greetingTitle.textContent !== title) {
+                greetingTitle.textContent = title;
+                greetingSub.textContent = sub;
+                greetingIcon.innerHTML = iconSvg;
+                headerEl.className = 'dpw-header ' + theme;
+            }
+
+            updateActivePrayer(h, m);
+        }
+
+        // 2. Hijri Calendar Date
+        function updateHijriDate() {
+            try {
+                const now = new Date();
+                const formatter = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                const parts = formatter.formatToParts(now);
+                let day = '', month = '', year = '';
+                parts.forEach(p => {
+                    if (p.type === 'day') day = p.value;
+                    if (p.type === 'month') month = p.value;
+                    if (p.type === 'year') year = p.value;
+                });
+                
+                const monthMap = {
+                    'Muharram': 'Muharram', 'Safar': 'Safar',
+                    'Rabiʻ I': 'Rabiul Awal', 'Rabiʻ II': 'Rabiul Akhir',
+                    'Jumada I': 'Jumadil Awal', 'Jumada II': 'Jumadil Akhir',
+                    'Rajab': 'Rajab', 'Shaʻban': 'Sya\'ban',
+                    'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal',
+                    'Dhuʻl-Qiʻdah': 'Dzulqa\'dah', 'Dhuʻl-Hijjah': 'Dzulhijjah',
+                    'Jumadil Ula': 'Jumadil Awal', 'Jumadil Akhirah': 'Jumadil Akhir'
+                };
+                const indonesianMonth = monthMap[month] || month;
+                if (day && indonesianMonth && year) {
+                    hijriText.textContent = `${day} ${indonesianMonth} ${year} H`;
+                }
+            } catch(e) {}
+        }
+
+        // 3. Highlight Active Prayer Time Pill
+        function updateActivePrayer(h, m) {
+            const currentTotalMin = (h * 60) + m;
+            const prayers = ['imsak', 'subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'];
+            let activePrayer = 'isya';
+
+            const prayerMinutes = {};
+            prayers.forEach(p => {
+                const el = document.getElementById('sholat-' + p);
+                if (el) {
+                    const parts = el.textContent.trim().split(':');
+                    if (parts.length === 2) {
+                        prayerMinutes[p] = (parseInt(parts[0], 10) * 60) + parseInt(parts[1], 10);
+                    }
+                }
+            });
+
+            if (prayerMinutes['imsak'] !== undefined && currentTotalMin < prayerMinutes['subuh']) {
+                activePrayer = currentTotalMin >= prayerMinutes['imsak'] ? 'imsak' : 'isya';
+            } else if (currentTotalMin < prayerMinutes['terbit']) {
+                activePrayer = 'subuh';
+            } else if (currentTotalMin < prayerMinutes['dhuha']) {
+                activePrayer = 'terbit';
+            } else if (currentTotalMin < prayerMinutes['dzuhur']) {
+                activePrayer = 'dhuha';
+            } else if (currentTotalMin < prayerMinutes['ashar']) {
+                activePrayer = 'dzuhur';
+            } else if (currentTotalMin < prayerMinutes['maghrib']) {
+                activePrayer = 'ashar';
+            } else if (currentTotalMin < prayerMinutes['isya']) {
+                activePrayer = 'maghrib';
+            } else {
+                activePrayer = 'isya';
+            }
+
+            document.querySelectorAll('.dpw-prayer-item').forEach(item => {
+                if (item.getAttribute('data-prayer') === activePrayer) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // 4. Fetch Prayer Times from MyQuran API (Kab. Probolinggo id 1622)
+        function fetchPrayerTimes() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            const cacheKey = `myquran_sholat_${y}_${m}_${d}`;
+            
+            const cached = localStorage.getItem(cacheKey);
+            if (cached) {
+                try {
+                    applyPrayerData(JSON.parse(cached));
+                    return;
+                } catch(e) {}
+            }
+
+            fetch(`https://api.myquran.com/v2/sholat/jadwal/1622/${y}/${m}/${d}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.status && data.data && data.data.jadwal) {
+                        localStorage.setItem(cacheKey, JSON.stringify(data.data.jadwal));
+                        applyPrayerData(data.data.jadwal);
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function applyPrayerData(jadwal) {
+            ['imsak', 'subuh', 'terbit', 'dhuha', 'dzuhur', 'ashar', 'maghrib', 'isya'].forEach(p => {
+                const el = document.getElementById('sholat-' + p);
+                if (el && jadwal[p]) {
+                    el.textContent = jadwal[p];
+                }
+            });
+            const now = new Date();
+            updateActivePrayer(now.getHours(), now.getMinutes());
+        }
+
+        // 5. Fetch Weather from Open-Meteo for Probolinggo
+        function fetchWeather() {
+            const weatherCacheKey = 'openmeteo_weather_probolinggo';
+            const cachedWeather = localStorage.getItem(weatherCacheKey);
+            const nowTime = Date.now();
+            
+            if (cachedWeather) {
+                try {
+                    const parsed = JSON.parse(cachedWeather);
+                    if (nowTime - parsed.timestamp < 3600000) {
+                        if (weatherTemp) weatherTemp.textContent = parsed.temp;
+                        if (weatherText) weatherText.textContent = parsed.desc;
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            fetch('https://api.open-meteo.com/v1/forecast?latitude=-7.75&longitude=113.42&current=temperature_2m,weather_code&timezone=Asia%2FJakarta')
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.current) {
+                        const temp = Math.round(data.current.temperature_2m) + '°C';
+                        const code = data.current.weather_code;
+                        let desc = 'Cerah';
+                        if (code >= 1 && code <= 3) desc = 'Berawan';
+                        else if (code >= 45 && code <= 48) desc = 'Berkabut';
+                        else if (code >= 51 && code <= 67) desc = 'Hujan';
+                        else if (code >= 80 && code <= 82) desc = 'Hujan Deras';
+                        else if (code >= 95) desc = 'Hujan Petir';
+
+                        if (weatherTemp) weatherTemp.textContent = temp;
+                        if (weatherText) weatherText.textContent = desc;
+
+                        localStorage.setItem(weatherCacheKey, JSON.stringify({
+                            temp: temp,
+                            desc: desc,
+                            timestamp: nowTime
+                        }));
+                    }
+                })
+                .catch(() => {});
+        }
+
+        updateClockAndGreeting();
+        updateHijriDate();
+        fetchPrayerTimes();
+        fetchWeather();
+        setInterval(updateClockAndGreeting, 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initDashboardPrayerWidget();
+    });
 </script>
 @endsection

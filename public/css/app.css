@@ -1591,3 +1591,319 @@ a:hover {
         padding: 8px 12px;
     }
 }
+
+/* ====================================================================
+   DASHBOARD WIDGET: WAKTU, KALENDER & JADWAL SHOLAT (STYLE PORTAL UNUJA)
+   ==================================================================== */
+.dashboard-prayer-widget {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-xl);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-prayer-widget:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.dpw-header {
+    background: linear-gradient(135deg, #a03c15 0%, #c0491e 50%, #7c2d0b 100%);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #ffffff;
+    transition: background 0.4s ease;
+}
+
+.dpw-header.theme-pagi {
+    background: linear-gradient(135deg, #0369a1 0%, #0284c7 50%, #075985 100%);
+}
+.dpw-header.theme-siang {
+    background: linear-gradient(135deg, #a03c15 0%, #c0491e 50%, #7c2d0b 100%);
+}
+.dpw-header.theme-sore {
+    background: linear-gradient(135deg, #b45309 0%, #d97706 50%, #92400e 100%);
+}
+.dpw-header.theme-malam {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #0f172a 100%);
+}
+
+.dpw-greeting-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dpw-greeting-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+}
+
+.dpw-greeting-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.dpw-greeting-sub {
+    font-size: 0.8rem;
+    margin: 3px 0 0 0;
+    opacity: 0.92;
+    color: #ffffff;
+}
+
+.dpw-weather-box {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.dpw-weather-temp {
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #ffffff;
+}
+
+.dpw-weather-cond {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dpw-body {
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.dpw-clock-wrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0 2px 0;
+}
+
+.dpw-digital-clock {
+    font-family: 'Inter', monospace;
+    font-size: 2.75rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: var(--on-surface);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dpw-digit {
+    min-width: 52px;
+    display: inline-block;
+    text-align: center;
+}
+
+.dpw-colon {
+    color: var(--outline);
+    animation: dpwBlink 1s infinite;
+}
+
+@keyframes dpwBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+}
+
+.dpw-date-masehi {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--on-surface);
+    margin-top: 8px;
+}
+
+.dpw-date-hijri {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: var(--on-surface-variant);
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.dpw-date-hijri .dpw-crescent {
+    color: var(--tertiary);
+    font-size: 0.95rem;
+}
+
+.dpw-prayer-section {
+    border-top: 1px solid var(--outline-variant);
+    padding-top: 14px;
+}
+
+.dpw-prayer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+}
+
+.dpw-prayer-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--on-surface);
+}
+
+.dpw-prayer-source {
+    font-size: 0.75rem;
+    color: var(--outline);
+    font-weight: 500;
+}
+
+.dpw-prayer-grid {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.dpw-prayer-item {
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-md);
+    padding: 8px 4px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: all 0.2s ease;
+}
+
+.dpw-prayer-name {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--on-surface-variant);
+    letter-spacing: 0.02em;
+}
+
+.dpw-prayer-time {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--on-surface);
+}
+
+/* Active Highlight Pill */
+.dpw-prayer-item.active {
+    background: #0f172a !important;
+    border-color: #0f172a !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.28);
+    transform: translateY(-2px);
+}
+
+.dpw-prayer-item.active .dpw-prayer-name {
+    color: #cbd5e1 !important;
+}
+
+.dpw-prayer-item.active .dpw-prayer-time {
+    color: #ffffff !important;
+    font-weight: 800;
+}
+
+[data-theme="dark"] .dpw-prayer-item.active {
+    background: #38bdf8 !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+}
+
+[data-theme="dark"] .dpw-prayer-item.active .dpw-prayer-name {
+    color: #032b44 !important;
+    font-weight: 600;
+}
+
+[data-theme="dark"] .dpw-prayer-item.active .dpw-prayer-time {
+    color: #0b1528 !important;
+    font-weight: 800;
+}
+
+/* Responsive Breakpoints for Prayer Widget */
+@media (max-width: 992px) {
+    .dpw-prayer-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+    }
+}
+
+@media (max-width: 640px) {
+    .dpw-header {
+        padding: 12px 14px;
+    }
+    .dpw-greeting-title {
+        font-size: 1rem;
+    }
+    .dpw-greeting-sub {
+        font-size: 0.75rem;
+    }
+    .dpw-weather-temp {
+        font-size: 1.15rem;
+    }
+    .dpw-digital-clock {
+        font-size: 2.1rem;
+        letter-spacing: 2px;
+    }
+    .dpw-digit {
+        min-width: 40px;
+    }
+    .dpw-body {
+        padding: 14px;
+        gap: 14px;
+    }
+    .dpw-prayer-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+    }
+    .dpw-prayer-item {
+        padding: 6px 3px;
+    }
+    .dpw-prayer-name {
+        font-size: 0.68rem;
+    }
+    .dpw-prayer-time {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .dpw-digital-clock {
+        font-size: 1.7rem;
+    }
+    .dpw-digit {
+        min-width: 32px;
+    }
+    .dpw-prayer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
