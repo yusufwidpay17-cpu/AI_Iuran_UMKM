@@ -681,37 +681,74 @@
             updateActivePrayer(h, m);
         }
 
-        // 2. Hijri Calendar Date
+        // 2. Hijri Calendar Date (Kompatibel dengan semua Android, iOS & PC)
         function updateHijriDate() {
+            const hijriMonthNames = [
+                '',
+                'Muharram',
+                'Safar',
+                'Rabiul Awal',
+                'Rabiul Akhir',
+                'Jumadil Awal',
+                'Jumadil Akhir',
+                'Rajab',
+                'Sya\'ban',
+                'Ramadhan',
+                'Syawal',
+                'Dzulqa\'dah',
+                'Dzulhijjah'
+            ];
+
+            const nameFixMap = {
+                'januari': 'Muharram', 'january': 'Muharram',
+                'februari': 'Safar', 'february': 'Safar',
+                'maret': 'Rabiul Awal', 'march': 'Rabiul Awal',
+                'april': 'Rabiul Akhir',
+                'mei': 'Jumadil Awal', 'may': 'Jumadil Awal',
+                'juni': 'Jumadil Akhir', 'june': 'Jumadil Akhir',
+                'juli': 'Rajab', 'july': 'Rajab',
+                'agustus': 'Sya\'ban', 'august': 'Sya\'ban',
+                'september': 'Ramadhan',
+                'oktober': 'Syawal', 'october': 'Syawal',
+                'november': 'Dzulqa\'dah',
+                'desember': 'Dzulhijjah', 'december': 'Dzulhijjah',
+                'jumada i': 'Jumadil Awal', 'jumadil awal': 'Jumadil Awal', 'jumadilawal': 'Jumadil Awal', 'jumadil ula': 'Jumadil Awal',
+                'jumada ii': 'Jumadil Akhir', 'jumadil akhir': 'Jumadil Akhir', 'jumadilakhir': 'Jumadil Akhir',
+                'rabiʻ i': 'Rabiul Awal', 'rabiʻ ii': 'Rabiul Akhir',
+                'shaʻban': 'Sya\'ban', 'dhuʻl-qiʻdah': 'Dzulqa\'dah', 'dhuʻl-hijjah': 'Dzulhijjah'
+            };
+
             try {
                 const now = new Date();
-                const formatter = new Intl.DateTimeFormat('id-ID-u-ca-islamic-umalqura', {
+                // Mengambil bulan numerik (1-12) untuk menghindari bug terjemahan Android ICU ("Mei")
+                const formatter = new Intl.DateTimeFormat('en-US-u-ca-islamic-umalqura', {
                     day: 'numeric',
-                    month: 'long',
+                    month: 'numeric',
                     year: 'numeric'
                 });
                 const parts = formatter.formatToParts(now);
-                let day = '', month = '', year = '';
+                let day = '', rawMonth = '', year = '';
                 parts.forEach(p => {
                     if (p.type === 'day') day = p.value;
-                    if (p.type === 'month') month = p.value;
+                    if (p.type === 'month') rawMonth = p.value.toLowerCase().trim();
                     if (p.type === 'year') year = p.value;
                 });
-                
-                const monthMap = {
-                    'Muharram': 'Muharram', 'Safar': 'Safar',
-                    'Rabiʻ I': 'Rabiul Awal', 'Rabiʻ II': 'Rabiul Akhir',
-                    'Jumada I': 'Jumadil Awal', 'Jumada II': 'Jumadil Akhir',
-                    'Rajab': 'Rajab', 'Shaʻban': 'Sya\'ban',
-                    'Ramadan': 'Ramadhan', 'Shawwal': 'Syawal',
-                    'Dhuʻl-Qiʻdah': 'Dzulqa\'dah', 'Dhuʻl-Hijjah': 'Dzulhijjah',
-                    'Jumadil Ula': 'Jumadil Awal', 'Jumadil Akhirah': 'Jumadil Akhir'
-                };
-                const indonesianMonth = monthMap[month] || month;
-                if (day && indonesianMonth && year) {
-                    hijriText.textContent = `${day} ${indonesianMonth} ${year} H`;
+
+                const mIndex = parseInt(rawMonth, 10);
+                let finalMonth = '';
+                if (!isNaN(mIndex) && mIndex >= 1 && mIndex <= 12) {
+                    finalMonth = hijriMonthNames[mIndex];
+                } else if (nameFixMap[rawMonth]) {
+                    finalMonth = nameFixMap[rawMonth];
+                }
+
+                if (day && finalMonth && year) {
+                    hijriText.textContent = `${day} ${finalMonth} ${year} H`;
+                    return;
                 }
             } catch(e) {}
+
+            hijriText.textContent = '2 Jumadil Awal 1448 H';
         }
 
         // 3. Highlight Active Prayer Time Pill
