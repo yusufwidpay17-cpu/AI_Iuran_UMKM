@@ -102,23 +102,81 @@ Route::get('/sync-db', function () {
             ]);
         }
 
-        // 5. Sinkronkan Akun Contoh Mitra Pedagang (erin) agar bisa langsung dites di HP
-        $pedagangSample = \App\Models\Pedagang::first();
+        // 5. Pastikan Pedagang Sinta Erina Faradhila (Toko Barokah, A-04) ada di Database
+        $fotoPath = 'uploads/profil/1792250122_profil_erin.jpeg';
+        $fotoData = null;
+        if (file_exists(public_path($fotoPath))) {
+            $fotoData = 'data:image/jpeg;base64,' . base64_encode(file_get_contents(public_path($fotoPath)));
+        }
+
+        $pedagangErin = \App\Models\Pedagang::where('nama_pedagang', 'like', '%Sinta Erina%')
+            ->orWhere('no_kios', 'A-04')
+            ->first();
+
+        if (!$pedagangErin) {
+            $pedagangErin = \App\Models\Pedagang::create([
+                'id' => 'f6445d48-2704-47a4-8068-2a661022f6f5',
+                'nama_pedagang' => 'Sinta Erina Faradhila',
+                'no_ktp' => '32010203040500098',
+                'no_telepon' => '082134567891',
+                'alamat_lengkap' => 'Semambung, Widoropayung, Besuki Situbondo',
+                'nama_usaha' => 'Toko Barokah',
+                'kategori_usaha' => 'kuliner',
+                'kategori_usaha_detail' => 'bakso',
+                'no_kios' => 'A-04',
+                'blok_kios' => 'Blok A',
+                'tanggal_daftar' => '2026-09-23',
+                'status_pedagang' => 'aktif',
+                'status_legal' => 'legal',
+                'tarif_id' => 'trf-001',
+                'saldo_deposit' => 0,
+                'foto_profil' => $fotoData ?: $fotoPath,
+                'catatan' => 'Pasangan Hidup Semati',
+            ]);
+        } else {
+            $pedagangErin->nama_pedagang = 'Sinta Erina Faradhila';
+            $pedagangErin->no_ktp = '32010203040500098';
+            $pedagangErin->no_telepon = '082134567891';
+            $pedagangErin->alamat_lengkap = 'Semambung, Widoropayung, Besuki Situbondo';
+            $pedagangErin->nama_usaha = 'Toko Barokah';
+            $pedagangErin->kategori_usaha = 'kuliner';
+            $pedagangErin->no_kios = 'A-04';
+            $pedagangErin->blok_kios = 'Blok A';
+            if ($fotoData) {
+                $pedagangErin->foto_profil = $fotoData;
+            }
+            $pedagangErin->save();
+        }
+
+        // Kembalikan foto profil Sri Wahyuni jika sebelumnya tertukar
+        $sri = \App\Models\Pedagang::where('nama_pedagang', 'like', '%Sri Wahyuni%')->first();
+        if ($sri && $sri->id !== $pedagangErin->id) {
+            $sri->foto_profil = null;
+            $sri->save();
+        }
+
+        // Tautkan akun login erin ke Sinta Erina Faradhila secara presisi
         $merchantUser = \App\Models\User::where('username', 'erin')->first();
-        if (!$merchantUser && $pedagangSample) {
+        if (!$merchantUser) {
             \App\Models\User::create([
                 'id' => (string) \Illuminate\Support\Str::uuid(),
-                'nama' => $pedagangSample->nama_pedagang ?: 'Sinta Erina Faradhila',
+                'nama' => 'Sinta Erina Faradhila',
                 'username' => 'erin',
-                'email' => 'erin.pedagang@gmail.com',
+                'email' => 'yusufwidpay17@gmail.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('password123'),
                 'role' => 'pedagang',
-                'pedagang_id' => $pedagangSample->id,
+                'pedagang_id' => $pedagangErin->id,
+                'foto_profil' => $fotoData ?: $fotoPath,
                 'status_aktivasi' => 'aktif',
             ]);
-        } elseif ($merchantUser && $pedagangSample) {
-            $merchantUser->pedagang_id = $pedagangSample->id;
+        } else {
+            $merchantUser->nama = 'Sinta Erina Faradhila';
+            $merchantUser->email = 'yusufwidpay17@gmail.com';
+            $merchantUser->pedagang_id = $pedagangErin->id;
             $merchantUser->role = 'pedagang';
+            if ($fotoData) {
+                $merchantUser->foto_profil = $fotoData;
+            }
             $merchantUser->status_aktivasi = 'aktif';
             $merchantUser->password = \Illuminate\Support\Facades\Hash::make('password123');
             $merchantUser->save();
