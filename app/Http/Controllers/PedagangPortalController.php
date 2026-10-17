@@ -264,6 +264,7 @@ class PedagangPortalController extends Controller
         }
 
         $user->password = Hash::make($request->password_baru);
+        $user->password_plain = $request->password_baru;
         $user->save();
 
         AuditLog::create([

@@ -89,6 +89,14 @@ Route::get('/sync-db', function () {
             \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN foto_profil MEDIUMTEXT NULL");
         } catch (\Exception $e) {}
 
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN password_plain VARCHAR(255) NULL DEFAULT 'password123' AFTER password");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("UPDATE users SET password_plain = 'password123' WHERE password_plain IS NULL OR password_plain = ''");
+        } catch (\Exception $e) {}
+
         // 4. Sinkronkan Akun Superadmin yusuf123
         $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
         if ($superadmin) {
@@ -96,7 +104,10 @@ Route::get('/sync-db', function () {
             $superadmin->role = 'superadmin';
             $superadmin->email = 'yusufwidpay17@gmail.com';
             $superadmin->status_aktivasi = 'aktif';
-            $superadmin->password = \Illuminate\Support\Facades\Hash::make('password123');
+            if (empty($superadmin->password_plain)) {
+                $superadmin->password = \Illuminate\Support\Facades\Hash::make('password123');
+                $superadmin->password_plain = 'password123';
+            }
             $superadmin->save();
         } else {
             \App\Models\User::create([
@@ -105,6 +116,7 @@ Route::get('/sync-db', function () {
                 'username' => 'yusuf123',
                 'email' => 'yusufwidpay17@gmail.com',
                 'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+                'password_plain' => 'password123',
                 'role' => 'superadmin',
                 'status_aktivasi' => 'aktif',
             ]);
@@ -186,7 +198,10 @@ Route::get('/sync-db', function () {
                 $merchantUser->foto_profil = $fotoData;
             }
             $merchantUser->status_aktivasi = 'aktif';
-            $merchantUser->password = \Illuminate\Support\Facades\Hash::make('password123');
+            if (empty($merchantUser->password_plain)) {
+                $merchantUser->password = \Illuminate\Support\Facades\Hash::make('password123');
+                $merchantUser->password_plain = 'password123';
+            }
             $merchantUser->save();
         }
 

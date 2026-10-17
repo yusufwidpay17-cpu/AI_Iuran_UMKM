@@ -239,7 +239,7 @@
                         <td style="padding: 14px 16px; vertical-align: middle; text-align: center;">
                             @if($pdg->user)
                                 <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
-                                    <button type="button" class="btn btn-outline btn-sm" onclick="bukaModalResetPassword('{{ $pdg->user->id }}', '{{ addslashes($pdg->nama_pedagang) }}', '{{ $pdg->user->username }}')" style="padding: 4px 8px; font-size: 0.75rem; border-color: #f59e0b; color: #b45309;" title="Ganti/Reset Kata Sandi Pedagang">
+                                    <button type="button" class="btn btn-outline btn-sm" onclick="bukaModalResetPassword('{{ $pdg->user->id }}', '{{ addslashes($pdg->nama_pedagang) }}', '{{ $pdg->user->username }}', '{{ addslashes($pdg->user->password_plain ?? 'password123') }}')" style="padding: 4px 8px; font-size: 0.75rem; border-color: #f59e0b; color: #b45309;" title="Ganti/Reset Kata Sandi Pedagang">
                                         🔑 Sandi
                                     </button>
                                     <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $pdg->user->id }}', '{{ addslashes($pdg->user->nama) }}', '{{ $pdg->user->username }}', '{{ $pdg->user->email }}', 'pedagang', '{{ $pdg->id }}', '{{ $pdg->user->status_aktivasi ?? 'aktif' }}')" style="padding: 4px 8px; font-size: 0.75rem;">
@@ -323,7 +323,7 @@
                         </td>
                         <td style="padding: 16px; vertical-align: middle; text-align: center;">
                             <div style="display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;">
-                                <button type="button" class="btn btn-outline btn-sm" onclick="bukaModalResetPassword('{{ $user->id }}', '{{ addslashes($user->nama) }}', '{{ $user->username }}')" style="padding: 4px 8px; font-size: 0.75rem; border-color: #f59e0b; color: #b45309;" title="Ganti Kata Sandi">
+                                <button type="button" class="btn btn-outline btn-sm" onclick="bukaModalResetPassword('{{ $user->id }}', '{{ addslashes($user->nama) }}', '{{ $user->username }}', '{{ addslashes($user->password_plain ?? 'password123') }}')" style="padding: 4px 8px; font-size: 0.75rem; border-color: #f59e0b; color: #b45309;" title="Ganti Kata Sandi">
                                     🔑 Sandi
                                 </button>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="editUser('{{ $user->id }}', '{{ addslashes($user->nama) }}', '{{ $user->username }}', '{{ $user->email }}', '{{ $user->role }}', '', '{{ $user->status_aktivasi ?? 'aktif' }}')" style="padding: 4px 10px; font-size: 0.75rem;">
@@ -796,12 +796,12 @@
     }
 
     // Modal Reset Password Cepat
-    function bukaModalResetPassword(userId, nama, username) {
+    function bukaModalResetPassword(userId, nama, username, currentPassword) {
         document.getElementById('modalResetPassword').style.display = 'flex';
         document.getElementById('reset_user_nama').textContent = nama;
         document.getElementById('reset_user_username').textContent = username;
         document.getElementById('formResetPassword').action = "{{ url('pengguna') }}/" + userId + "/reset-password";
-        document.getElementById('input_reset_password').value = 'password123';
+        document.getElementById('input_reset_password').value = currentPassword || 'password123';
         document.getElementById('input_reset_password').type = 'text';
         const eye = document.getElementById('toggleResetEye');
         if (eye) eye.textContent = '👁️';

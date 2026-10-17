@@ -77,6 +77,7 @@ class PenggunaController extends Controller
             'username' => $username,
             'email' => $email,
             'password' => Hash::make($request->password),
+            'password_plain' => $request->password,
             'role' => 'pedagang',
             'pedagang_id' => $pedagang->id,
             'status_aktivasi' => 'aktif',
@@ -144,6 +145,7 @@ class PenggunaController extends Controller
         $user = User::findOrFail($id);
         $user->update([
             'password' => Hash::make($request->password),
+            'password_plain' => $request->password,
             'status_aktivasi' => 'aktif',
             'activation_token' => null,
             'activation_expires_at' => null,
@@ -207,11 +209,13 @@ class PenggunaController extends Controller
         if ($metode === 'aktivasi_email') {
             // Password acak sementara terkunci, menunggu user membuat password sendiri
             $userData['password'] = Hash::make(Str::random(32));
+            $userData['password_plain'] = 'Menunggu Aktivasi';
             $userData['status_aktivasi'] = 'pending';
             $userData['activation_token'] = $token;
             $userData['activation_expires_at'] = $expiresAt;
         } else {
             $userData['password'] = Hash::make($request->password);
+            $userData['password_plain'] = $request->password;
             $userData['status_aktivasi'] = 'aktif';
             $userData['activation_token'] = null;
             $userData['activation_expires_at'] = null;
@@ -346,6 +350,7 @@ class PenggunaController extends Controller
 
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
+            $data['password_plain'] = $request->password;
             // Jika admin mengisi password secara manual, set status aktif
             $data['status_aktivasi'] = 'aktif';
             $data['activation_token'] = null;

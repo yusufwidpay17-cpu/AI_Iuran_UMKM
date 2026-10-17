@@ -67,6 +67,7 @@ class AktivasiController extends Controller
         // Perbarui password dan aktifkan akun secara resmi
         $user->forceFill([
             'password' => Hash::make($request->password),
+            'password_plain' => $request->password,
             'status_aktivasi' => 'aktif',
             'activation_token' => null,
             'activation_expires_at' => null,
