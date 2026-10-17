@@ -337,7 +337,7 @@
                         <td style="padding: 12px 16px; vertical-align: middle; text-align: right;">
                             <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
                                 @if ($isLunas)
-                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ $tgh->nominal_tagihan - $tgh->nominal_dibayar }}')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff;">
+                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', 'lunas')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff;">
                                         ✏️ Edit
                                     </button>
                                 @elseif ($isBatal)
@@ -345,7 +345,7 @@
                                         Bebas Iuran
                                     </span>
                                 @else
-                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ $tgh->nominal_tagihan - $tgh->nominal_dibayar }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2);">
+                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', '{{ $isSebagian ? 'bayar_sebagian' : 'belum_bayar' }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2);">
                                         💵 Bayar
                                     </button>
                                     <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 6px; padding: 5px 8px; font-size: 0.725rem; color: #64748b; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Lapak Tutup / Libur">
@@ -491,6 +491,13 @@
                         <option value="belum_bayar">BELUM BAYAR</option>
                         <option value="bayar_sebagian">CICIL</option>
                     </select>
+                <div class="form-group" id="quick-bayar-mode-group" style="margin-bottom: 14px; display: none;">
+                    <label class="form-label" style="font-weight: 700;">Tipe Input Transaksi</label>
+                    <select name="mode_cicilan" id="quick-bayar-mode" class="form-select" style="border-radius: 8px; min-height: 42px;" onchange="handleModeCicilanChange()">
+                        <option value="tambah">➕ Tambah Cicilan Baru (Diakumulasikan)</option>
+                        <option value="koreksi">✏️ Koreksi Total Nominal Pembayaran</option>
+                    </select>
+                    <p id="quick-bayar-hint" style="font-size: 0.75rem; color: #0284c7; margin-top: 4px; font-weight: 600;"></p>
                 </div>
                 <!-- removed Nomor Struk input to use automatic generation -->
                 <div class="form-group" style="margin-bottom: 14px;">
@@ -569,14 +576,55 @@
         document.getElementById('modal-generate').classList.remove('active');
     }
 
-    function openBayarModal(tagihanId, namaPedagang, nominalTagihan, sisaNominal) {
+    let currentNominalSebelumnya = 0;
+    let currentSisaNominal = 0;
+    let currentNominalTagihan = 0;
+
+    function openBayarModal(tagihanId, namaPedagang, nominalTagihan, sisaNominal, nominalSebelumnya, currentStatus) {
         document.getElementById('quick-bayar-form').action = '/tagihan/' + tagihanId + '/bayar';
         document.getElementById('quick-bayar-pedagang').value = namaPedagang;
         
-        // Default to sisaNominal or 5000 if 0
-        const defaultVal = parseFloat(sisaNominal) > 0 ? parseFloat(sisaNominal) : (parseFloat(nominalTagihan) > 0 ? parseFloat(nominalTagihan) : 5000);
-        document.getElementById('quick-bayar-nominal').value = defaultVal;
+        currentNominalSebelumnya = parseFloat(nominalSebelumnya) || 0;
+        currentSisaNominal = parseFloat(sisaNominal) || 0;
+        currentNominalTagihan = parseFloat(nominalTagihan) || 0;
+
+        const modeGroup = document.getElementById('quick-bayar-mode-group');
+        const modeSelect = document.getElementById('quick-bayar-mode');
+        const hintEl = document.getElementById('quick-bayar-hint');
+        const statusSelect = document.querySelector('#quick-bayar-form select[name="status_pembayaran"]');
+
+        if (currentNominalSebelumnya > 0 && currentStatus !== 'lunas') {
+            modeGroup.style.display = 'block';
+            modeSelect.value = 'tambah';
+            hintEl.innerText = 'ℹ Tagihan ini telah terbayar Rp ' + currentNominalSebelumnya.toLocaleString('id-ID') + ' dari total Rp ' + currentNominalTagihan.toLocaleString('id-ID') + ' (Sisa: Rp ' + currentSisaNominal.toLocaleString('id-ID') + ').';
+            document.getElementById('quick-bayar-nominal').value = currentSisaNominal > 0 ? currentSisaNominal : currentNominalTagihan;
+            if (statusSelect) statusSelect.value = currentSisaNominal > 0 ? 'bayar_sebagian' : 'lunas';
+        } else if (currentStatus === 'lunas') {
+            modeGroup.style.display = 'block';
+            modeSelect.value = 'koreksi';
+            hintEl.innerText = 'ℹ Tagihan ini sudah lunas Rp ' + currentNominalSebelumnya.toLocaleString('id-ID') + '. Pilih "Koreksi" jika ingin meralat nominal total.';
+            document.getElementById('quick-bayar-nominal').value = currentNominalSebelumnya;
+            if (statusSelect) statusSelect.value = 'lunas';
+        } else {
+            modeGroup.style.display = 'none';
+            modeSelect.value = 'tambah';
+            document.getElementById('quick-bayar-nominal').value = currentNominalTagihan > 0 ? currentNominalTagihan : 5000;
+            if (statusSelect) statusSelect.value = 'lunas';
+        }
+
         document.getElementById('modal-quick-bayar').classList.add('active');
+    }
+
+    function handleModeCicilanChange() {
+        const modeSelect = document.getElementById('quick-bayar-mode');
+        const nominalInput = document.getElementById('quick-bayar-nominal');
+        const statusSelect = document.querySelector('#quick-bayar-form select[name="status_pembayaran"]');
+        if (modeSelect.value === 'tambah') {
+            nominalInput.value = currentSisaNominal > 0 ? currentSisaNominal : currentNominalTagihan;
+            if (statusSelect) statusSelect.value = 'bayar_sebagian';
+        } else if (modeSelect.value === 'koreksi') {
+            nominalInput.value = currentNominalSebelumnya;
+        }
     }
     function closeBayarModal() {
         document.getElementById('modal-quick-bayar').classList.remove('active');

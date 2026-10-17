@@ -483,4 +483,36 @@ class IntegritasTransaksiTest extends TestCase
         $this->assertEquals(16000, $totalTunggakan, 'Total tunggakan harus tepat mencerminkan sisa kewajiban (16.000)');
         $this->assertEquals($totalTagihan, $totalPendapatanRiil + $totalTunggakan, 'Prinsip akuntansi: Total Tagihan = Total Terkumpul + Total Tunggakan');
     }
+
+    /**
+     * Skenario 13: Mode Koreksi vs Mode Tambah Cicilan Baru - Koreksi menggantikan nilai total pembayaran secara eksplisit.
+     */
+    public function test_13_koreksi_total_pembayaran_dengan_mode_koreksi()
+    {
+        $testDate = '2028-02-13';
+        $tagihan = $this->createTagihan([
+            'tanggal_tagihan' => $testDate,
+            'nominal_tagihan' => 10000,
+            'nominal_dibayar' => 4000,
+            'status_bayar' => 'bayar_sebagian',
+        ]);
+
+        // Petugas melakukan koreksi: nilai sebenarnya adalah Rp 2.500
+        $response = $this->actingAs($this->petugasUser)->post("/tagihan/{$tagihan->id}/bayar", [
+            'nominal_dibayar' => 2500,
+            'metode_bayar' => 'tunai',
+            'status_pembayaran' => 'bayar_sebagian',
+            'mode_cicilan' => 'koreksi', // Mode koreksi eksplisit
+            'catatan' => 'Koreksi kesalahan input kasir',
+        ]);
+
+        $response->assertSessionHas('success');
+
+        $tagihan->refresh();
+        // Karena mode 'koreksi', nominal_dibayar menjadi 2.500 (BUKAN 4.000 + 2.500 = 6.500)
+        $this->assertEquals(2500, (float) $tagihan->nominal_dibayar, 'Mode koreksi harus menggantikan nominal total secara eksplisit');
+        $this->assertEquals('bayar_sebagian', $tagihan->status_bayar);
+        $this->assertEquals(7500, (float) ($tagihan->nominal_tagihan - $tagihan->nominal_dibayar));
+    }
 }
+
