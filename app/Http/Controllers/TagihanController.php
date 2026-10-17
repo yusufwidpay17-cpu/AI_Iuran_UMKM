@@ -12,16 +12,22 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
+use App\Services\KalenderOperasionalService;
+
 class TagihanController extends Controller
 {
+    protected $kalenderService;
+
+    public function __construct(KalenderOperasionalService $kalenderService)
+    {
+        $this->kalenderService = $kalenderService;
+    }
+
     private function generateNoBukti($prefix = 'INV-')
     {
-        do {
-            $noBukti = $prefix . date('YmdHis') . str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
-        } while (Tagihan::where('no_bukti', $noBukti)->exists());
-        
-        return $noBukti;
+        return $this->kalenderService->generateNoBukti($prefix);
     }
+
     /**
      * Display a mobile-first list of today's / selected date's bills for data entry
      */
@@ -29,11 +35,16 @@ class TagihanController extends Controller
     {
         $tanggal = $request->input('tanggal', Carbon::today()->format('Y-m-d'));
         
+        $rule = $this->kalenderService->getRuleForDate($tanggal);
+        $isBebasIuran = $rule ? $rule->isBebasIuran() : false;
+        $isPenagihanDiliburkan = $rule !== null;
+
         // 1. Check if bills are generated for this date
         $billCount = Tagihan::where('tanggal_tagihan', $tanggal)->count();
         
-        if ($billCount == 0 && $tanggal == Carbon::today()->format('Y-m-d')) {
-            $this->generateBillsForDate($tanggal);
+        // Hanya generate otomatis jika BUKAN hari bebas iuran
+        if ($billCount == 0 && $tanggal == Carbon::today()->format('Y-m-d') && !$isBebasIuran) {
+            $this->kalenderService->generateBillsForDate($tanggal);
         }
 
         // 2. Fetch bills with filters
@@ -74,7 +85,7 @@ class TagihanController extends Controller
         $pedagangs = Pedagang::where('status_pedagang', 'aktif')->orderBy('nama_pedagang', 'asc')->get();
         $tarifs = Tarif::where('aktif', 1)->get();
 
-        return view('tagihan.input', compact('tagihans', 'tanggal', 'blokList', 'pedagangs', 'tarifs'));
+        return view('tagihan.input', compact('tagihans', 'tanggal', 'blokList', 'pedagangs', 'tarifs', 'rule', 'isBebasIuran', 'isPenagihanDiliburkan'));
     }
 
     /**
@@ -92,6 +103,12 @@ class TagihanController extends Controller
             'metode_bayar' => 'nullable|string',
             'catatan' => 'nullable|string',
         ]);
+
+        if ($this->kalenderService->isBebasIuran($request->tanggal_tagihan)) {
+            $rule = $this->kalenderService->getRuleForDate($request->tanggal_tagihan);
+            $alasan = $rule ? $rule->alasan : 'Bebas Iuran';
+            return back()->with('error', "Tanggal {$request->tanggal_tagihan} telah ditetapkan sebagai Hari Bebas Iuran ({$alasan}). Pembuatan tagihan manual tidak diperkenankan.");
+        }
 
         $pdg = Pedagang::findOrFail($request->pedagang_id);
         $nominalTagihan = (float) $request->nominal_tagihan;
@@ -209,71 +226,22 @@ class TagihanController extends Controller
     public function generate(Request $request)
     {
         $tanggal = $request->input('tanggal_generate', Carbon::today()->format('Y-m-d'));
-        $createdCount = $this->generateBillsForDate($tanggal);
+        $result = $this->kalenderService->generateBillsForDate($tanggal);
 
-        return back()->with('success', "Berhasil me-generate {$createdCount} tagihan untuk tanggal " . Carbon::parse($tanggal)->format('d/m/Y') . ".");
+        if (!$result['success']) {
+            return back()->with('error', $result['message']);
+        }
+
+        return back()->with('success', $result['message']);
     }
 
     /**
-     * Helper to generate bills for active merchants
+     * Helper to generate bills for active merchants (delegated to KalenderOperasionalService)
      */
     private function generateBillsForDate($tanggal)
     {
-        $activeMerchants = Pedagang::where('status_pedagang', 'aktif')->get();
-        $createdCount = 0;
-
-        foreach ($activeMerchants as $pdg) {
-            $exists = Tagihan::where('pedagang_id', $pdg->id)
-                ->where('tanggal_tagihan', $tanggal)
-                ->where('jenis_iuran', 'Iuran Harian')
-                ->exists();
-
-            if (!$exists) {
-                $nominal = $pdg->tarif->nominal_harian;
-                $dibayar = 0.00;
-                $status = 'belum_bayar';
-                $metode = null;
-                $waktu = null;
-                $catatan = null;
-
-                if ($pdg->saldo_deposit > 0) {
-                    if ($pdg->saldo_deposit >= $nominal) {
-                        $dibayar = $nominal;
-                        $pdg->saldo_deposit -= $nominal;
-                        $status = 'lunas';
-                        $metode = 'tunai';
-                        $waktu = now();
-                        $catatan = 'Lunas otomatis menggunakan saldo deposit.';
-                    } else {
-                        $dibayar = $pdg->saldo_deposit;
-                        $status = 'bayar_sebagian';
-                        $pdg->saldo_deposit = 0.00;
-                        $waktu = now();
-                        $catatan = 'Dibayar sebagian menggunakan sisa saldo deposit.';
-                    }
-                    $pdg->save();
-                }
-
-                Tagihan::create([
-                    'id' => (string) Str::uuid(),
-                    'pedagang_id' => $pdg->id,
-                    'tarif_id' => $pdg->tarif_id,
-                    'jenis_iuran' => 'Iuran Harian',
-                    'petugas_id' => null,
-                    'tanggal_tagihan' => $tanggal,
-                    'nominal_tagihan' => $nominal,
-                    'nominal_dibayar' => $dibayar,
-                    'status_bayar' => $status,
-                    'waktu_bayar' => $waktu,
-                    'metode_bayar' => $metode,
-                    'no_bukti' => $status == 'lunas' ? $this->generateNoBukti('DEP-AUTO-') : null,
-                    'catatan' => $catatan
-                ]);
-                $createdCount++;
-            }
-        }
-
-        return $createdCount;
+        $result = $this->kalenderService->generateBillsForDate($tanggal);
+        return $result['created_count'] ?? 0;
     }
 
     /**
@@ -378,13 +346,24 @@ class TagihanController extends Controller
         $tanggalIndo = $namaHari . ', ' . $carbonDate->format('d') . ' ' . $namaBulan . ' ' . $carbonDate->format('Y');
 
         $alasan = $request->input('alasan') ?? $request->input('catatan') ?? 'Toko Tutup / Tidak Berdagang';
+        $bebasIuran = $request->has('bebas_iuran') ? $request->boolean('bebas_iuran') : true;
 
-        $tagihan->status_bayar = 'belum_bayar';
-        $tagihan->nominal_dibayar = 0.00;
-        $tagihan->waktu_bayar = null;
-        $tagihan->metode_bayar = null;
-        $tagihan->no_bukti = null;
-        $tagihan->catatan = '[TIDAK BERDAGANG] Alasan: ' . $alasan . ' pada ' . $tanggalIndo;
+        if ($bebasIuran) {
+            $tagihan->nominal_tagihan = 0.00;
+            $tagihan->nominal_dibayar = 0.00;
+            $tagihan->status_bayar = 'dibatalkan';
+            $tagihan->waktu_bayar = null;
+            $tagihan->metode_bayar = null;
+            $tagihan->no_bukti = null;
+            $tagihan->catatan = '[TOKO TUTUP - BEBAS IURAN] Alasan: ' . $alasan . ' pada ' . $tanggalIndo;
+        } else {
+            $tagihan->status_bayar = 'belum_bayar';
+            $tagihan->nominal_dibayar = 0.00;
+            $tagihan->waktu_bayar = null;
+            $tagihan->metode_bayar = null;
+            $tagihan->no_bukti = null;
+            $tagihan->catatan = '[TIDAK BERDAGANG - TETAP BERKEWAJIBAN] Alasan: ' . $alasan . ' pada ' . $tanggalIndo;
+        }
         $tagihan->petugas_id = Auth::id();
         $tagihan->save();
 
@@ -392,10 +371,10 @@ class TagihanController extends Controller
             'id' => (string) Str::uuid(),
             'user_id' => Auth::id(),
             'aksi' => 'MARK_ABSENT',
-            'deskripsi' => 'Menandai pedagang tidak berdagang (' . $alasan . '): ' . $tagihan->pedagang->nama_pedagang . ' (Kios: ' . $tagihan->pedagang->no_kios . ').',
+            'deskripsi' => 'Menandai pedagang tidak berdagang (' . ($bebasIuran ? 'Bebas Iuran' : 'Tetap Berutang') . ' - ' . $alasan . '): ' . $tagihan->pedagang->nama_pedagang . ' (Kios: ' . $tagihan->pedagang->no_kios . ').',
             'created_at' => now(),
         ]);
 
-        return back()->with('success', 'Status pedagang ' . $tagihan->pedagang->nama_pedagang . ' berhasil dicatat sebagai "Tidak Berdagang" (' . $alasan . ').');
+        return back()->with('success', 'Status pedagang ' . $tagihan->pedagang->nama_pedagang . ' berhasil dicatat (' . ($bebasIuran ? 'Bebas Iuran' : 'Tetap Berutang') . ' - ' . $alasan . ').');
     }
 }

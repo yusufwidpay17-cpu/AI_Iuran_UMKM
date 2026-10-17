@@ -40,7 +40,7 @@ class LaporanController extends Controller
         }
 
         if ($jenisLaporan === 'tunggakan') {
-            $query->where('status_bayar', '!=', 'lunas');
+            $query->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian']);
         } elseif ($jenisLaporan === 'pembayaran') {
             $query->where('nominal_dibayar', '>', 0);
         }
@@ -55,6 +55,7 @@ class LaporanController extends Controller
                 'lunas_count' => 0,
                 'sebagian_count' => 0,
                 'belum_count' => 0,
+                'dibatalkan_count' => 0,
             ];
         } else {
             $tagihans = $query->orderBy('updated_at', 'desc')
@@ -62,15 +63,17 @@ class LaporanController extends Controller
                               ->orderBy('tanggal_tagihan', 'desc')
                               ->get();
 
-            // Summary Calculations
+            // Summary Calculations (AmanahLedger Consistency: Exclude 'dibatalkan' from arrears)
+            $activeTagihans = $tagihans->where('status_bayar', '!=', 'dibatalkan');
             $summary = [
-                'total_tagihan' => $tagihans->sum('nominal_tagihan'),
+                'total_tagihan' => $activeTagihans->sum('nominal_tagihan'),
                 'total_dibayar' => $tagihans->sum('nominal_dibayar'),
-                'total_tunggakan' => $tagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'),
+                'total_tunggakan' => max(0, $activeTagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar')),
                 'jumlah_transaksi' => $tagihans->count(),
                 'lunas_count' => $tagihans->where('status_bayar', 'lunas')->count(),
                 'sebagian_count' => $tagihans->where('status_bayar', 'bayar_sebagian')->count(),
                 'belum_count' => $tagihans->where('status_bayar', 'belum_bayar')->count(),
+                'dibatalkan_count' => $tagihans->where('status_bayar', 'dibatalkan')->count(),
             ];
         }
 
@@ -121,7 +124,7 @@ class LaporanController extends Controller
         }
 
         if ($jenisLaporan === 'tunggakan') {
-            $query->where('status_bayar', '!=', 'lunas');
+            $query->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian']);
         } elseif ($jenisLaporan === 'pembayaran') {
             $query->where('nominal_dibayar', '>', 0);
         }
@@ -131,10 +134,11 @@ class LaporanController extends Controller
                           ->orderBy('tanggal_tagihan', 'desc')
                           ->get();
 
+        $activeTagihans = $tagihans->where('status_bayar', '!=', 'dibatalkan');
         $summary = [
-            'total_tagihan' => $tagihans->sum('nominal_tagihan'),
+            'total_tagihan' => $activeTagihans->sum('nominal_tagihan'),
             'total_dibayar' => $tagihans->sum('nominal_dibayar'),
-            'total_tunggakan' => $tagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'),
+            'total_tunggakan' => max(0, $activeTagihans->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar')),
             'jumlah_transaksi' => $tagihans->count(),
         ];
 

@@ -13,6 +13,8 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ExportExcelController;
 use App\Http\Controllers\SegmentasiController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\PedagangPortalController;
+use App\Http\Controllers\KalenderOperasionalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -172,6 +174,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/riwayat-transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat.index');
     Route::get('/riwayat-transaksi/{id}/cetak', [RiwayatTransaksiController::class, 'cetak'])->name('riwayat.cetak');
 
+    // C. Portal Khusus Mitra Pedagang (Hanya Role Pedagang & Server-Side Protected)
+    Route::middleware(['role:pedagang'])->prefix('pedagang-portal')->name('pedagang.')->group(function () {
+        Route::get('/tagihan', [PedagangPortalController::class, 'tagihan'])->name('tagihan');
+        Route::get('/tunggakan', [PedagangPortalController::class, 'tunggakan'])->name('tunggakan');
+        Route::get('/notifikasi', [PedagangPortalController::class, 'notifikasi'])->name('notifikasi');
+        Route::get('/profil', [PedagangPortalController::class, 'profil'])->name('profil');
+    });
+
 
     // ==========================================
     // 3. OPERASIONAL PETUGAS & ADMIN (Iuran / Tagihan Lapangan)
@@ -237,11 +247,24 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/segmentasi/train', [SegmentasiController::class, 'train'])->name('segmentasi.train');
         Route::get('/segmentasi/cek', [SegmentasiController::class, 'cek'])->name('segmentasi.cek');
 
+        // Kalender Operasional & Kontrol Penagihan
+        Route::prefix('kalender-operasional')->name('kalender.')->group(function () {
+            Route::get('/', [KalenderOperasionalController::class, 'index'])->name('index');
+            Route::post('/', [KalenderOperasionalController::class, 'store'])->name('store');
+            Route::put('/{id}', [KalenderOperasionalController::class, 'update'])->name('update');
+            Route::post('/{id}/batalkan', [KalenderOperasionalController::class, 'batalkan'])->name('batalkan');
+            Route::get('/{id}/dampak', [KalenderOperasionalController::class, 'previewDampak'])->name('dampak');
+            Route::post('/{id}/koreksi-tagihan', [KalenderOperasionalController::class, 'koreksiTagihan'])->name('koreksi-tagihan');
+        });
+
         // Manajemen Pengguna & Hak Akses
         Route::get('/pengguna', [PenggunaController::class, 'index'])->name('pengguna.index');
         Route::post('/pengguna', [PenggunaController::class, 'store'])->name('pengguna.store');
         Route::put('/pengguna/{id}', [PenggunaController::class, 'update'])->name('pengguna.update');
         Route::delete('/pengguna/{id}', [PenggunaController::class, 'destroy'])->name('pengguna.destroy');
         Route::post('/pengguna/{id}/kirim-ulang-aktivasi', [PenggunaController::class, 'resendActivation'])->name('pengguna.resend-activation');
+        Route::post('/pengguna/beri-akses-pedagang', [PenggunaController::class, 'beriAksesPedagang'])->name('pengguna.beri-akses-pedagang');
+        Route::post('/pengguna/{id}/cabut-akses-pedagang', [PenggunaController::class, 'cabutAksesPedagang'])->name('pengguna.cabut-akses-pedagang');
+        Route::post('/pengguna/{id}/reset-password', [PenggunaController::class, 'resetPassword'])->name('pengguna.reset-password');
     });
 });

@@ -176,6 +176,8 @@ class ExportExcelController extends Controller
                         }
                         $totalDibayarPedagang += $t->nominal_dibayar;
                         $dailyTotals[$d] += $t->nominal_dibayar;
+                    } elseif ($t->status_bayar === 'dibatalkan') {
+                        $row[] = 'Libur';
                     } elseif (str_contains($t->catatan ?? '', '[TIDAK BERDAGANG]')) {
                         $row[] = 'Tutup';
                     } else {

@@ -275,7 +275,7 @@
     </div>
 
     <!-- 4 KPI Mini Cards Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+    <div class="responsive-kpi-4">
         <!-- Target Nominal -->
         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
@@ -491,7 +491,7 @@
             <h3 class="card-title" style="margin-bottom: 0;">Tren Pendapatan Iuran</h3>
             <span style="font-size: 0.75rem; color: #64748b;">7 Hari Terakhir</span>
         </div>
-        <div style="position: relative; height: 230px; width: 100%;">
+        <div class="chart-container" style="position: relative; height: 230px; width: 100%;">
             <canvas id="revenueChart"></canvas>
         </div>
     </div>

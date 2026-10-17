@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             'id' => 'usr-001',
             'nama' => 'Admin Yusuf',
             'username' => 'yusuf123',
-            'password' => bcrypt('12345678'),
+            'password' => bcrypt('password123'),
             'role' => 'superadmin'
         ]);
         User::create([

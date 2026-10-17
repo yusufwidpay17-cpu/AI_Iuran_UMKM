@@ -21,37 +21,72 @@ class DashboardController extends Controller
             $pedagang = $user->pedagang ?? ($user->pedagang_id ? Pedagang::with('tarif')->find($user->pedagang_id) : null);
 
             $tagihanHariIni = null;
+            $totalTagihanBulanIni = 0;
+            $totalTagihanSemua = 0;
+            $totalDibayarBulanIni = 0;
+            $totalDibayarSemua = 0;
             $totalTunggakanPedagang = 0;
             $jumlahHariMenunggak = 0;
-            $totalDibayarBulanIni = 0;
             $tagihanBelumLunas = collect([]);
+            $tagihanTerbaru = collect([]);
+            $pembayaranTerakhir = null;
             $riwayatPembayaran = collect([]);
 
             if ($pedagang) {
+                // 1. Tagihan Hari Ini
                 $tagihanHariIni = Tagihan::where('pedagang_id', $pedagang->id)
                     ->where('tanggal_tagihan', $today)
                     ->first();
 
-                $unpaidBills = Tagihan::where('pedagang_id', $pedagang->id)
-                    ->where('status_bayar', '!=', 'lunas')
-                    ->orderBy('tanggal_tagihan', 'desc')
-                    ->get();
-
-                $totalTunggakanPedagang = $unpaidBills->sum(function($item) {
-                    return $item->nominal_tagihan - $item->nominal_dibayar;
-                });
-                $jumlahHariMenunggak = $unpaidBills->count();
-                $tagihanBelumLunas = $unpaidBills;
-
+                // 2. Periode Berjalan (Bulan Ini)
                 $startThisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
                 $endThisMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
+
+                $totalTagihanBulanIni = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->whereBetween('tanggal_tagihan', [$startThisMonth, $endThisMonth])
+                    ->sum('nominal_tagihan');
+
                 $totalDibayarBulanIni = Tagihan::where('pedagang_id', $pedagang->id)
                     ->whereBetween('tanggal_tagihan', [$startThisMonth, $endThisMonth])
                     ->sum('nominal_dibayar');
 
+                $totalTagihanSemua = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->sum('nominal_tagihan');
+
+                $totalDibayarSemua = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->sum('nominal_dibayar');
+
+                // 3. Sisa Tagihan / Tunggakan
+                $unpaidBills = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
+                    ->orderBy('tanggal_tagihan', 'desc')
+                    ->get();
+
+                $totalTunggakanPedagang = $unpaidBills->sum(function($item) {
+                    return max(0, $item->nominal_tagihan - $item->nominal_dibayar);
+                });
+                $jumlahHariMenunggak = $unpaidBills->count();
+                $tagihanBelumLunas = $unpaidBills;
+
+                // 4. Daftar Tagihan Terbaru (6 Terakhir)
+                $tagihanTerbaru = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->where('status_bayar', '!=', 'dibatalkan')
+                    ->orderBy('tanggal_tagihan', 'desc')
+                    ->limit(6)
+                    ->get();
+
+                // 5. Pembayaran Terakhir
+                $pembayaranTerakhir = Tagihan::where('pedagang_id', $pedagang->id)
+                    ->where('nominal_dibayar', '>', 0)
+                    ->orderBy('waktu_bayar', 'desc')
+                    ->orderBy('tanggal_tagihan', 'desc')
+                    ->first();
+
+                // 6. Riwayat Pembayaran (10 Terakhir)
                 $riwayatPembayaran = Tagihan::where('pedagang_id', $pedagang->id)
                     ->where('nominal_dibayar', '>', 0)
                     ->orderBy('waktu_bayar', 'desc')
+                    ->orderBy('tanggal_tagihan', 'desc')
                     ->limit(10)
                     ->get();
             }
@@ -59,10 +94,15 @@ class DashboardController extends Controller
             return view('dashboard.pedagang', compact(
                 'pedagang',
                 'tagihanHariIni',
+                'totalTagihanBulanIni',
+                'totalTagihanSemua',
+                'totalDibayarBulanIni',
+                'totalDibayarSemua',
                 'totalTunggakanPedagang',
                 'jumlahHariMenunggak',
-                'totalDibayarBulanIni',
                 'tagihanBelumLunas',
+                'tagihanTerbaru',
+                'pembayaranTerakhir',
                 'riwayatPembayaran'
             ));
         }
@@ -77,23 +117,26 @@ class DashboardController extends Controller
         }
 
         // 2. Today's Bill Status
-        $todayBills = Tagihan::with('pedagang')->where('tanggal_tagihan', $today)->get();
+        $todayBills = Tagihan::with('pedagang')
+            ->where('tanggal_tagihan', $today)
+            ->where('status_bayar', '!=', 'dibatalkan')
+            ->get();
         
         $sudahBayarHariIniCount = $todayBills->where('status_bayar', 'lunas')->count();
-        $belumBayarHariIniCount = $todayBills->where('status_bayar', '!=', 'lunas')->count();
+        $belumBayarHariIniCount = $todayBills->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])->count();
         
         $targetIuranHariIni = $todayBills->sum('nominal_tagihan');
         $totalIuranTerkumpulHariIni = $todayBills->sum('nominal_dibayar');
-        $sisaBelumBayarHariIni = $targetIuranHariIni - $totalIuranTerkumpulHariIni;
+        $sisaBelumBayarHariIni = max(0, $targetIuranHariIni - $totalIuranTerkumpulHariIni);
 
         $persenPelunasanHariIni = $targetIuranHariIni > 0 
             ? round(($totalIuranTerkumpulHariIni / $targetIuranHariIni) * 100, 1) 
             : 0;
 
         // 3. Arrears & Monthly Income
-        $allUnpaidBills = Tagihan::where('status_bayar', '!=', 'lunas')->get();
+        $allUnpaidBills = Tagihan::whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])->get();
         $totalTunggakan = $allUnpaidBills->sum(function($b) {
-            return $b->nominal_tagihan - $b->nominal_dibayar;
+            return max(0, $b->nominal_tagihan - $b->nominal_dibayar);
         });
 
         $startThisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
@@ -103,16 +146,16 @@ class DashboardController extends Controller
         // 4. Section B: Pedagang Belum Bayar Hari Ini (with days arrears and total arrears)
         $unpaidMerchantsToday = Tagihan::with('pedagang')
             ->where('tanggal_tagihan', $today)
-            ->where('status_bayar', '!=', 'lunas')
+            ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
             ->get()
             ->map(function($tgh) {
                 // Calculate total days & amount menunggak for this merchant
                 $merchantUnpaid = Tagihan::where('pedagang_id', $tgh->pedagang_id)
-                    ->where('status_bayar', '!=', 'lunas')
+                    ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
                     ->get();
                 
                 $tgh->total_tunggakan_pedagang = $merchantUnpaid->sum(function($item) {
-                    return $item->nominal_tagihan - $item->nominal_dibayar;
+                    return max(0, $item->nominal_tagihan - $item->nominal_dibayar);
                 });
                 $tgh->jumlah_hari_menunggak = $merchantUnpaid->count();
                 return $tgh;
@@ -127,7 +170,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(tagihan.nominal_tagihan - tagihan.nominal_dibayar) as total_tunggakan')
             )
             ->join('tagihan', 'pedagang.id', '=', 'tagihan.pedagang_id')
-            ->where('tagihan.status_bayar', '!=', 'lunas')
+            ->whereIn('tagihan.status_bayar', ['belum_bayar', 'bayar_sebagian'])
             ->groupBy('pedagang.id', 'pedagang.nama_pedagang', 'pedagang.no_kios', 'pedagang.blok_kios')
             ->orderByDesc('total_tunggakan')
             ->limit(5)

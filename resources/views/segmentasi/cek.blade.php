@@ -38,7 +38,7 @@
 </div>
 
 @if($selectedPedagang)
-    <div class="grid-2" style="gap: var(--space-lg); display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+    <div class="grid-2">
         
         <!-- AI Decision & Category -->
         <div style="display: flex; flex-direction: column; gap: var(--space-lg);">

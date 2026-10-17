@@ -24,7 +24,7 @@
 </div>
 
 <!-- FINANCIAL SUMMARY CARDS -->
-<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-bottom: var(--space-lg);">
+<div class="stats-grid">
     <div class="stat-card">
         <div class="stat-label">Besaran Iuran Harian</div>
         <div class="stat-value numeric-display">Rp {{ number_format($pedagang->tarif->nominal_harian, 0, ',', '.') }}</div>

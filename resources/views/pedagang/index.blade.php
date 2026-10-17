@@ -9,12 +9,12 @@
         <h2 class="page-title">Data Pedagang</h2>
         <p class="page-subtitle">Kelola data pedagang UMKM Pesantren & pasar harian</p>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; max-width: 100%;">
         <!-- Top Search Form -->
-        <form action="{{ route('pedagang.index') }}" method="GET" style="display: flex; gap: 8px;">
-            <div style="position: relative;">
-                <input type="text" name="search" class="form-input" placeholder="Cari pedagang..." value="{{ request('search') }}" style="min-height: 40px; padding-left: 36px; min-width: 220px; font-size: 0.84375rem; border-radius: 8px;">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 12px; top: 12px; color: #94a3b8;">
+        <form action="{{ route('pedagang.index') }}" method="GET" style="display: flex; gap: 8px; flex: 1 1 200px; min-width: 0;">
+            <div style="position: relative; width: 100%;">
+                <input type="text" name="search" class="form-input" placeholder="Cari pedagang..." value="{{ request('search') }}" style="min-height: 38px; padding-left: 36px; width: 100%; font-size: 0.84375rem; border-radius: 8px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="position: absolute; left: 12px; top: 11px; color: #94a3b8;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
@@ -25,7 +25,7 @@
         </form>
 
         <!-- Tambah Pedagang Button -->
-        <a href="{{ route('pedagang.create') }}" class="btn btn-primary">
+        <a href="{{ route('pedagang.create') }}" class="btn btn-primary" style="white-space: nowrap;">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
             </svg>

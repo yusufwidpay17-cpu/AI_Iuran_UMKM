@@ -215,7 +215,7 @@
 /* ====================================================================
    BASE RESET & LAYOUTS
    ==================================================================== */
-* {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -223,6 +223,8 @@
 
 html {
     scroll-behavior: smooth;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -234,6 +236,13 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+img, svg, canvas {
+    max-width: 100%;
+    height: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -257,20 +266,25 @@ a:hover {
 .app-wrapper {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* ====================================================================
    SIDEBAR NAVIGATION
    ==================================================================== */
 .sidebar {
-    width: 250px;
+    width: 260px;
     background-color: #ffffff;
     border-right: 1px solid var(--outline-variant);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    bottom: 0;
     height: 100vh;
     z-index: 100;
 }
@@ -413,7 +427,12 @@ a:hover {
     display: flex;
     flex-direction: column;
     min-width: 0;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+    margin-left: 260px;
+    overflow-x: hidden;
     background-color: var(--background);
+    transition: margin-left 0.2s ease, width 0.2s ease;
 }
 
 .top-navbar {
@@ -436,6 +455,7 @@ a:hover {
     max-width: 1400px;
     width: 100%;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 /* ====================================================================
@@ -684,6 +704,9 @@ a:hover {
     margin-bottom: 16px;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .card-title {
@@ -948,36 +971,51 @@ a:hover {
     color: #b91c1c;
 }
 
+.badge-bayar-dibatalkan {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
 /* ====================================================================
    LAYOUT GRIDS (SECTION B, C, D, E)
    ==================================================================== */
 .grid-2 {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .grid-3 {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .grid-uneven {
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: 16px;
+    min-width: 0;
+    max-width: 100%;
 }
 
-.table-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+.grid-2 > *, .grid-3 > *, .grid-uneven > * {
+    min-width: 0;
+    max-width: 100%;
 }
 
 @media (max-width: 1024px) {
     .grid-2, .grid-3, .grid-uneven {
-        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
     }
 }
 
@@ -1245,10 +1283,7 @@ a:hover {
 }
 
 /* ====================================================================
-   MOBILE & TABLET RESPONSIVE ENHANCEMENTS
-   ==================================================================== */
-/* ====================================================================
-   MOBILE & TABLET RESPONSIVE ENHANCEMENTS (ANDROID & IOS COMPATIBLE)
+   MOBILE & TABLET RESPONSIVE ENHANCEMENTS (ANDROID, IOS, TABLET & DESKTOP)
    ==================================================================== */
 
 /* iOS Safe Area & Fluid Container Support */
@@ -1259,203 +1294,369 @@ a:hover {
     --sal: env(safe-area-inset-left, 0px);
 }
 
+/* Reusable Fluid Responsive Utilities */
+.responsive-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.responsive-grid-status {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.responsive-kpi-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+/* Tablet Breakpoint (<= 992px) */
 @media (max-width: 992px) {
     .app-wrapper {
         min-height: 100vh;
         min-height: -webkit-fill-available;
     }
 
+    .sidebar {
+        display: none !important;
+    }
+
+    .main-container {
+        margin-left: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     .top-navbar {
+        display: flex !important;
         height: calc(54px + var(--sat));
         padding-top: var(--sat);
         padding-left: calc(14px + var(--sal));
         padding-right: calc(14px + var(--sar));
     }
+
+    .grid-2, .grid-3, .grid-uneven {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+    }
 }
 
+/* Mobile Devices (<= 768px: Android & iPhone) */
 @media (max-width: 768px) {
-    /* Top Navbar Mobile - Slim & Neat */
+    /* Top Navbar Mobile - Clean, Balanced & Guaranteed Single Row */
     .top-navbar {
-        height: calc(48px + var(--sat));
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        height: calc(52px + var(--sat));
         padding: var(--sat) 10px 0 10px;
+        gap: 8px;
+        background-color: #ffffff;
+        border-bottom: 1px solid var(--outline-variant);
+        position: sticky;
+        top: 0;
+        z-index: 990;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
     }
 
-    .top-navbar img {
-        height: 28px !important;
-        width: 28px !important;
-    }
-
-    .top-navbar .sidebar-logo-text {
-        font-size: 0.95rem !important;
-    }
-
+    .top-navbar-toggle,
     .top-navbar #mobile-menu-toggle {
-        min-height: 32px !important;
-        height: 32px !important;
-        width: 34px !important;
+        min-height: 36px !important;
+        height: 36px !important;
+        width: 36px !important;
+        min-width: 36px !important;
         padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0;
+        border-radius: var(--radius-md);
     }
 
+    .top-navbar-toggle svg,
     .top-navbar #mobile-menu-toggle svg {
         width: 20px;
         height: 20px;
     }
 
-    .content-body {
-        padding: 8px calc(8px + var(--sar)) calc(20px + var(--sab)) calc(8px + var(--sal));
+    .top-navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
     }
 
+    .top-navbar-logo,
+    .top-navbar img {
+        height: 26px !important;
+        width: 26px !important;
+        border-radius: 6px;
+        object-fit: contain;
+        background: #ffffff;
+        padding: 1.5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        flex-shrink: 0;
+    }
+
+    .top-navbar-brand-name,
+    .top-navbar .sidebar-logo-text {
+        font-size: 0.95rem !important;
+        font-weight: 800;
+        color: var(--primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.2;
+    }
+
+    .top-navbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .top-navbar-theme,
+    .top-navbar .theme-toggle-btn {
+        width: 32px !important;
+        min-width: 32px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        font-size: 0.85rem;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-md);
+        background: var(--surface-container);
+        border: 1px solid var(--outline-variant);
+        cursor: pointer;
+    }
+
+    .top-navbar-avatar,
+    .top-navbar .user-avatar {
+        width: 30px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+        font-size: 0.8rem !important;
+        flex-shrink: 0;
+    }
+
+    /* Content Body Padding - Tight, Proportionate & Safe-Area Aware */
+    .content-body {
+        padding: 10px calc(10px + var(--sar)) calc(20px + var(--sab)) calc(10px + var(--sal));
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Page Header */
     .page-header {
         flex-direction: column;
         align-items: stretch;
         gap: 6px;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
 
     .page-title {
-        font-size: 1.05rem;
-        line-height: 1.2;
+        font-size: 1.15rem !important;
+        line-height: 1.25;
+        margin: 0;
     }
 
     .page-subtitle {
-        font-size: 0.6875rem;
-        line-height: 1.3;
-        color: #64748b;
+        font-size: 0.72rem !important;
+        line-height: 1.35;
+        color: var(--on-surface-variant);
+        margin-top: 2px;
     }
 
     .page-header > div:last-child {
         width: 100%;
         display: flex;
-        flex-direction: column;
-        gap: 5px;
+        flex-wrap: wrap;
+        gap: 6px;
     }
 
     .page-header .btn {
-        width: 100%;
+        flex: 1 1 auto;
         justify-content: center;
-        min-height: 34px;
-        font-size: 0.78rem;
-        padding: 5px 10px;
+        min-height: 36px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
     }
 
-    /* Welcome Banner - Responsive, Lengkap & Terbaca Sempurna di HP */
+    /* Forms in Page Headers */
+    .page-header form {
+        width: 100%;
+    }
+
+    .page-header form input {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Welcome Banner - Streamlined & Compact on Mobile */
     .welcome-banner {
         flex-direction: column;
         align-items: stretch;
-        padding: 20px 18px;
-        border-radius: 16px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 20px rgba(0, 61, 155, 0.2);
-        gap: 16px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        box-shadow: 0 3px 12px rgba(0, 61, 155, 0.12);
+        gap: 8px;
     }
 
     .banner-badge {
-        font-size: 0.7rem;
-        padding: 4px 10px;
-        margin-bottom: 8px;
-        letter-spacing: 0.04em;
+        font-size: 0.625rem;
+        padding: 3px 8px;
+        margin-bottom: 2px;
+        letter-spacing: 0.03em;
     }
 
     .banner-title {
-        font-size: 1.35rem;
-        margin-bottom: 8px;
+        font-size: 1.15rem !important;
+        margin: 2px 0 4px;
         line-height: 1.25;
     }
 
     .banner-desc {
-        font-size: 0.85rem;
-        line-height: 1.5;
-        margin-bottom: 16px;
+        font-size: 0.78rem;
+        line-height: 1.4;
+        margin-bottom: 10px;
         opacity: 0.95;
-        display: block;
-        overflow: visible;
-        -webkit-line-clamp: unset;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .banner-actions {
         width: 100%;
-        flex-direction: column;
         display: flex;
-        gap: 10px;
+        flex-direction: row;
+        gap: 6px;
     }
 
     .btn-banner-primary, .btn-banner-secondary {
-        width: 100%;
+        flex: 1 1 0;
         justify-content: center;
-        min-height: 40px;
-        padding: 10px 14px;
-        font-size: 0.85rem;
-        border-radius: 10px;
-        white-space: normal;
+        min-height: 36px;
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        border-radius: 8px;
+        white-space: nowrap;
         text-align: center;
         box-sizing: border-box;
     }
 
-    /* Tampilkan kartu ilustrasi & info kios secara penuh dan rapi di HP */
+    /* Banner Illustration - Hide decorative graphic on mobile to preserve vertical space */
     .banner-illustration {
-        display: flex !important;
-        width: 100%;
-        margin-top: 6px;
-        justify-content: center;
+        display: none !important;
     }
 
-    .illustration-glass-card {
-        width: 100%;
-        max-width: 100%;
-        padding: 14px;
-        border-radius: 14px;
-        box-sizing: border-box;
-    }
-
-    /* Stats Grid - Clean, Compact 2-Column Cards */
+    /* Stats Grid - Crisp, Proportionate 2-Column Mobile Layout */
     .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 5px;
+        gap: 8px;
         margin-bottom: 10px;
     }
 
     .stat-card {
-        padding: 7px 9px;
-        border-radius: 8px;
-        min-height: 62px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        min-height: 72px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
     .stat-label {
-        font-size: 0.58rem;
+        font-size: 0.625rem;
         letter-spacing: 0.02em;
-        line-height: 1.1;
+        line-height: 1.15;
+        font-weight: 600;
+        text-transform: uppercase;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .stat-value {
-        font-size: 0.95rem;
-        margin: 1px 0 0 0;
+        font-size: 1.05rem;
+        margin: 2px 0;
+        line-height: 1.2;
         word-break: break-word;
     }
 
     .stat-value.numeric-display {
-        font-size: 0.78rem;
+        font-size: 0.85rem;
         line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .stat-sub {
-        font-size: 0.58rem;
-        line-height: 1.1;
+        font-size: 0.625rem;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    /* Pedagang & Layout Grids */
+    /* Layout Grids */
+    .responsive-grid-2 {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+
+    .responsive-grid-status {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px;
+    }
+
+    .responsive-kpi-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px;
+    }
+
     .pedagang-grid {
         grid-template-columns: 1fr !important;
         gap: 10px;
     }
 
     .pedagang-card {
-        padding: 12px;
-        border-radius: 10px;
+        padding: 12px 14px;
+        border-radius: 12px;
     }
 
     .grid-2, .grid-3, .grid-uneven {
-        grid-template-columns: 1fr !important;
-        gap: 12px;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        gap: 10px;
+    }
+
+    .grid-2 > *, .grid-3 > *, .grid-uneven > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
     }
 
     /* Filter Bar Responsive */
@@ -1463,9 +1664,9 @@ a:hover {
         flex-direction: column;
         align-items: stretch;
         gap: 8px;
-        padding: 10px;
+        padding: 10px 12px;
         border-radius: 10px;
-        margin-bottom: 12px;
+        margin-bottom: 10px;
     }
 
     .filter-item {
@@ -1488,37 +1689,55 @@ a:hover {
 
     /* Card styling on phone */
     .card {
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden;
     }
 
     .card-title {
-        font-size: 0.875rem;
+        font-size: 0.92rem;
         margin-bottom: 8px;
+    }
+
+    /* Responsive Chart Container */
+    .chart-container {
+        position: relative;
+        height: 190px !important;
+        width: 100% !important;
+        max-width: 100%;
     }
 
     /* Modern Responsive Scrollable Tables */
     .table-responsive {
         border-radius: 8px;
         margin: 0;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        display: block;
+        overflow-x: auto !important;
         -webkit-overflow-scrolling: touch;
         border: 1px solid var(--outline-variant);
-        box-shadow: inset -3px 0 6px -3px rgba(0, 0, 0, 0.08);
+        box-shadow: inset -4px 0 8px -4px rgba(0, 0, 0, 0.08);
     }
 
     .data-table, .table {
-        min-width: 520px;
+        min-width: 440px;
+        width: 100%;
     }
 
     .data-table th, .table th {
-        padding: 8px 8px;
-        font-size: 0.65rem;
+        padding: 7px 8px !important;
+        font-size: 0.6875rem !important;
+        white-space: nowrap;
     }
 
     .data-table td, .table td {
-        padding: 8px 8px;
-        font-size: 0.78rem;
+        padding: 7px 8px !important;
+        font-size: 0.75rem !important;
     }
 
     /* Modals Responsive */
@@ -1529,7 +1748,7 @@ a:hover {
     .modal-container {
         max-width: 100%;
         width: 100%;
-        max-height: 94vh;
+        max-height: 90vh;
         overflow-y: auto;
         border-radius: 14px;
     }
@@ -1553,15 +1772,21 @@ a:hover {
     }
 }
 
-/* Extra small devices (iPhone SE, Galaxy A series, <= 360px) */
-@media (max-width: 360px) {
+/* Extra small devices (iPhone SE, Galaxy A series, 341px - 380px) */
+@media (max-width: 380px) {
     .content-body {
         padding: 8px 6px 16px 6px;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        gap: 5px;
+    .top-navbar {
+        padding-left: 8px;
+        padding-right: 8px;
+        gap: 6px;
+    }
+
+    .top-navbar-brand-name,
+    .top-navbar .sidebar-logo-text {
+        font-size: 0.88rem !important;
     }
 
     .stat-card {
@@ -1581,16 +1806,96 @@ a:hover {
     }
 
     .banner-title {
-        font-size: 1rem;
+        font-size: 1.05rem !important;
+    }
+}
+
+/* Ultra Narrow Screen Fallback (<= 340px, e.g. 320px screens) */
+@media (max-width: 340px) {
+    .top-navbar {
+        height: calc(48px + var(--sat));
+        padding: var(--sat) 6px 0 6px;
+        gap: 4px;
+    }
+
+    .top-navbar-toggle,
+    .top-navbar #mobile-menu-toggle {
+        width: 32px !important;
+        min-width: 32px !important;
+        height: 32px !important;
+        min-height: 32px !important;
+    }
+
+    .top-navbar-logo,
+    .top-navbar img {
+        height: 22px !important;
+        width: 22px !important;
+    }
+
+    .top-navbar-brand-name,
+    .top-navbar .sidebar-logo-text {
+        font-size: 0.82rem !important;
+    }
+
+    .top-navbar-theme,
+    .top-navbar .theme-toggle-btn {
+        width: 28px !important;
+        min-width: 28px !important;
+        height: 28px !important;
+        min-height: 28px !important;
+        font-size: 0.75rem;
+    }
+
+    .top-navbar-avatar,
+    .top-navbar .user-avatar {
+        width: 28px !important;
+        min-width: 28px !important;
+        height: 28px !important;
+        min-height: 28px !important;
+        font-size: 0.72rem !important;
+    }
+
+    /* Fallback 1 Column on 320px for perfect legibility without truncation */
+    .stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 6px;
+    }
+
+    .stat-card {
+        padding: 8px 10px;
+    }
+
+    .stat-value.numeric-display {
+        font-size: 0.95rem;
+    }
+
+    .responsive-grid-status {
+        grid-template-columns: 1fr !important;
+    }
+
+    .responsive-kpi-4 {
+        grid-template-columns: 1fr !important;
     }
 
     .banner-actions {
         flex-direction: column;
     }
 
-    .top-navbar {
-        padding-left: 8px;
-        padding-right: 8px;
+    .btn-banner-primary, .btn-banner-secondary {
+        width: 100%;
+    }
+}
+
+/* Touch Friendly Targets (iOS & Android) */
+@media (pointer: coarse) {
+    .sidebar-nav-item,
+    .theme-toggle-btn {
+        min-height: 40px;
+    }
+
+    .tab-btn {
+        min-height: 38px;
+        padding: 8px 12px;
     }
 }
 
@@ -1863,6 +2168,110 @@ a:hover {
     font-weight: 800;
 }
 
+/* Explicit Dark Mode Overrides for Prayer & Clock Widgets */
+[data-theme="dark"] .dashboard-prayer-widget {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .dpw-digital-clock,
+[data-theme="dark"] .dpw-digit {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .dpw-colon {
+    color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .dpw-date-masehi {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .dpw-date-hijri {
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .dpw-prayer-section {
+    border-top-color: #334155 !important;
+}
+
+[data-theme="dark"] .dpw-prayer-location {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .dpw-prayer-source {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .dpw-prayer-item {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .dpw-prayer-name {
+    color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .dpw-prayer-time {
+    color: #f8fafc !important;
+}
+
+/* Live Clock Badge (Header / Navbar) - Stabil & Jelas di Mode Siang / Malam */
+.live-clock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-md);
+    padding: 7px 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.live-clock-badge .live-clock-icon {
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.live-clock-badge .live-clock-text {
+    font-size: 0.95rem;
+    font-weight: 800;
+    font-family: 'Inter', monospace;
+    line-height: 1;
+    color: #0f172a;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 3px;
+}
+
+.live-clock-badge .live-admin-time {
+    color: #0f172a;
+    letter-spacing: 0.5px;
+}
+
+.live-clock-badge .live-admin-tz {
+    font-size: 0.725rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+[data-theme="dark"] .live-clock-badge {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .live-clock-badge .live-clock-text,
+[data-theme="dark"] .live-clock-badge .live-admin-time {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .live-clock-badge .live-clock-icon,
+[data-theme="dark"] .live-clock-badge .live-admin-tz {
+    color: #38bdf8 !important;
+}
+
 /* Responsive Breakpoints for Prayer Widget */
 @media (max-width: 992px) {
     .dpw-prayer-grid {
@@ -1871,54 +2280,140 @@ a:hover {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .dpw-header {
-        padding: 12px 14px;
+        padding: 10px 12px;
+        gap: 8px;
+    }
+    .dpw-greeting-box {
+        gap: 8px;
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+    }
+    .dpw-greeting-icon {
+        width: 32px;
+        height: 32px;
+        font-size: 0.95rem;
+        flex-shrink: 0;
     }
     .dpw-greeting-title {
-        font-size: 1rem;
+        font-size: 0.92rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .dpw-greeting-sub {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .dpw-weather-box {
+        flex-shrink: 0;
+        text-align: right;
     }
     .dpw-weather-temp {
         font-size: 1.15rem;
     }
-    .dpw-digital-clock {
-        font-size: 2.1rem;
-        letter-spacing: 2px;
-    }
-    .dpw-digit {
-        min-width: 40px;
+    .dpw-weather-cond {
+        font-size: 0.68rem;
+        white-space: nowrap;
     }
     .dpw-body {
-        padding: 14px;
-        gap: 14px;
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .dpw-digital-clock {
+        font-size: 1.75rem;
+        letter-spacing: 1px;
+        gap: 4px;
+    }
+    .dpw-digit {
+        min-width: 30px;
+    }
+    .dpw-date-masehi {
+        font-size: 0.825rem;
+        margin-top: 4px;
+    }
+    .dpw-date-hijri {
+        font-size: 0.75rem;
+        margin-top: 2px;
+    }
+    .dpw-prayer-section {
+        padding-top: 10px;
+    }
+    .dpw-prayer-head {
+        margin-bottom: 8px;
+        font-size: 0.75rem;
     }
     .dpw-prayer-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
         gap: 6px;
     }
     .dpw-prayer-item {
         padding: 6px 3px;
+        border-radius: 6px;
+        min-width: 0;
+        overflow: hidden;
     }
     .dpw-prayer-name {
-        font-size: 0.68rem;
+        font-size: 0.64rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .dpw-prayer-time {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
+        font-weight: 700;
     }
 }
 
 @media (max-width: 380px) {
     .dpw-digital-clock {
-        font-size: 1.7rem;
+        font-size: 1.6rem;
     }
     .dpw-digit {
-        min-width: 32px;
+        min-width: 28px;
+    }
+    .dpw-prayer-item {
+        padding: 5px 2px;
+    }
+    .dpw-prayer-name {
+        font-size: 0.6rem;
+    }
+    .dpw-prayer-time {
+        font-size: 0.74rem;
+    }
+}
+
+/* 2-Column Prayer Grid for Ultra Narrow Screens (<= 340px, e.g. 320px) */
+@media (max-width: 340px) {
+    .dpw-digital-clock {
+        font-size: 1.45rem;
+        gap: 2px;
+    }
+    .dpw-digit {
+        min-width: 25px;
+    }
+    .dpw-date-masehi {
+        font-size: 0.78rem;
+    }
+    .dpw-date-hijri {
+        font-size: 0.7rem;
     }
     .dpw-prayer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px;
+    }
+    .dpw-prayer-item {
+        padding: 7px 4px;
+    }
+    .dpw-prayer-name {
+        font-size: 0.68rem;
+    }
+    .dpw-prayer-time {
+        font-size: 0.82rem;
     }
 }
 

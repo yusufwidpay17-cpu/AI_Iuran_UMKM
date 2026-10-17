@@ -4,15 +4,15 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div class="page-header">
     <div>
-        <h2 class="page-title" style="margin: 0; font-size: 1.5rem; font-weight: 700; color: var(--on-surface);">Portal Mitra Pedagang</h2>
-        <p class="page-subtitle" style="margin: 4px 0 0; color: var(--on-surface-variant); font-size: 0.875rem;">
+        <h2 class="page-title">Portal Mitra Pedagang</h2>
+        <p class="page-subtitle">
             Pusat Informasi Lapak & Pembayaran Iuran Pasar UMKM (<span class="live-pedagang-date">{{ \Carbon\Carbon::today()->isoFormat('D MMMM YYYY') }}</span>)
         </p>
     </div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #059669; font-weight: 700; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(16, 185, 129, 0.3);">
+    <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #059669; font-weight: 700; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.3);">
             ● Mitra Terverifikasi
         </span>
     </div>
@@ -174,9 +174,9 @@
     </div>
 
     <!-- 3. KARTU APRESIASI MITRA & MUTIARA HIKMAH BERKAH -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px;">
+    <div class="responsive-grid-2" style="margin-bottom: 18px;">
         <!-- Card Apresiasi Kedisiplinan -->
-        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; border-radius: var(--radius-lg); padding: 20px;">
+        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; border-radius: var(--radius-lg);">
             <div style="display: flex; align-items: flex-start; justify-content: space-between;">
                 <div>
                     <span style="font-size: 0.75rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">STATUS KEPATUHAN LAPAK</span>
@@ -203,7 +203,7 @@
         </div>
 
         <!-- Card Mutiara Hikmah Perniagaan -->
-        <div class="card" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: var(--radius-lg); padding: 20px;">
+        <div class="card" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: var(--radius-lg);">
             <span style="font-size: 0.75rem; font-weight: 700; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px;">MUTIARA PERNIAGAAN BERKAH</span>
             <blockquote style="margin: 8px 0 0; font-size: 0.85rem; color: #1e3a8a; font-style: italic; line-height: 1.5;">
                 “Pedagang yang senantiasa jujur dan terpercaya kelak akan dikumpulkan bersama para Nabi, orang-orang benar, dan para syuhada.”
@@ -214,89 +214,227 @@
         </div>
     </div>
 
-    <!-- 4. RINGKASAN STATUS IURAN HARI INI & KIOS (Section ID) -->
-    <div id="section-status-iuran" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 24px;">
-        <!-- Card Kios -->
-        <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); padding: 18px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase;">Nomor Kios</span>
-                <span style="background: rgba(11, 83, 49, 0.1); color: var(--primary); padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700;">{{ $pedagang->blok_kios ?? 'Blok -' }}</span>
-            </div>
-            <div style="font-size: 1.5rem; font-weight: 800; color: var(--on-surface);">
-                {{ $pedagang->no_kios ?? 'Kios -' }}
-            </div>
-            <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                Usaha: <strong style="color: var(--on-surface);">{{ $pedagang->nama_usaha ?? $pedagang->nama_pedagang }}</strong>
-            </div>
+    <!-- 3. RINGKASAN KEUANGAN UTAMA KIOS (PERIODE BERJALAN & DATABASE SAH) -->
+    <div style="margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--on-surface); margin: 0; display: flex; align-items: center; gap: 8px;">
+                <span>📊</span> Ringkasan Keuangan Kios (Periode {{ date('F Y') }})
+            </h3>
+            <span style="font-size: 0.775rem; color: var(--on-surface-variant);">
+                Data sah real-time tersinkronisasi kasir pasar
+            </span>
         </div>
 
-        <!-- Card Status Hari Ini -->
-        <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); padding: 18px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase;">Status Hari Ini</span>
-                <span style="font-size: 0.75rem; color: var(--on-surface-variant);">{{ date('d M Y') }}</span>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+            <!-- 1. Total Tagihan Periode Berjalan -->
+            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Total Tagihan Bulan Ini</span>
+                    <span style="font-size: 1.1rem;">🧾</span>
+                </div>
+                <div style="font-size: 1.45rem; font-weight: 800; color: var(--on-surface);">
+                    Rp {{ number_format($totalTagihanBulanIni, 0, ',', '.') }}
+                </div>
+                <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                    Total seluruh tagihan terbit: Rp {{ number_format($totalTagihanSemua, 0, ',', '.') }}
+                </div>
             </div>
-            @if($tagihanHariIni && $tagihanHariIni->status_bayar === 'lunas')
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 1.5rem; font-weight: 800; color: #059669;">LUNAS</span>
-                    <span style="background: #d1fae5; color: #065f46; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">✓ Terbayar</span>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Nominal: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }}
-                </div>
-            @elseif($tagihanHariIni)
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 1.4rem; font-weight: 800; color: #d97706;">BELUM LUNAS</span>
-                    <span style="background: #fef3c7; color: #92400e; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Menunggu</span>
-                </div>
-                <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Tagihan: Rp {{ number_format($tagihanHariIni->nominal_tagihan, 0, ',', '.') }}
-                </div>
-            @else
-                <div style="font-size: 1.3rem; font-weight: 700; color: var(--on-surface-variant);">
-                    Belum Ditarik
-                </div>
-                <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Tarif Harian: Rp {{ number_format($pedagang->tarif->nominal_harian ?? 0, 0, ',', '.') }}
-                </div>
-            @endif
-        </div>
 
-        <!-- Card Terbayar Bulan Ini -->
-        <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); padding: 18px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase;">Terbayar Bulan Ini</span>
-                <span style="font-size: 0.75rem; color: var(--on-surface-variant);">{{ date('F Y') }}</span>
+            <!-- 2. Total Pembayaran Tercatat -->
+            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Total Pembayaran Tercatat</span>
+                    <span style="font-size: 1.1rem;">💰</span>
+                </div>
+                <div style="font-size: 1.45rem; font-weight: 800; color: #059669;">
+                    Rp {{ number_format($totalDibayarBulanIni, 0, ',', '.') }}
+                </div>
+                <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
+                    Total akumulasi terbayar: Rp {{ number_format($totalDibayarSemua, 0, ',', '.') }}
+                </div>
             </div>
-            <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);">
-                Rp {{ number_format($totalDibayarBulanIni, 0, ',', '.') }}
-            </div>
-            <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                Kategori: {{ $pedagang->kategori_usaha ?? 'Umum' }}
-            </div>
-        </div>
 
-        <!-- Card Total Tunggakan -->
-        <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); padding: 18px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
-                <span style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase;">Total Tunggakan</span>
-                @if($totalTunggakanPedagang > 0)
-                    <span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;">{{ $jumlahHariMenunggak }} Hari</span>
+            <!-- 3. Total Sisa Tagihan atau Tunggakan -->
+            <div class="card" style="background: var(--surface-container-lowest); border: 1.5px solid {{ $totalTunggakanPedagang > 0 ? '#fecaca' : '#a7f3d0' }}; border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: {{ $totalTunggakanPedagang > 0 ? '#b91c1c' : '#047857' }}; text-transform: uppercase; letter-spacing: 0.5px;">Sisa Tagihan / Tunggakan</span>
+                    @if($totalTunggakanPedagang > 0)
+                        <span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700;">{{ $jumlahHariMenunggak }} Hari</span>
+                    @else
+                        <span style="background: #d1fae5; color: #047857; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700;">Lancar</span>
+                    @endif
+                </div>
+                <div style="font-size: 1.45rem; font-weight: 800; color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#059669' }};">
+                    Rp {{ number_format($totalTunggakanPedagang, 0, ',', '.') }}
+                </div>
+                <div style="font-size: 0.75rem; color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#047857' }}; margin-top: 4px;">
+                    {{ $totalTunggakanPedagang > 0 ? 'Harap diselesaikan ke petugas' : 'Alhamdulillah bebas tunggakan' }}
+                </div>
+            </div>
+
+            <!-- 4. Status Iuran Hari Ini -->
+            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Status Iuran Hari Ini</span>
+                    <span style="font-size: 0.75rem; color: var(--on-surface-variant);">{{ date('d M Y') }}</span>
+                </div>
+                @if($tagihanHariIni && $tagihanHariIni->status_bayar === 'lunas')
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.45rem; font-weight: 800; color: #059669;">LUNAS</span>
+                        <span style="background: #d1fae5; color: #065f46; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">✓ Terbayar</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                        Nominal: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }} ({{ $tagihanHariIni->metode_bayar ?: 'Tunai' }})
+                    </div>
+                @elseif($tagihanHariIni && $tagihanHariIni->status_bayar === 'bayar_sebagian')
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.35rem; font-weight: 800; color: #d97706;">CICIL</span>
+                        <span style="background: #fef3c7; color: #92400e; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Sebagian</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                        Dibayar: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }} | Sisa: Rp {{ number_format($tagihanHariIni->nominal_tagihan - $tagihanHariIni->nominal_dibayar, 0, ',', '.') }}
+                    </div>
+                @elseif($tagihanHariIni)
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="font-size: 1.35rem; font-weight: 800; color: #dc2626;">BELUM BAYAR</span>
+                        <span style="background: #fee2e2; color: #b91c1c; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Menunggu</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                        Tagihan: Rp {{ number_format($tagihanHariIni->nominal_tagihan, 0, ',', '.') }}
+                    </div>
                 @else
-                    <span style="background: #d1fae5; color: #047857; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;">Lancar</span>
+                    <div style="font-size: 1.25rem; font-weight: 700; color: var(--on-surface-variant);">
+                        Belum Ditarik
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                        Tarif Kios: Rp {{ number_format($pedagang->tarif->nominal_harian ?? 0, 0, ',', '.') }} / hari
+                    </div>
                 @endif
-            </div>
-            <div style="font-size: 1.5rem; font-weight: 800; color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#059669' }};">
-                Rp {{ number_format($totalTunggakanPedagang, 0, ',', '.') }}
-            </div>
-            <div style="font-size: 0.8rem; color: var(--on-surface-variant); margin-top: 4px;">
-                {{ $totalTunggakanPedagang > 0 ? 'Harap diselesaikan ke petugas' : 'Alhamdulillah bebas tunggakan' }}
             </div>
         </div>
     </div>
 
-    <!-- 5. FITUR MENARIK KHUSUS: BUKU KAS HARIAN KIOS MANDIRI (Catatan Penjualan & Pengeluaran Toko) -->
-    <div id="section-buku-kas" class="card" style="background: var(--surface-container-lowest); border: 1.5px solid var(--outline-variant); border-radius: var(--radius-lg); padding: 20px; margin-bottom: 24px; box-shadow: var(--shadow-sm);">
+    <!-- 4. INFORMASI PEMBAYARAN TERAKHIR (JIKA ADA RIWAYAT TRANSAKSI) -->
+    @if($pembayaranTerakhir)
+        <div class="card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 95, 70, 0.04) 100%); border: 1.5px solid #a7f3d0; border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 44px; height: 44px; border-radius: 10px; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                        💳
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">
+                            Transaksi Pembayaran Terakhir
+                        </div>
+                        <div style="font-size: 1.2rem; font-weight: 800; color: #065f46; margin: 2px 0;">
+                            Rp {{ number_format($pembayaranTerakhir->nominal_dibayar, 0, ',', '.') }}
+                            <span style="font-size: 0.8rem; font-weight: 600; background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 6px; margin-left: 6px;">
+                                {{ strtoupper($pembayaranTerakhir->status_bayar === 'lunas' ? 'Lunas' : 'Cicil') }}
+                            </span>
+                        </div>
+                        <div style="font-size: 0.785rem; color: #047857;">
+                            Waktu: <strong>{{ $pembayaranTerakhir->waktu_bayar ? \Carbon\Carbon::parse($pembayaranTerakhir->waktu_bayar)->locale('id')->isoFormat('D MMMM YYYY, HH:mm') : \Carbon\Carbon::parse($pembayaranTerakhir->tanggal_tagihan)->format('d/m/Y') }} WIB</strong> | No. Kuitansi: <code>{{ $pembayaranTerakhir->no_bukti ?: '-' }}</code> | Metode: <strong style="text-transform: uppercase;">{{ $pembayaranTerakhir->metode_bayar ?: 'Tunai' }}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <a href="{{ route('riwayat.cetak', $pembayaranTerakhir->id) }}" target="_blank" class="btn btn-primary btn-sm" style="background: #059669; font-size: 0.8rem; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;">
+                        🖨️ Cetak Bukti Kuitansi
+                    </a>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <!-- 5. DAFTAR TAGIHAN TERBARU KIOS (6 TERAKHIR) -->
+    <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 14px; overflow: hidden; margin-bottom: 20px;">
+        <div style="padding: 16px 20px; border-bottom: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+            <div>
+                <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--on-surface);">Daftar Tagihan Iuran Terbaru</h3>
+                <p style="font-size: 0.8rem; color: var(--on-surface-variant); margin: 2px 0 0;">Status pembayaran tagihan iuran harian beberapa waktu terakhir</p>
+            </div>
+            <a href="{{ route('pedagang.tagihan') }}" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">
+                Lihat Seluruh Tagihan Saya →
+            </a>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th style="padding: 12px 16px; text-align: left;">Tanggal</th>
+                        <th style="padding: 12px 16px; text-align: left;">Jenis Iuran</th>
+                        <th style="padding: 12px 16px; text-align: right;">Tagihan</th>
+                        <th style="padding: 12px 16px; text-align: right;">Dibayar</th>
+                        <th style="padding: 12px 16px; text-align: right;">Sisa</th>
+                        <th style="padding: 12px 16px; text-align: center;">Status</th>
+                        <th style="padding: 12px 16px; text-align: center;">Bukti / Nota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($tagihanTerbaru as $tb)
+                    @php
+                        $sisaTb = max(0, $tb->nominal_tagihan - $tb->nominal_dibayar);
+                    @endphp
+                    <tr style="border-bottom: 1px solid var(--outline-variant);">
+                        <td style="padding: 12px 16px; vertical-align: middle;">
+                            <strong style="color: var(--on-surface); font-size: 0.875rem;">
+                                {{ \Carbon\Carbon::parse($tb->tanggal_tagihan)->locale('id')->isoFormat('D MMM YYYY') }}
+                            </strong>
+                            <div style="font-size: 0.725rem; color: var(--on-surface-variant);">
+                                {{ \Carbon\Carbon::parse($tb->tanggal_tagihan)->diffForHumans() }}
+                            </div>
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; font-size: 0.875rem;">
+                            {{ $tb->jenis_iuran ?: 'Iuran Harian' }}
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: right; font-weight: 600; color: var(--on-surface);">
+                            Rp {{ number_format($tb->nominal_tagihan, 0, ',', '.') }}
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: right; font-weight: 700; color: #059669;">
+                            Rp {{ number_format($tb->nominal_dibayar, 0, ',', '.') }}
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: right; font-weight: 800; color: {{ $sisaTb > 0 ? '#dc2626' : '#059669' }};">
+                            Rp {{ number_format($sisaTb, 0, ',', '.') }}
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: center;">
+                            @if($tb->status_bayar === 'lunas')
+                                <span style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 0.725rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;">
+                                    LUNAS
+                                </span>
+                            @elseif($tb->status_bayar === 'bayar_sebagian')
+                                <span style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.725rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;">
+                                    CICIL
+                                </span>
+                            @else
+                                <span style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.725rem; font-weight: 800; padding: 3px 8px; border-radius: 999px;">
+                                    BELUM BAYAR
+                                </span>
+                            @endif
+                        </td>
+                        <td style="padding: 12px 16px; vertical-align: middle; text-align: center;">
+                            @if($tb->nominal_dibayar > 0)
+                                <a href="{{ route('riwayat.cetak', $tb->id) }}" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.725rem; padding: 2px 8px; border-color: #10b981; color: #047857;" title="Cetak Kuitansi">
+                                    🖨️ Cetak
+                                </a>
+                            @else
+                                <span style="color: var(--outline); font-size: 0.8rem;">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 30px; color: var(--on-surface-variant);">
+                            Belum ada catatan tagihan terbaru.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 6. FITUR MENARIK KHUSUS: BUKU KAS HARIAN KIOS MANDIRI (Catatan Penjualan & Pengeluaran Toko) -->
+    <div id="section-buku-kas" class="card" style="background: var(--surface-container-lowest); border: 1.5px solid var(--outline-variant); border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: var(--shadow-sm);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(11, 83, 49, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
@@ -312,7 +450,7 @@
             </button>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 16px;">
+        <div class="responsive-kpi-4" style="margin-bottom: 14px;">
             <div>
                 <label style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface); display: block; margin-bottom: 4px;">Total Penjualan / Pemasukan (Rp):</label>
                 <input type="number" id="kasPemasukan" class="form-control" placeholder="Contoh: 350000" oninput="hitungLabaHarian()" style="font-size: 0.9rem; font-weight: 600;">
@@ -330,61 +468,6 @@
         </div>
         <div style="font-size: 0.75rem; color: var(--on-surface-variant); line-height: 1.4;">
             💡 <em>Catatan ini tersimpan secara privat di perangkat Anda untuk memudahkan rekapitulasi harian toko Anda.</em>
-        </div>
-    </div>
-
-    <!-- 6. RIWAYAT PEMBAYARAN IURAN SAYA BESERTA CETAK BUKTI -->
-    <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: var(--radius-lg); overflow: hidden;">
-        <div style="padding: 16px 20px; border-bottom: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-            <div>
-                <h3 style="font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--on-surface);">Riwayat Pembayaran Kios Saya</h3>
-                <p style="font-size: 0.8rem; color: var(--on-surface-variant); margin: 2px 0 0;">Daftar pembayaran iuran resmi yang telah tercatat di kasir pasar</p>
-            </div>
-            <a href="{{ route('riwayat.index') }}" class="btn btn-secondary btn-sm" style="font-size: 0.8rem;">
-                Lihat Selengkapnya →
-            </a>
-        </div>
-        <div class="table-responsive">
-            <table class="data-table" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Waktu Bayar</th>
-                        <th>No. Kuitansi</th>
-                        <th>Nominal Dibayar</th>
-                        <th>Metode Bayar</th>
-                        <th>Petugas Penerima</th>
-                        <th style="text-align: center;">Kuitansi Resmi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($riwayatPembayaran as $tgh)
-                        <tr>
-                            <td>{{ $tgh->waktu_bayar ? \Carbon\Carbon::parse($tgh->waktu_bayar)->isoFormat('D MMM Y, HH:mm') : \Carbon\Carbon::parse($tgh->tanggal_tagihan)->format('d/m/Y') }}</td>
-                            <td><code>{{ $tgh->no_bukti ?? $tgh->no_tagihan ?? '-' }}</code></td>
-                            <td style="font-weight: 700; color: #059669;">
-                                Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}
-                            </td>
-                            <td>
-                                <span class="badge" style="background: var(--surface-container-high); color: var(--on-surface); text-transform: uppercase;">
-                                    {{ $tgh->metode_bayar ?? 'Tunai' }}
-                                </span>
-                            </td>
-                            <td>{{ $tgh->petugas->nama ?? 'Petugas Pasar' }}</td>
-                            <td style="text-align: center;">
-                                <a href="{{ route('riwayat.cetak', $tgh->id) }}" target="_blank" class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 12px; display: inline-flex; align-items: center; gap: 4px;" title="Cetak Kuitansi Resmi">
-                                    🖨️ Cetak Kuitansi
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 36px; color: var(--on-surface-variant);">
-                                Belum ada riwayat pembayaran yang tercatat.
-                            </td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
         </div>
     </div>
 @endif

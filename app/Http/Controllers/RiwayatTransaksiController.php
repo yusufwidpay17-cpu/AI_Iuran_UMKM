@@ -47,11 +47,13 @@ class RiwayatTransaksiController extends Controller
         }
 
         if ($request->has('reset')) {
-            // Return empty paginator
-            $transaksis = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
-        } else {
-            $transaksis = $query->orderBy('waktu_bayar', 'desc')->paginate(15)->withQueryString();
+            return redirect()->route('riwayat.index');
         }
+
+        $transaksis = $query->orderByRaw("COALESCE(waktu_bayar, CONCAT(tanggal_tagihan, ' 23:59:59')) desc")
+            ->orderBy('id', 'desc')
+            ->paginate(15)
+            ->withQueryString();
 
         // Jika pedagang, tidak perlu kirim daftar seluruh pedagang
         $pedagangs = ($user && $user->role === 'pedagang') 

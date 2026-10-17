@@ -64,6 +64,7 @@
             <option value="lunas" {{ $statusBayar == 'lunas' ? 'selected' : '' }}>Lunas</option>
             <option value="bayar_sebagian" {{ $statusBayar == 'bayar_sebagian' ? 'selected' : '' }}>Bayar Sebagian</option>
             <option value="belum_bayar" {{ $statusBayar == 'belum_bayar' ? 'selected' : '' }}>Belum Bayar</option>
+            <option value="dibatalkan" {{ $statusBayar == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan / Bebas Iuran</option>
         </select>
     </div>
 
@@ -74,7 +75,7 @@
 </form>
 
 <!-- REPORT SUMMARY -->
-<div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: var(--space-lg);">
+<div class="stats-grid">
     <div class="stat-card">
         <div class="stat-label">Total Nominal Tagihan</div>
         <div class="stat-value numeric-display">Rp {{ number_format($summary['total_tagihan'], 0, ',', '.') }}</div>

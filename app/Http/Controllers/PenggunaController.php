@@ -16,12 +16,149 @@ class PenggunaController extends Controller
 {
     public function index()
     {
-        $pengguna = User::with('pedagang')->orderBy('created_at', 'desc')->get();
-        // Ambil data pedagang yang belum memiliki akun user tertaut
-        $pedagangList = Pedagang::whereDoesntHave('user')->orderBy('nama_pedagang', 'asc')->get();
+        // 1. Data Staf Pengelola (Superadmin, Admin, Petugas Lapangan)
+        $stafPengguna = User::whereIn('role', ['superadmin', 'admin', 'petugas'])
+            ->orderByRaw("FIELD(role, 'superadmin', 'admin', 'petugas')")
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // 2. Data Seluruh Mitra Pedagang beserta Akun Loginnya (jika sudah dibuatkan)
+        $mitraPedagang = Pedagang::with('user')
+            ->orderBy('no_kios', 'asc')
+            ->get();
+
+        // Data pedagang yang belum memiliki akun login (untuk dropdown modal)
+        $pedagangTanpaAkun = Pedagang::whereDoesntHave('user')
+            ->orderBy('nama_pedagang', 'asc')
+            ->get();
+
         $semuaPedagang = Pedagang::orderBy('nama_pedagang', 'asc')->get();
 
-        return view('pengguna.index', compact('pengguna', 'pedagangList', 'semuaPedagang'));
+        // Statistik ringkasan hak akses
+        $stats = [
+            'total_staf' => $stafPengguna->count(),
+            'total_pedagang' => $mitraPedagang->count(),
+            'pedagang_punya_akses' => $mitraPedagang->filter(fn($p) => $p->user !== null)->count(),
+            'pedagang_belum_akses' => $mitraPedagang->filter(fn($p) => $p->user === null)->count(),
+        ];
+
+        return view('pengguna.index', compact('stafPengguna', 'mitraPedagang', 'pedagangTanpaAkun', 'semuaPedagang', 'stats'));
+    }
+
+    public function beriAksesPedagang(Request $request)
+    {
+        $request->validate([
+            'pedagang_id' => 'required|exists:pedagang,id',
+            'username' => 'required|string|max:50|unique:users,username',
+            'password' => 'required|string|min:6',
+            'email' => 'nullable|email|max:150|unique:users,email',
+            'nama' => 'nullable|string|max:100',
+        ], [
+            'username.unique' => 'Username ini sudah digunakan, silakan pilih username lain.',
+            'email.unique' => 'Email ini sudah terdaftar pada akun lain.',
+            'password.min' => 'Kata sandi minimal 6 karakter.',
+        ]);
+
+        $pedagang = Pedagang::findOrFail($request->pedagang_id);
+
+        // Jika pedagang sudah punya user, jangan duplikasi
+        $existing = User::where('pedagang_id', $pedagang->id)->first();
+        if ($existing) {
+            return redirect()->route('pengguna.index')->with('warning', "Pedagang {$pedagang->nama_pedagang} sudah memiliki akun login (Username: {$existing->username}). Gunakan fitur edit/reset sandi jika diperlukan.");
+        }
+
+        $namaUser = $request->nama ?: $pedagang->nama_pedagang;
+        $username = strtolower(trim($request->username));
+        $email = $request->email ? strtolower(trim($request->email)) : ($username . '@amanahledger.id');
+
+        $newUser = User::create([
+            'id' => (string) Str::uuid(),
+            'nama' => $namaUser,
+            'username' => $username,
+            'email' => $email,
+            'password' => Hash::make($request->password),
+            'role' => 'pedagang',
+            'pedagang_id' => $pedagang->id,
+            'status_aktivasi' => 'aktif',
+            'activation_token' => null,
+            'activation_expires_at' => null,
+        ]);
+
+        // Catat Audit Log
+        AuditLog::create([
+            'id' => (string) Str::uuid(),
+            'user_id' => auth()->id() ?? $newUser->id,
+            'aksi' => 'BERI_AKSES_PEDAGANG',
+            'deskripsi' => 'Superadmin memberikan hak akses login kepada pedagang ' . $pedagang->nama_pedagang . ' (Kios: ' . ($pedagang->no_kios ?? '-') . ', Username: ' . $username . ').',
+            'created_at' => now(),
+        ]);
+
+        return redirect()->route('pengguna.index')
+            ->with('success', "✓ Hak akses login berhasil diberikan kepada pedagang {$pedagang->nama_pedagang} (Username: {$username})!");
+    }
+
+    public function cabutAksesPedagang(Request $request, $id)
+    {
+        $user = User::with('pedagang')->findOrFail($id);
+
+        if ($user->role !== 'pedagang') {
+            return redirect()->route('pengguna.index')->with('error', 'Hanya akun mitra pedagang yang dapat dicabut melalui tindakan ini.');
+        }
+
+        $namaPedagang = $user->pedagang ? $user->pedagang->nama_pedagang : $user->nama;
+        $kios = $user->pedagang ? $user->pedagang->no_kios : '-';
+
+        // Jika opsi tandai pedagang berhenti jualan / nonaktif dipilih
+        if ($request->input('tandai_berhenti') == '1' && $user->pedagang) {
+            $user->pedagang->update([
+                'status_pedagang' => 'nonaktif',
+                'catatan' => trim(($user->pedagang->catatan ? $user->pedagang->catatan . ' | ' : '') . 'Berhenti jualan & hak akses login dicabut pada ' . now()->format('d/m/Y H:i')),
+            ]);
+        }
+
+        // Catat Audit Log sebelum penghapusan user
+        AuditLog::create([
+            'id' => (string) Str::uuid(),
+            'user_id' => auth()->id(),
+            'aksi' => 'CABUT_AKSES_PEDAGANG',
+            'deskripsi' => "Mencabut hak akses login pedagang {$namaPedagang} (Kios: {$kios}, Akun: {$user->username}). " . ($request->input('tandai_berhenti') == '1' ? 'Status pedagang ditandai Nonaktif/Berhenti.' : 'Data histori lapak dan transaksi tetap tersimpan.'),
+            'created_at' => now(),
+        ]);
+
+        // Hapus akun login (data transaksi & profil pedagang tetap aman)
+        $user->delete();
+
+        return redirect()->route('pengguna.index')
+            ->with('success', "✓ Hak akses login pedagang {$namaPedagang} berhasil dicabut. Akun login telah dihapus sehingga pedagang tidak dapat lagi masuk ke aplikasi.");
+    }
+
+    public function resetPassword(Request $request, $id)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6',
+        ], [
+            'password.required' => 'Kata sandi baru wajib diisi.',
+            'password.min' => 'Kata sandi minimal 6 karakter.',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->update([
+            'password' => Hash::make($request->password),
+            'status_aktivasi' => 'aktif',
+            'activation_token' => null,
+            'activation_expires_at' => null,
+        ]);
+
+        AuditLog::create([
+            'id' => (string) Str::uuid(),
+            'user_id' => auth()->id(),
+            'aksi' => 'RESET_PASSWORD',
+            'deskripsi' => "Mereset kata sandi pengguna {$user->nama} ({$user->username}).",
+            'created_at' => now(),
+        ]);
+
+        return redirect()->route('pengguna.index')
+            ->with('success', "✓ Kata sandi untuk pengguna {$user->nama} ({$user->username}) berhasil diubah.");
     }
 
     public function store(Request $request)

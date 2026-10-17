@@ -141,15 +141,16 @@ class PedagangController extends Controller
             ? Lapak::where('kode_lapak', $pedagang->no_kios)->first()
             : null;
 
-        // Financial totals for this merchant
-        $totalTagihan = $pedagang->tagihan->sum('nominal_tagihan');
+        // Financial totals for this merchant (Consistent with Kalender Operasional: Exclude 'dibatalkan')
+        $activeTagihans = $pedagang->tagihan->where('status_bayar', '!=', 'dibatalkan');
+        $totalTagihan = $activeTagihans->sum('nominal_tagihan');
         $totalPembayaran = $pedagang->tagihan->sum('nominal_dibayar');
-        $totalTunggakan = $totalTagihan - $totalPembayaran;
+        $totalTunggakan = max(0, $totalTagihan - $totalPembayaran);
 
         // Categorized History
         $riwayatIuran = $pedagang->tagihan->sortByDesc('tanggal_tagihan');
         $riwayatPembayaran = $pedagang->tagihan->where('nominal_dibayar', '>', 0)->sortByDesc('waktu_bayar');
-        $riwayatTunggakan = $pedagang->tagihan->where('status_bayar', '!=', 'lunas')->sortByDesc('tanggal_tagihan');
+        $riwayatTunggakan = $pedagang->tagihan->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])->sortByDesc('tanggal_tagihan');
 
         return view('pedagang.show', compact(
             'pedagang',
