@@ -247,10 +247,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/notifikasi', [PedagangPortalController::class, 'notifikasi'])->name('notifikasi');
         Route::get('/profil', [PedagangPortalController::class, 'profil'])->name('profil');
         Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto');
+        Route::post('/profil/password', [PedagangPortalController::class, 'updatePassword'])->name('profil.password');
     });
 
-    // Alias route profil.foto direct
+    // Alias route profil.foto & profil.password direct
     Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto')->middleware('auth');
+    Route::post('/profil/password', [PedagangPortalController::class, 'updatePassword'])->name('profil.password')->middleware('auth');
 
 
     // ==========================================

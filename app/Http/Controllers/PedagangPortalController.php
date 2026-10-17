@@ -7,6 +7,7 @@ use App\Models\Pedagang;
 use App\Models\Tagihan;
 use App\Models\AuditLog;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
 use App\Services\KalenderOperasionalService;
@@ -239,6 +240,41 @@ class PedagangPortalController extends Controller
         }
 
         return back()->with('error', 'Gagal memproses unggahan foto.');
+    }
+
+    /**
+     * Update Kata Sandi Mandiri oleh Mitra Pedagang
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'password_saat_ini' => 'required',
+            'password_baru' => 'required|string|min:6|confirmed',
+        ], [
+            'password_saat_ini.required' => 'Kata sandi saat ini wajib diisi.',
+            'password_baru.required' => 'Kata sandi baru wajib diisi.',
+            'password_baru.min' => 'Kata sandi baru minimal 6 karakter.',
+            'password_baru.confirmed' => 'Konfirmasi kata sandi baru tidak cocok.',
+        ]);
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->password_saat_ini, $user->password)) {
+            return back()->withErrors(['password_saat_ini' => 'Kata sandi saat ini yang Anda masukkan salah.']);
+        }
+
+        $user->password = Hash::make($request->password_baru);
+        $user->save();
+
+        AuditLog::create([
+            'id' => (string) Str::uuid(),
+            'user_id' => $user->id,
+            'aksi' => 'UPDATE_PASSWORD_MANDIRI',
+            'deskripsi' => "Pengguna mitra {$user->nama} ({$user->username}) memperbarui kata sandinya secara mandiri dari Portal Pedagang.",
+            'created_at' => now(),
+        ]);
+
+        return back()->with('success_password', '✓ Kata sandi akun Anda berhasil diperbarui!');
     }
 }
 

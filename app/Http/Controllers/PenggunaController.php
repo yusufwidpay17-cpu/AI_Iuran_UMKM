@@ -158,7 +158,7 @@ class PenggunaController extends Controller
         ]);
 
         return redirect()->route('pengguna.index')
-            ->with('success', "✓ Kata sandi untuk pengguna {$user->nama} ({$user->username}) berhasil diubah.");
+            ->with('success', "✓ Kata sandi untuk pengguna {$user->nama} ({$user->username}) berhasil diubah menjadi '{$request->password}'. Silakan beritahukan sandi baru ini kepada pedagang terkait.");
     }
 
     public function store(Request $request)

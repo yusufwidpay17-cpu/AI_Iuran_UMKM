@@ -515,15 +515,23 @@
 
             <div class="form-group" style="margin-bottom: 18px;">
                 <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Kata Sandi Baru (Min. 6 Karakter) <span style="color: #ef4444;">*</span></label>
-                <input type="text" name="password" id="input_reset_password" class="form-control" required minlength="6" placeholder="Masukkan kata sandi baru" value="password123" style="font-family: monospace;">
-                <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Ketik sandi baru dan serahkan kepada pemilik akun.
+                <div style="display: flex; gap: 8px;">
+                    <div style="position: relative; flex: 1;">
+                        <input type="text" name="password" id="input_reset_password" class="form-control" required minlength="6" placeholder="Ketik kata sandi baru di sini" style="font-family: monospace; font-weight: 700; padding-right: 36px;">
+                        <button type="button" onclick="salinSandiReset()" title="Salin Sandi ke Clipboard" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px; color: var(--outline);">📋</button>
+                    </div>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="acakSandiReset()" style="white-space: nowrap; font-size: 0.8rem; font-weight: 600;">
+                        🎲 Acak Sandi
+                    </button>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 6px; line-height: 1.4;">
+                    🛡️ Sandi akun dienkripsi secara aman. Ketik sandi baru di atas atau klik <b>Acak Sandi</b>, lalu serahkan kepada pemilik akun.
                 </div>
             </div>
 
             <div style="display: flex; gap: 10px; justify-content: flex-end;">
                 <button type="button" class="btn btn-outline" onclick="document.getElementById('modalResetPassword').style.display='none'">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan Kata Sandi Baru</button>
+                <button type="submit" class="btn btn-primary" style="font-weight: 700;">💾 Simpan Kata Sandi Baru</button>
             </div>
         </form>
     </div>
@@ -782,7 +790,26 @@
         document.getElementById('reset_user_nama').textContent = nama;
         document.getElementById('reset_user_username').textContent = username;
         document.getElementById('formResetPassword').action = "{{ url('pengguna') }}/" + userId + "/reset-password";
-        document.getElementById('input_reset_password').value = 'password123';
+        document.getElementById('input_reset_password').value = '';
+        document.getElementById('input_reset_password').focus();
+    }
+
+    function acakSandiReset() {
+        const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
+        let res = 'pass';
+        for (let i = 0; i < 4; i++) {
+            res += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        document.getElementById('input_reset_password').value = res;
+    }
+
+    function salinSandiReset() {
+        const val = document.getElementById('input_reset_password').value;
+        if (!val) {
+            alert('Silakan ketik atau acak kata sandi terlebih dahulu sebelum menyalin.');
+            return;
+        }
+        salinTeks(val, 'Kata Sandi Baru');
     }
 
     // Modal Tambah Pengguna Umum / Staf

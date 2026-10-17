@@ -27,6 +27,13 @@
     </div>
 @endif
 
+@if(session('success_password'))
+    <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #047857; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem;">
+        <span>🔒</span>
+        <span>{{ session('success_password') }}</span>
+    </div>
+@endif
+
 @if($errors->any())
     <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
         <ul style="margin: 0; padding-left: 20px;">
@@ -249,6 +256,67 @@
             </div>
         </div>
     </div>
+
+    <!-- 4. KARTU GANTI KATA SANDI MANDIRI -->
+    <div class="card" style="padding: 24px; border-radius: 14px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.4rem;">🔐</span>
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--on-surface);">Keamanan & Ganti Sandi</h3>
+            </div>
+            <span style="background: rgba(59, 130, 246, 0.12); color: #2563eb; font-weight: 700; font-size: 0.75rem; padding: 4px 8px; border-radius: 6px;">
+                Akses Mandiri
+            </span>
+        </div>
+
+        <p style="margin: 0 0 16px; font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.4;">
+            Demi keamanan akun Anda, Anda dapat mengganti kata sandi kapan saja tanpa harus menghubungi admin pasar.
+        </p>
+
+        <form action="{{ route('pedagang.profil.password') }}" method="POST">
+            @csrf
+
+            <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--on-surface); margin-bottom: 4px;">
+                    Kata Sandi Saat Ini <span style="color: #ef4444;">*</span>
+                </label>
+                <div style="position: relative;">
+                    <input type="password" name="password_saat_ini" id="portalPassCurrent" required placeholder="Masukkan kata sandi saat ini" class="form-control" style="padding-right: 40px; font-size: 0.85rem; width: 100%;">
+                    <button type="button" onclick="togglePassVisibility('portalPassCurrent', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 15px; color: var(--outline);" title="Lihat/Sembunyikan Sandi">👁️</button>
+                </div>
+                @error('password_saat_ini')
+                    <div style="color: #ef4444; font-size: 0.75rem; margin-top: 4px; font-weight: 600;">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div style="margin-bottom: 14px;">
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--on-surface); margin-bottom: 4px;">
+                    Kata Sandi Baru (Min. 6 Karakter) <span style="color: #ef4444;">*</span>
+                </label>
+                <div style="position: relative;">
+                    <input type="password" name="password_baru" id="portalPassNew" required minlength="6" placeholder="Ketik kata sandi baru" class="form-control" style="padding-right: 40px; font-size: 0.85rem; width: 100%;">
+                    <button type="button" onclick="togglePassVisibility('portalPassNew', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 15px; color: var(--outline);" title="Lihat/Sembunyikan Sandi">👁️</button>
+                </div>
+                @error('password_baru')
+                    <div style="color: #ef4444; font-size: 0.75rem; margin-top: 4px; font-weight: 600;">{{ $message }}</div>
+                @enderror
+            </div>
+
+            <div style="margin-bottom: 18px;">
+                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--on-surface); margin-bottom: 4px;">
+                    Konfirmasi Kata Sandi Baru <span style="color: #ef4444;">*</span>
+                </label>
+                <div style="position: relative;">
+                    <input type="password" name="password_baru_confirmation" id="portalPassConfirm" required minlength="6" placeholder="Ulangi kata sandi baru" class="form-control" style="padding-right: 40px; font-size: 0.85rem; width: 100%;">
+                    <button type="button" onclick="togglePassVisibility('portalPassConfirm', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 15px; color: var(--outline);" title="Lihat/Sembunyikan Sandi">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem;">
+                <span>🔒</span> Simpan Kata Sandi Baru
+            </button>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -291,6 +359,18 @@ function cancelPortalAvatar() {
     const actions = document.getElementById('portalAvatarActions');
     if (actions) {
         actions.style.display = 'none';
+    }
+}
+
+function togglePassVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        btn.textContent = '👁️';
     }
 }
 </script>
