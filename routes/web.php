@@ -73,6 +73,14 @@ Route::get('/sync-db', function () {
             \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN activation_expires_at TIMESTAMP NULL AFTER activation_token");
         } catch (\Exception $e) {}
 
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE pedagang ADD COLUMN foto_profil MEDIUMTEXT NULL AFTER status_legal");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN foto_profil MEDIUMTEXT NULL AFTER email");
+        } catch (\Exception $e) {}
+
         // 4. Sinkronkan Akun Superadmin yusuf123
         $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
         if ($superadmin) {
@@ -180,6 +188,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tunggakan', [PedagangPortalController::class, 'tunggakan'])->name('tunggakan');
         Route::get('/notifikasi', [PedagangPortalController::class, 'notifikasi'])->name('notifikasi');
         Route::get('/profil', [PedagangPortalController::class, 'profil'])->name('profil');
+        Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto');
     });
 
 

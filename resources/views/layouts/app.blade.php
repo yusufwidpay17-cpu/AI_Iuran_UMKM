@@ -179,8 +179,12 @@
                 </div>
 
                 <div class="user-profile-widget">
-                    <div class="user-avatar">
-                        {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        @if(Auth::user() && Auth::user()->foto_profil_url)
+                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                        @endif
                     </div>
                     <div class="user-info">
                         <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
@@ -215,8 +219,12 @@
                     <button class="theme-toggle-btn top-navbar-theme" id="mobile-theme-toggle" title="Ganti Tema (Gelap / Terang)">
                         🌙
                     </button>
-                    <div class="user-avatar top-navbar-avatar">
-                        {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                    <div class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        @if(Auth::user() && Auth::user()->foto_profil_url)
+                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        @else
+                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                        @endif
                     </div>
                 </div>
             </header>
@@ -317,7 +325,13 @@
                         </nav>
                         <div style="margin-top: var(--space-md);">
                             <div class="user-profile-widget" style="margin-bottom: var(--space-md);">
-                                <div class="user-avatar">{{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}</div>
+                                <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                    @if(Auth::user() && Auth::user()->foto_profil_url)
+                                        <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                        {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                                    @endif
+                                </div>
                                 <div class="user-info">
                                     <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
                                     <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>

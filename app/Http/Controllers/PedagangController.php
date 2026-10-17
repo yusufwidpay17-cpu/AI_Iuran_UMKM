@@ -77,6 +77,7 @@ class PedagangController extends Controller
             'tanggal_daftar' => 'required|date',
             'status_pedagang' => 'required|in:aktif,nonaktif,sementara_tutup',
             'status_legal' => 'required|in:legal,ilegal,proses_izin',
+            'foto_profil' => 'nullable|image|max:2048',
             'foto_ktp' => 'nullable|image|max:2048',
             'foto_izin_usaha' => 'nullable|image|max:2048',
             'catatan' => 'nullable|string',
@@ -84,10 +85,24 @@ class PedagangController extends Controller
             'saldo_deposit' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['foto_ktp', 'foto_izin_usaha']);
+        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha']);
         $pedagangId = (string) Str::uuid();
         $data['id'] = $pedagangId;
         $data['saldo_deposit'] = $request->input('saldo_deposit') ?? 0;
+
+        if ($request->hasFile('foto_profil')) {
+            $file = $request->file('foto_profil');
+            $filename = time() . '_profil_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            try {
+                if (!file_exists(public_path('uploads/profil'))) {
+                    @mkdir(public_path('uploads/profil'), 0777, true);
+                }
+                $file->move(public_path('uploads/profil'), $filename);
+                $data['foto_profil'] = 'uploads/profil/' . $filename;
+            } catch (\Exception $e) {
+                $data['foto_profil'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            }
+        }
 
         if ($request->hasFile('foto_ktp')) {
             $file = $request->file('foto_ktp');
@@ -195,6 +210,7 @@ class PedagangController extends Controller
             'tanggal_daftar' => 'required|date',
             'status_pedagang' => 'required|in:aktif,nonaktif,sementara_tutup',
             'status_legal' => 'required|in:legal,ilegal,proses_izin',
+            'foto_profil' => 'nullable|image|max:2048',
             'foto_ktp' => 'nullable|image|max:2048',
             'foto_izin_usaha' => 'nullable|image|max:2048',
             'catatan' => 'nullable|string',
@@ -202,8 +218,28 @@ class PedagangController extends Controller
             'saldo_deposit' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['foto_ktp', 'foto_izin_usaha']);
+        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha']);
         $data['saldo_deposit'] = $request->input('saldo_deposit') ?? 0;
+
+        if ($request->hasFile('foto_profil')) {
+            if ($pedagang->foto_profil && !str_starts_with($pedagang->foto_profil, 'data:') && file_exists(public_path($pedagang->foto_profil))) {
+                @unlink(public_path($pedagang->foto_profil));
+            }
+            $file = $request->file('foto_profil');
+            $filename = time() . '_profil_' . Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) . '.' . $file->getClientOriginalExtension();
+            try {
+                if (!file_exists(public_path('uploads/profil'))) {
+                    @mkdir(public_path('uploads/profil'), 0777, true);
+                }
+                $file->move(public_path('uploads/profil'), $filename);
+                $data['foto_profil'] = 'uploads/profil/' . $filename;
+            } catch (\Exception $e) {
+                $data['foto_profil'] = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            }
+
+            // Sync ke user account jika ada
+            User::where('pedagang_id', $pedagang->id)->update(['foto_profil' => $data['foto_profil']]);
+        }
 
         if ($request->hasFile('foto_ktp')) {
             if ($pedagang->foto_ktp && file_exists(public_path($pedagang->foto_ktp))) {

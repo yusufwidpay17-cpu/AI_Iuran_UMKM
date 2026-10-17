@@ -247,8 +247,31 @@
             </div>
         </div>
 
-        <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg); margin-top: var(--space-xl);">Berkas & Lampiran</h3>
+        <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg); margin-top: var(--space-xl);">Foto Profil & Berkas Lampiran</h3>
         
+        <!-- Upload Foto Profil -->
+        <div class="form-group" style="margin-bottom: var(--space-lg); background: var(--surface-container-low); padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant);">
+            <label for="foto_profil" class="form-label" style="font-weight: 700; display: block; margin-bottom: 8px;">Foto Profil / Foto Diri Pedagang</label>
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    @if($pedagang->foto_profil_url)
+                        <img id="preview-foto-profil" src="{{ $pedagang->foto_profil_url }}" alt="Preview Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                        <span id="placeholder-foto-profil" style="font-size: 1.8rem; color: #64748b; display: none;">👤</span>
+                    @else
+                        <img id="preview-foto-profil" src="" alt="Preview Foto" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <span id="placeholder-foto-profil" style="font-size: 1.8rem; color: #64748b;">👤</span>
+                    @endif
+                </div>
+                <div style="flex-grow: 1; min-width: 220px;">
+                    <input type="file" name="foto_profil" id="foto_profil" class="form-control" style="padding-top: var(--space-sm);" accept="image/*" onchange="previewAvatar(this)">
+                    <span style="font-size: 0.75rem; color: var(--on-surface-variant); display: block; margin-top: 4px;">Pilih foto formal atau foto diri pedagang. Format: JPG, PNG, WEBP (Maksimal 2 MB).</span>
+                </div>
+            </div>
+            @error('foto_profil')
+                <span class="form-error">{{ $message }}</span>
+            @enderror
+        </div>
+
         <div class="grid-2">
             <!-- Upload Foto KTP -->
             <div class="form-group">
@@ -301,6 +324,20 @@
 
 @section('scripts')
 <script>
+    function previewAvatar(input) {
+        const preview = document.getElementById('preview-foto-profil');
+        const placeholder = document.getElementById('placeholder-foto-profil');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const blokKios = document.getElementById('blok_kios');
         const noKios = document.getElementById('no_kios');

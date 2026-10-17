@@ -20,8 +20,75 @@
     </div>
 </div>
 
+@if(session('success'))
+    <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #047857; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem;">
+        <span>✓</span>
+        <span>{{ session('success') }}</span>
+    </div>
+@endif
+
+@if($errors->any())
+    <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #b91c1c; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 0.875rem;">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
-    <!-- 1. KARTU DATA LAPAK KIOS -->
+    <!-- KARTU 1: FOTO PROFIL PRIBADI & PENGATURAN AVATAR -->
+    <div class="card" style="padding: 24px; border-radius: 14px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.4rem;">📸</span>
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--on-surface);">Foto Profil Pribadi</h3>
+            </div>
+            <span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.75rem;">
+                Bisa Diubah Kapan Saja
+            </span>
+        </div>
+
+        <form action="{{ route('profil.foto') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 10px 0;">
+                <div style="position: relative; width: 110px; height: 110px; border-radius: 50%; padding: 4px; border: 3px solid var(--primary); background: var(--surface-container-low); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                    <img id="portalAvatarPreview" 
+                         src="{{ $pedagang->foto_profil_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($pedagang->nama_pedagang) . '&background=008080&color=fff&size=200' }}" 
+                         alt="Foto Profil {{ $pedagang->nama_pedagang }}" 
+                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                </div>
+
+                <div>
+                    <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--on-surface);">{{ $pedagang->nama_pedagang }}</h4>
+                    <span style="font-size: 0.775rem; color: var(--on-surface-variant);">Foto diri / profil resmi mitra pedagang</span>
+                </div>
+
+                <div style="width: 100%; text-align: left; background: var(--surface-container-low); padding: 14px; border-radius: 10px; border: 1px solid var(--outline-variant);">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--on-surface); margin-bottom: 6px;">
+                        Pilih Foto Baru:
+                    </label>
+                    <input type="file" 
+                           name="foto_profil" 
+                           id="portalFotoInput" 
+                           accept="image/png, image/jpeg, image/jpg, image/webp" 
+                           required 
+                           onchange="previewPortalAvatar(this)"
+                           style="width: 100%; font-size: 0.825rem; color: var(--on-surface); background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 6px; padding: 6px 10px;">
+                    <div style="font-size: 0.725rem; color: var(--on-surface-variant); margin-top: 6px; line-height: 1.4;">
+                        Format: JPG, PNG, WEBP. Maksimal ukuran 2 MB. Foto ini akan otomatis tampil pada navigasi atas dan akun Anda.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <span>💾</span> Simpan Foto Profil
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 2. KARTU DATA LAPAK KIOS -->
     <div class="card" style="padding: 24px; border-radius: 14px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -92,7 +159,7 @@
         </div>
     </div>
 
-    <!-- 2. KARTU IDENTITAS PEDAGANG & AKUN LOGIN -->
+    <!-- 3. KARTU IDENTITAS PEDAGANG & AKUN LOGIN -->
     <div class="card" style="padding: 24px; border-radius: 14px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -155,4 +222,19 @@
         </div>
     </div>
 </div>
+
+<script>
+function previewPortalAvatar(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('portalAvatarPreview');
+            if (preview) {
+                preview.src = e.target.result;
+            }
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 @endsection

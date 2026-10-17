@@ -71,6 +71,22 @@
         
         <!-- TAB A: INFORMASI PEDAGANG -->
         <div id="tab-informasi" class="tab-content active">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: var(--space-lg); padding: 16px; background: var(--surface-container-low); border-radius: 12px; border: 1px solid var(--outline-variant);">
+                <div style="width: 68px; height: 68px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 3px solid var(--primary); flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
+                    @if($pedagang->foto_profil_url)
+                        <img src="{{ $pedagang->foto_profil_url }}" alt="Foto {{ $pedagang->nama_pedagang }}" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        <span style="font-size: 1.8rem; color: #64748b;">👤</span>
+                    @endif
+                </div>
+                <div>
+                    <h3 style="margin: 0; font-weight: 800; font-size: 1.2rem; color: var(--on-surface);">{{ $pedagang->nama_pedagang }}</h3>
+                    <div style="font-size: 0.85rem; color: var(--on-surface-variant); margin-top: 2px;">
+                        {{ $pedagang->nama_usaha ?: 'Toko/Kios' }} &bull; Kios <strong style="color: var(--primary);">{{ $pedagang->no_kios }}</strong> ({{ $pedagang->blok_kios }})
+                    </div>
+                </div>
+            </div>
+
             <div class="grid-2">
                 <div>
                     <h4 style="font-size: 1rem; margin-bottom: var(--space-md); color: var(--primary);">Profil & Kontak</h4>
@@ -161,7 +177,15 @@
 
                     <div style="background: var(--surface-container-lowest); padding: var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--outline-variant);">
                         <div style="font-size: 0.875rem; font-weight: 700; margin-bottom: var(--space-xs);">Dokumen Terlampir</div>
-                        <div style="display: flex; gap: var(--space-md);">
+                        <div style="display: flex; gap: var(--space-md); flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--outline); display: block;">Foto Profil</span>
+                                @if ($pedagang->foto_profil_url)
+                                    <a href="{{ $pedagang->foto_profil_url }}" target="_blank" style="font-size: 0.8125rem; text-decoration: underline; color: var(--primary);">Lihat Profil</a>
+                                @else
+                                    <span style="font-size: 0.8125rem; color: var(--outline); font-style: italic;">Belum diupload</span>
+                                @endif
+                            </div>
                             <div>
                                 <span style="font-size: 0.75rem; color: var(--outline); display: block;">Foto KTP</span>
                                 @if ($pedagang->foto_ktp)

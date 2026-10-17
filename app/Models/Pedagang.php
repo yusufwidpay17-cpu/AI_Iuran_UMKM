@@ -34,12 +34,26 @@ class Pedagang extends Model
         'tanggal_daftar',
         'status_pedagang',
         'status_legal',
+        'foto_profil',
         'foto_ktp',
         'foto_izin_usaha',
         'catatan',
         'tarif_id',
         'saldo_deposit',
     ];
+
+    public function getFotoProfilUrlAttribute()
+    {
+        if (empty($this->foto_profil)) {
+            return null;
+        }
+
+        if (str_starts_with($this->foto_profil, 'data:image') || str_starts_with($this->foto_profil, 'http://') || str_starts_with($this->foto_profil, 'https://')) {
+            return $this->foto_profil;
+        }
+
+        return asset($this->foto_profil);
+    }
 
     public function tarif()
     {

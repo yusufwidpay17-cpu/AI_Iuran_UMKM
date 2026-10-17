@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pedagang;
 use App\Models\Tagihan;
+use App\Models\AuditLog;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 use App\Services\KalenderOperasionalService;
@@ -183,4 +185,60 @@ class PedagangPortalController extends Controller
 
         return view('pedagang_portal.profil', compact('pedagang', 'user'));
     }
+
+    /**
+     * Update Foto Profil Pedagang Mandiri
+     */
+    public function updateFoto(Request $request)
+    {
+        $request->validate([
+            'foto_profil' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ], [
+            'foto_profil.required' => 'Silakan pilih berkas foto terlebih dahulu.',
+            'foto_profil.image' => 'Berkas harus berupa gambar (JPG, PNG, WEBP).',
+            'foto_profil.max' => 'Ukuran foto maksimal 2 MB.',
+        ]);
+
+        $pedagang = $this->getPedagang();
+        $user = auth()->user();
+
+        if ($request->hasFile('foto_profil')) {
+            if ($pedagang->foto_profil && !str_starts_with($pedagang->foto_profil, 'data:') && file_exists(public_path($pedagang->foto_profil))) {
+                @unlink(public_path($pedagang->foto_profil));
+            }
+
+            $file = $request->file('foto_profil');
+            $filename = time() . '_profil_' . Str::slug($pedagang->nama_pedagang) . '.' . $file->getClientOriginalExtension();
+            try {
+                if (!file_exists(public_path('uploads/profil'))) {
+                    @mkdir(public_path('uploads/profil'), 0777, true);
+                }
+                $file->move(public_path('uploads/profil'), $filename);
+                $path = 'uploads/profil/' . $filename;
+            } catch (\Exception $e) {
+                $path = 'data:' . $file->getMimeType() . ';base64,' . base64_encode(file_get_contents($file->getRealPath()));
+            }
+
+            $pedagang->foto_profil = $path;
+            $pedagang->save();
+
+            if ($user) {
+                $user->foto_profil = $path;
+                $user->save();
+            }
+
+            AuditLog::create([
+                'id' => (string) Str::uuid(),
+                'user_id' => $user->id,
+                'aksi' => 'UPDATE_FOTO_PROFIL',
+                'deskripsi' => "Mitra pedagang {$pedagang->nama_pedagang} memperbarui foto profil mandiri.",
+                'created_at' => now(),
+            ]);
+
+            return back()->with('success', 'Foto profil berhasil diperbarui!');
+        }
+
+        return back()->with('error', 'Gagal memproses unggahan foto.');
+    }
 }
+

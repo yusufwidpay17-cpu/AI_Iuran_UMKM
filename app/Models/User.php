@@ -27,10 +27,27 @@ class User extends Authenticatable
         'password',
         'role',
         'pedagang_id',
+        'foto_profil',
         'status_aktivasi',
         'activation_token',
         'activation_expires_at',
     ];
+
+    public function getFotoProfilUrlAttribute()
+    {
+        if (!empty($this->foto_profil)) {
+            if (str_starts_with($this->foto_profil, 'data:image') || str_starts_with($this->foto_profil, 'http://') || str_starts_with($this->foto_profil, 'https://')) {
+                return $this->foto_profil;
+            }
+            return asset($this->foto_profil);
+        }
+
+        if ($this->pedagang && !empty($this->pedagang->foto_profil)) {
+            return $this->pedagang->foto_profil_url;
+        }
+
+        return null;
+    }
 
     /**
      * The attributes that should be hidden for serialization.
