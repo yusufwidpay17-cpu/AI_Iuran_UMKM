@@ -38,52 +38,80 @@
 @endif
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
-    <!-- KARTU 1: FOTO PROFIL PRIBADI & PENGATURAN AVATAR -->
+    <!-- KARTU 1: FOTO PROFIL PRIBADI & PENGATURAN AVATAR (GAYA WHATSAPP) -->
     <div class="card" style="padding: 24px; border-radius: 14px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
                 <span style="font-size: 1.4rem;">📸</span>
                 <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--on-surface);">Foto Profil Pribadi</h3>
             </div>
-            <span style="background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.75rem;">
-                Bisa Diubah Kapan Saja
+            <span style="background: rgba(16, 185, 129, 0.12); color: #047857; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; border: 1px solid rgba(16, 185, 129, 0.25);">
+                Aktif & Terverifikasi
             </span>
         </div>
 
-        <form action="{{ route('pedagang.profil.foto') }}" method="POST" enctype="multipart/form-data">
+        <form id="formFotoProfil" action="{{ route('pedagang.profil.foto') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 10px 0;">
-                <div style="position: relative; width: 110px; height: 110px; border-radius: 50%; padding: 4px; border: 3px solid var(--primary); background: var(--surface-container-low); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-                    <img id="portalAvatarPreview" 
-                         src="{{ $pedagang->foto_profil_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($pedagang->nama_pedagang) . '&background=008080&color=fff&size=200' }}" 
-                         alt="Foto Profil {{ $pedagang->nama_pedagang }}" 
-                         style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            <!-- Input Berkas Tersembunyi (Dibuka saat mengklik foto atau pensil) -->
+            <input type="file" 
+                   name="foto_profil" 
+                   id="portalFotoInput" 
+                   accept="image/png, image/jpeg, image/jpg, image/webp" 
+                   onchange="previewPortalAvatar(this)" 
+                   style="display: none;">
+
+            <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 10px 0;">
+                
+                <!-- Lingkaran Foto Profil dengan Tombol Ikon Pensil Melayang (Mirip WhatsApp) -->
+                <div style="position: relative; width: 130px; height: 130px; margin: 0 auto;">
+                    <div style="width: 130px; height: 130px; border-radius: 50%; padding: 4px; border: 3px solid var(--primary); background: var(--surface-container-low); box-shadow: 0 6px 18px rgba(0,0,0,0.12); overflow: hidden; cursor: pointer;" 
+                         onclick="document.getElementById('portalFotoInput').click()" 
+                         title="Klik foto untuk mengganti profil">
+                        <img id="portalAvatarPreview" 
+                             src="{{ $pedagang->foto_profil_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($pedagang->nama_pedagang) . '&background=008080&color=fff&size=200' }}" 
+                             alt="Foto Profil {{ $pedagang->nama_pedagang }}" 
+                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; transition: filter 0.2s;"
+                             onmouseover="this.style.filter='brightness(0.85)'"
+                             onmouseout="this.style.filter='brightness(1)'">
+                    </div>
+
+                    <!-- Tombol Pensil Melayang -->
+                    <button type="button" 
+                            onclick="document.getElementById('portalFotoInput').click()" 
+                            style="position: absolute; bottom: 4px; right: 4px; width: 40px; height: 40px; border-radius: 50%; background: #10b981; color: #ffffff; border: 3px solid var(--surface-container-lowest); display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-size: 17px; transition: transform 0.2s, background 0.2s;"
+                            title="Edit / Ganti Foto Profil"
+                            onmouseover="this.style.transform='scale(1.12)'; this.style.background='#059669'"
+                            onmouseout="this.style.transform='scale(1)'; this.style.background='#10b981'">
+                        ✏️
+                    </button>
                 </div>
 
+                <!-- Keterangan Nama & Tombol Edit -->
                 <div>
-                    <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: var(--on-surface);">{{ $pedagang->nama_pedagang }}</h4>
-                    <span style="font-size: 0.775rem; color: var(--on-surface-variant);">Foto diri / profil resmi mitra pedagang</span>
+                    <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--on-surface);">{{ $pedagang->nama_pedagang }}</h4>
+                    <button type="button" 
+                            onclick="document.getElementById('portalFotoInput').click()" 
+                            style="margin-top: 6px; background: transparent; border: none; color: var(--primary); font-size: 0.8rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+                        <span>✏️</span> Edit Foto Profil
+                    </button>
                 </div>
 
-                <div style="width: 100%; text-align: left; background: var(--surface-container-low); padding: 14px; border-radius: 10px; border: 1px solid var(--outline-variant);">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--on-surface); margin-bottom: 6px;">
-                        Pilih Foto Baru:
-                    </label>
-                    <input type="file" 
-                           name="foto_profil" 
-                           id="portalFotoInput" 
-                           accept="image/png, image/jpeg, image/jpg, image/webp" 
-                           required 
-                           onchange="previewPortalAvatar(this)"
-                           style="width: 100%; font-size: 0.825rem; color: var(--on-surface); background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 6px; padding: 6px 10px;">
-                    <div style="font-size: 0.725rem; color: var(--on-surface-variant); margin-top: 6px; line-height: 1.4;">
-                        Format: JPG, PNG, WEBP. Maksimal ukuran 2 MB. Foto ini akan otomatis tampil pada navigasi atas dan akun Anda.
+                <!-- Box Aksi Konfirmasi (Hanya Muncul Otomatis Saat Ada Foto Baru Dipilih) -->
+                <div id="portalAvatarActions" style="display: none; width: 100%; margin-top: 10px; background: rgba(16, 185, 129, 0.08); border: 1.5px dashed #10b981; border-radius: 12px; padding: 14px; text-align: center;">
+                    <div style="font-size: 0.875rem; font-weight: 700; color: #047857; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <span>✨</span> Foto Baru Siap Diterapkan!
+                    </div>
+                    <div id="namaFileTerpilih" style="font-size: 0.75rem; color: var(--on-surface-variant); margin-bottom: 12px; word-break: break-all;"></div>
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <button type="button" onclick="cancelPortalAvatar()" class="btn btn-secondary btn-sm" style="padding: 7px 16px; font-size: 0.8rem; border-radius: 8px;">
+                            Batal
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm" style="padding: 7px 18px; font-size: 0.8rem; font-weight: 700; background: #10b981; border-color: #10b981; border-radius: 8px; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                            💾 Simpan Foto Profil
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <span>💾</span> Simpan Foto Profil
-                </button>
             </div>
         </form>
     </div>
@@ -224,16 +252,45 @@
 </div>
 
 <script>
+const originalAvatarSrc = "{{ $pedagang->foto_profil_url ?: 'https://ui-avatars.com/api/?name=' . urlencode($pedagang->nama_pedagang) . '&background=008080&color=fff&size=200' }}";
+
 function previewPortalAvatar(input) {
     if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran foto terlalu besar. Maksimal 2 MB.');
+            input.value = '';
+            return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
             const preview = document.getElementById('portalAvatarPreview');
             if (preview) {
                 preview.src = e.target.result;
             }
+            const namaFileEl = document.getElementById('namaFileTerpilih');
+            if (namaFileEl) {
+                namaFileEl.textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+            }
+            const actions = document.getElementById('portalAvatarActions');
+            if (actions) {
+                actions.style.display = 'block';
+            }
         };
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
+    }
+}
+
+function cancelPortalAvatar() {
+    const input = document.getElementById('portalFotoInput');
+    if (input) input.value = '';
+    const preview = document.getElementById('portalAvatarPreview');
+    if (preview) {
+        preview.src = originalAvatarSrc;
+    }
+    const actions = document.getElementById('portalAvatarActions');
+    if (actions) {
+        actions.style.display = 'none';
     }
 }
 </script>

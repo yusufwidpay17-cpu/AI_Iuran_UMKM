@@ -117,9 +117,16 @@
                 <!-- Top Card Header: Avatar, Name, Shop & Status Badge -->
                 <div class="pedagang-card-header">
                     <div class="pedagang-avatar-info">
-                        <div class="pedagang-avatar" style="background-color: {{ $avatarBg }};">
-                            {{ $initials }}
-                        </div>
+                        @if($pdg->foto_profil_url)
+                            <img src="{{ $pdg->foto_profil_url }}" 
+                                 alt="{{ $pdg->nama_pedagang }}" 
+                                 class="pedagang-avatar" 
+                                 style="object-fit: cover; border: 2px solid var(--outline-variant); width: 42px; height: 42px; border-radius: 50%;">
+                        @else
+                            <div class="pedagang-avatar" style="background-color: {{ $avatarBg }};">
+                                {{ $initials }}
+                            </div>
+                        @endif
                         <div class="pedagang-name-group">
                             <div class="pedagang-name" title="{{ $pdg->nama_pedagang }}">
                                 {{ $pdg->nama_pedagang }}
