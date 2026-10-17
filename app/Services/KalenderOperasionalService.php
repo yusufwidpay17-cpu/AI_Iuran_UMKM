@@ -74,13 +74,12 @@ class KalenderOperasionalService
         // 2. Gunakan database transaction untuk atomic & concurrency safety
         DB::beginTransaction();
         try {
-            $activeMerchants = Pedagang::where('status_pedagang', 'aktif')->get();
+            $activeMerchants = Pedagang::where('status_pedagang', 'aktif')->lockForUpdate()->get();
 
             foreach ($activeMerchants as $pdg) {
-                // Cek duplikasi tagihan
+                // Cek duplikasi tagihan (berdasarkan pedagang_id dan tanggal_tagihan)
                 $exists = Tagihan::where('pedagang_id', $pdg->id)
                     ->where('tanggal_tagihan', $tanggal)
-                    ->where('jenis_iuran', 'Iuran Harian')
                     ->exists();
 
                 if (!$exists) {

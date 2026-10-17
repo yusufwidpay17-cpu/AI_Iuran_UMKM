@@ -73,6 +73,11 @@ class RiwayatTransaksiController extends Controller
             abort(403, 'Akses Ditolak: Anda tidak diizinkan mencetak bukti pembayaran milik pedagang lain.');
         }
 
+        // Integritas kuitansi: Bukti pembayaran hanya boleh dicetak jika tagihan sudah memiliki nominal pembayaran sah (> 0)
+        if ((float) $tagihan->nominal_dibayar <= 0) {
+            abort(400, 'Permintaan Ditolak: Tagihan ini belum memiliki pembayaran sah sehingga bukti pembayaran belum dapat dicetak.');
+        }
+
         return view('riwayat.cetak', compact('tagihan'));
     }
 }
