@@ -365,67 +365,81 @@
             <button type="button" onclick="document.getElementById('modalBeriAkses').style.display='none'" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--outline);">&times;</button>
         </div>
 
-        <form action="{{ route('pengguna.beri-akses-pedagang') }}" method="POST">
-            @csrf
+        @if($pedagangTanpaAkun->isEmpty())
+            <div style="background: rgba(16, 185, 129, 0.12); border: 1.5px solid #10b981; border-radius: 12px; padding: 18px; margin-bottom: 20px; text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 8px;">🎉</div>
+                <h4 style="margin: 0 0 6px; color: #065f46; font-size: 1.05rem; font-weight: 700;">Semua Mitra Pedagang Sudah Memiliki Akun Login!</h4>
+                <p style="margin: 0; font-size: 0.85rem; color: #047857; line-height: 1.5;">
+                    Seluruh pedagang yang terdaftar di pasar saat ini sudah memiliki akun aktif (termasuk <b>Sinta Erina Faradhila</b> dengan username <code>erin</code>).
+                </p>
+                <div style="margin-top: 14px; background: white; padding: 12px; border-radius: 8px; border: 1px solid #a7f3d0; text-align: left; font-size: 0.8rem; color: #065f46;">
+                    💡 <b>Petunjuk:</b> Jika Anda ingin mengganti kata sandi atau memperbarui data akun pedagang yang sudah ada, silakan tutup jendela ini dan klik tombol <b>🔑 Sandi</b> atau <b>✏️ Edit</b> yang tersedia langsung pada baris tabel pedagang.
+                </div>
+            </div>
 
-            <!-- Pilih Pedagang -->
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Pilih Mitra Pedagang <span style="color: #ef4444;">*</span></label>
-                <select name="pedagang_id" id="akses_pedagang_id" class="form-select" required onchange="onPilihPedagangAkses(this)">
-                    <option value="">-- Pilih Pedagang yang Belum Memiliki Akses --</option>
-                    @foreach($pedagangTanpaAkun as $pTanpa)
-                        <option value="{{ $pTanpa->id }}" data-nama="{{ $pTanpa->nama_pedagang }}" data-kios="{{ $pTanpa->no_kios }}">
-                            {{ $pTanpa->nama_pedagang }} (Kios: {{ $pTanpa->no_kios ?: '-' }} - {{ $pTanpa->nama_usaha ?: 'Usaha' }})
-                        </option>
-                    @endforeach
-                </select>
-                @if($pedagangTanpaAkun->isEmpty())
-                    <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
-                        ✓ Semua mitra pedagang saat ini telah memiliki akun hak akses login.
+            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                <button type="button" class="btn btn-primary" onclick="document.getElementById('modalBeriAkses').style.display='none'" style="padding: 10px 20px; font-weight: 700;">
+                    ✓ Mengerti & Tutup Jendela
+                </button>
+            </div>
+        @else
+            <form action="{{ route('pengguna.beri-akses-pedagang') }}" method="POST">
+                @csrf
+
+                <!-- Pilih Pedagang -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Pilih Mitra Pedagang <span style="color: #ef4444;">*</span></label>
+                    <select name="pedagang_id" id="akses_pedagang_id" class="form-select" required onchange="onPilihPedagangAkses(this)">
+                        <option value="">-- Pilih Pedagang yang Belum Memiliki Akses --</option>
+                        @foreach($pedagangTanpaAkun as $pTanpa)
+                            <option value="{{ $pTanpa->id }}" data-nama="{{ $pTanpa->nama_pedagang }}" data-kios="{{ $pTanpa->no_kios }}">
+                                {{ $pTanpa->nama_pedagang }} (Kios: {{ $pTanpa->no_kios ?: '-' }} - {{ $pTanpa->nama_usaha ?: 'Usaha' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Nama Akun (Auto-filled) -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Nama Tampilan Pengguna</label>
+                    <input type="text" name="nama" id="akses_nama" class="form-control" placeholder="Nama pedagang">
+                </div>
+
+                <!-- Username Login -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Username Login <span style="color: #ef4444;">*</span></label>
+                    <input type="text" name="username" id="akses_username" class="form-control" required placeholder="contoh: sriwahyuni" autocomplete="off">
+                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                        Username huruf kecil tanpa spasi yang akan digunakan pedagang untuk login.
                     </div>
-                @endif
-            </div>
-
-            <!-- Nama Akun (Auto-filled) -->
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Nama Tampilan Pengguna</label>
-                <input type="text" name="nama" id="akses_nama" class="form-control" placeholder="Nama pedagang">
-            </div>
-
-            <!-- Username Login -->
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Username Login <span style="color: #ef4444;">*</span></label>
-                <input type="text" name="username" id="akses_username" class="form-control" required placeholder="contoh: sriwahyuni" autocomplete="off">
-                <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Username huruf kecil tanpa spasi yang akan digunakan pedagang untuk login.
                 </div>
-            </div>
 
-            <!-- Email (Opsional) -->
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Alamat Email <small style="font-weight: normal; color: var(--on-surface-variant);">(Opsional)</small></label>
-                <input type="email" name="email" id="akses_email" class="form-control" placeholder="contoh: pedagang@amanahledger.id">
-            </div>
-
-            <!-- Kata Sandi Awal -->
-            <div class="form-group" style="margin-bottom: 18px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Kata Sandi (Password) Login <span style="color: #ef4444;">*</span></label>
-                <div style="display: flex; gap: 8px;">
-                    <input type="text" name="password" id="akses_password" class="form-control" required minlength="6" value="password123" style="font-family: monospace; font-weight: 600;">
-                    <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('akses_password').value='pass' + Math.floor(1000 + Math.random() * 9000)" style="white-space: nowrap; font-size: 0.75rem;">
-                        Acak Sandi
-                    </button>
+                <!-- Email (Opsional) -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Alamat Email <small style="font-weight: normal; color: var(--on-surface-variant);">(Opsional)</small></label>
+                    <input type="email" name="email" id="akses_email" class="form-control" placeholder="contoh: pedagang@amanahledger.id">
                 </div>
-                <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
-                    Sandi default: <code>password123</code>. Beritahukan sandi ini kepada pedagang terkait.
-                </div>
-            </div>
 
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button type="button" class="btn btn-outline" onclick="document.getElementById('modalBeriAkses').style.display='none'">Batal</button>
-                <button type="submit" class="btn btn-primary">Aktifkan & Beri Hak Akses</button>
-            </div>
-        </form>
+                <!-- Kata Sandi Awal -->
+                <div class="form-group" style="margin-bottom: 18px;">
+                    <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Kata Sandi (Password) Login <span style="color: #ef4444;">*</span></label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" name="password" id="akses_password" class="form-control" required minlength="6" value="password123" style="font-family: monospace; font-weight: 600;">
+                        <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('akses_password').value='pass' + Math.floor(1000 + Math.random() * 9000)" style="white-space: nowrap; font-size: 0.75rem;">
+                            Acak Sandi
+                        </button>
+                    </div>
+                    <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
+                        Sandi default: <code>password123</code>. Beritahukan sandi ini kepada pedagang terkait.
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('modalBeriAkses').style.display='none'">Batal</button>
+                    <button type="submit" class="btn btn-primary">Aktifkan & Beri Hak Akses</button>
+                </div>
+            </form>
+        @endif
     </div>
 </div>
 
