@@ -494,73 +494,52 @@
 
 <!-- ========================================================================= -->
 <!-- ========================================================================= -->
-<!-- MODAL 3: KREDENSIAL & RESET KATA SANDI CEPAT                              -->
+<!-- MODAL 3: KATA SANDI PENGGUNA                                              -->
 <!-- ========================================================================= -->
 <div id="modalResetPassword" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; overflow-y: auto; padding: 20px;">
-    <div class="modal-content card" style="width: 100%; max-width: 470px; padding: 24px; position: relative; border-radius: 14px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px;">
+    <div class="modal-content card" style="width: 100%; max-width: 420px; padding: 20px; position: relative; border-radius: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 10px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 1.3rem;">🔑</span>
-                <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--on-surface);">Kredensial & Reset Kata Sandi</h3>
+                <span style="font-size: 1.2rem;">🔑</span>
+                <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--on-surface);">Kata Sandi Akun</h3>
             </div>
-            <button type="button" onclick="document.getElementById('modalResetPassword').style.display='none'" style="background: none; border: none; font-size: 24px; cursor: pointer; color: var(--outline);">&times;</button>
+            <button type="button" onclick="document.getElementById('modalResetPassword').style.display='none'" style="background: none; border: none; font-size: 22px; cursor: pointer; color: var(--outline);">&times;</button>
         </div>
 
         <form id="formResetPassword" method="POST">
             @csrf
 
-            <!-- Info Pengguna & Status Enkripsi -->
-            <div style="background: var(--surface-container-low); padding: 12px 14px; border-radius: 10px; margin-bottom: 14px; font-size: 0.85rem; display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--outline-variant);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Pengguna: <strong id="reset_user_nama">-</strong></span>
-                    <span style="background: rgba(16, 185, 129, 0.12); color: #059669; font-weight: 700; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.25);">🔒 Bcrypt Hash</span>
-                </div>
-                <div>Username: <code id="reset_user_username" style="font-weight: 700; color: var(--primary);">-</code></div>
+            <!-- Info Singkat Pengguna -->
+            <div style="background: var(--surface-container-low); padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.85rem; border: 1px solid var(--outline-variant);">
+                <div>Pengguna: <strong id="reset_user_nama">-</strong></div>
+                <div style="margin-top: 4px;">Username: <code id="reset_user_username" style="font-weight: 700; color: var(--primary);">-</code></div>
             </div>
 
-            <!-- Penjelasan Transparan Standar Keamanan -->
-            <div style="background: rgba(59, 130, 246, 0.08); border: 1px solid rgba(59, 130, 246, 0.25); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.45;">
-                <div style="font-weight: 700; color: #1d4ed8; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                    <span>ℹ️</span> Standar Keamanan Kata Sandi Akun
-                </div>
-                <div>
-                    Kata sandi tersimpan dalam database menggunakan <b>enkripsi satu arah (hash)</b> yang tidak dapat diintip kembali oleh siapapun demi keamanan akun.
-                </div>
-                <div style="margin-top: 4px; color: var(--on-surface);">
-                    Kata sandi standar bawaan sistem adalah: <code style="font-weight: 700; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px;">password123</code> (berlaku jika belum pernah diubah mandiri).
-                </div>
-            </div>
-
-            <!-- Input & Kendali Sandi -->
+            <!-- Input Kata Sandi Ringkas -->
             <div class="form-group" style="margin-bottom: 14px;">
-                <label class="form-label" style="font-weight: 600; font-size: 0.85rem;">Kata Sandi (Lihat, Salin, atau Ubah Baru) <span style="color: #ef4444;">*</span></label>
+                <label class="form-label" style="font-weight: 600; font-size: 0.85rem; margin-bottom: 6px;">Kata Sandi</label>
                 <div style="position: relative;">
-                    <input type="text" name="password" id="input_reset_password" class="form-control" required minlength="6" placeholder="Ketik kata sandi" style="font-family: monospace; font-weight: 700; font-size: 0.95rem; padding-right: 76px; letter-spacing: 0.5px;">
+                    <input type="text" name="password" id="input_reset_password" class="form-control" required minlength="6" placeholder="Ketik kata sandi" style="font-family: monospace; font-weight: 700; font-size: 0.95rem; padding-right: 76px;">
                     <div style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px; align-items: center;">
                         <button type="button" id="toggleResetEye" onclick="toggleResetPassVisibility()" title="Lihat / Sembunyikan Sandi" style="background: none; border: none; cursor: pointer; font-size: 15px; color: var(--outline); padding: 2px 4px;">👁️</button>
                         <button type="button" onclick="salinSandiReset()" title="Salin Sandi ke Clipboard" style="background: none; border: none; cursor: pointer; font-size: 15px; color: var(--outline); padding: 2px 4px;">📋</button>
                     </div>
                 </div>
                 
-                <!-- Tombol Cepat Sandi Default & Acak -->
-                <div style="display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap;">
+                <!-- Tombol Cepat -->
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
                     <button type="button" class="btn btn-outline btn-sm" onclick="pasangSandiDefault()" style="font-size: 0.775rem; font-weight: 600; padding: 4px 10px;">
-                        🔁 Sandi Default (password123)
+                        🔁 Sandi Standar (password123)
                     </button>
                     <button type="button" class="btn btn-outline btn-sm" onclick="acakSandiReset()" style="font-size: 0.775rem; font-weight: 600; padding: 4px 10px;">
-                        🎲 Acak Sandi Baru
+                        🎲 Acak Baru
                     </button>
                 </div>
             </div>
 
-            <!-- Petunjuk Perbedaan Fitur Sandi vs Edit -->
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 12px; margin-bottom: 18px; padding-top: 10px; border-top: 1px dashed var(--outline-variant); line-height: 1.45;">
-                💡 <b>Perbedaan Fitur:</b> Tombol <b>🔑 Sandi</b> ini adalah pintasan instan untuk melihat sandi bawaan atau mereset sandi tanpa membuka form panjang. Untuk mengubah seluruh data profil (nama, email, role, atau kios), silakan gunakan tombol <b>✏️ Edit</b>.
-            </div>
-
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button type="button" class="btn btn-outline" onclick="document.getElementById('modalResetPassword').style.display='none'">Batal</button>
-                <button type="submit" class="btn btn-primary" style="font-weight: 700;">💾 Simpan & Terapkan Sandi</button>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('modalResetPassword').style.display='none'">Batal</button>
+                <button type="submit" class="btn btn-primary btn-sm" style="font-weight: 700;">💾 Simpan Sandi</button>
             </div>
         </form>
     </div>
