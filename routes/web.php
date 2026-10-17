@@ -78,7 +78,15 @@ Route::get('/sync-db', function () {
         } catch (\Exception $e) {}
 
         try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE pedagang MODIFY COLUMN foto_profil MEDIUMTEXT NULL");
+        } catch (\Exception $e) {}
+
+        try {
             \Illuminate\Support\Facades\DB::statement("ALTER TABLE users ADD COLUMN foto_profil MEDIUMTEXT NULL AFTER email");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE users MODIFY COLUMN foto_profil MEDIUMTEXT NULL");
         } catch (\Exception $e) {}
 
         // 4. Sinkronkan Akun Superadmin yusuf123
