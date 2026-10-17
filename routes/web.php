@@ -170,7 +170,7 @@ Route::get('/sync-db', function () {
                 'id' => (string) \Illuminate\Support\Str::uuid(),
                 'nama' => 'Sinta Erina Faradhila',
                 'username' => 'erin',
-                'email' => 'yusufwidpay17@gmail.com',
+                'email' => 'erin@amanahledger.id',
                 'password' => \Illuminate\Support\Facades\Hash::make('password123'),
                 'role' => 'pedagang',
                 'pedagang_id' => $pedagangErin->id,
@@ -179,7 +179,7 @@ Route::get('/sync-db', function () {
             ]);
         } else {
             $merchantUser->nama = 'Sinta Erina Faradhila';
-            $merchantUser->email = 'yusufwidpay17@gmail.com';
+            $merchantUser->email = 'erin@amanahledger.id';
             $merchantUser->pedagang_id = $pedagangErin->id;
             $merchantUser->role = 'pedagang';
             if ($fotoData) {
