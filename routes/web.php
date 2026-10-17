@@ -191,6 +191,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto');
     });
 
+    // Alias route profil.foto direct
+    Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto')->middleware('auth');
+
 
     // ==========================================
     // 3. OPERASIONAL PETUGAS & ADMIN (Iuran / Tagihan Lapangan)

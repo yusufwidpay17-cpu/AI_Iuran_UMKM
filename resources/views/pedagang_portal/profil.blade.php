@@ -50,7 +50,7 @@
             </span>
         </div>
 
-        <form action="{{ route('profil.foto') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('pedagang.profil.foto') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div style="display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 10px 0;">
                 <div style="position: relative; width: 110px; height: 110px; border-radius: 50%; padding: 4px; border: 3px solid var(--primary); background: var(--surface-container-low); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
