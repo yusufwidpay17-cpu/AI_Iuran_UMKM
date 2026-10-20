@@ -14,7 +14,7 @@ use Carbon\Carbon;
 
 class PenggunaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // 1. Data Staf Pengelola (Superadmin, Admin, Petugas Lapangan)
         $stafPengguna = User::whereIn('role', ['superadmin', 'admin', 'petugas'])
@@ -22,10 +22,25 @@ class PenggunaController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // 2. Data Seluruh Mitra Pedagang beserta Akun Loginnya (jika sudah dibuatkan)
-        $mitraPedagang = Pedagang::with('user')
-            ->orderBy('no_kios', 'asc')
-            ->get();
+        // 2. Data Seluruh Mitra Pedagang beserta Akun Loginnya (dengan Pencarian & Slide)
+        $queryPedagang = Pedagang::with('user');
+
+        if ($request->filled('search_pedagang')) {
+            $search = $request->input('search_pedagang');
+            $queryPedagang->where(function($q) use ($search) {
+                $q->where('nama_pedagang', 'like', "%{$search}%")
+                  ->orWhere('no_kios', 'like', "%{$search}%")
+                  ->orWhere('nama_usaha', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($qu) use ($search) {
+                      $qu->where('username', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $mitraPedagang = $queryPedagang->orderBy('no_kios', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         // Data pedagang yang belum memiliki akun login (untuk dropdown modal)
         $pedagangTanpaAkun = Pedagang::whereDoesntHave('user')
@@ -35,11 +50,13 @@ class PenggunaController extends Controller
         $semuaPedagang = Pedagang::orderBy('nama_pedagang', 'asc')->get();
 
         // Statistik ringkasan hak akses
+        $totalPedagangSemua = Pedagang::count();
+        $pedagangPunyaAkses = User::where('role', 'pedagang')->whereNotNull('pedagang_id')->count();
         $stats = [
             'total_staf' => $stafPengguna->count(),
-            'total_pedagang' => $mitraPedagang->count(),
-            'pedagang_punya_akses' => $mitraPedagang->filter(fn($p) => $p->user !== null)->count(),
-            'pedagang_belum_akses' => $mitraPedagang->filter(fn($p) => $p->user === null)->count(),
+            'total_pedagang' => $totalPedagangSemua,
+            'pedagang_punya_akses' => $pedagangPunyaAkses,
+            'pedagang_belum_akses' => max(0, $totalPedagangSemua - $pedagangPunyaAkses),
         ];
 
         return view('pengguna.index', compact('stafPengguna', 'mitraPedagang', 'pedagangTanpaAkun', 'semuaPedagang', 'stats'));
@@ -95,7 +112,7 @@ class PenggunaController extends Controller
         ]);
 
         return redirect()->route('pengguna.index')
-            ->with('success', "✓ Hak akses login berhasil diberikan kepada pedagang {$pedagang->nama_pedagang} (Username: {$username})!");
+            ->with('success', "Hak akses login berhasil diberikan kepada pedagang {$pedagang->nama_pedagang} (Username: {$username})!");
     }
 
     public function cabutAksesPedagang(Request $request, $id)
@@ -130,37 +147,144 @@ class PenggunaController extends Controller
         $user->delete();
 
         return redirect()->route('pengguna.index')
-            ->with('success', "✓ Hak akses login pedagang {$namaPedagang} berhasil dicabut. Akun login telah dihapus sehingga pedagang tidak dapat lagi masuk ke aplikasi.");
+            ->with('success', "Hak akses login pedagang {$namaPedagang} berhasil dicabut. Akun login telah dihapus sehingga pedagang tidak dapat lagi masuk ke aplikasi.");
     }
 
     public function resetPassword(Request $request, $id)
     {
-        $request->validate([
-            'password' => 'required|string|min:6',
-        ], [
-            'password.required' => 'Kata sandi baru wajib diisi.',
-            'password.min' => 'Kata sandi minimal 6 karakter.',
-        ]);
+        try {
+            $request->validate([
+                'password' => 'required|string|min:6',
+            ], [
+                'password.required' => 'Kata sandi baru wajib diisi.',
+                'password.min' => 'Kata sandi minimal 6 karakter.',
+            ]);
 
-        $user = User::findOrFail($id);
-        $user->update([
-            'password' => Hash::make($request->password),
-            'password_plain' => $request->password,
-            'status_aktivasi' => 'aktif',
-            'activation_token' => null,
-            'activation_expires_at' => null,
-        ]);
+            $user = User::findOrFail($id);
+            $user->update([
+                'password' => Hash::make($request->password),
+                'password_plain' => $request->password,
+                'status_aktivasi' => 'aktif',
+                'activation_token' => null,
+                'activation_expires_at' => null,
+            ]);
 
-        AuditLog::create([
-            'id' => (string) Str::uuid(),
-            'user_id' => auth()->id(),
-            'aksi' => 'RESET_PASSWORD',
-            'deskripsi' => "Mereset kata sandi pengguna {$user->nama} ({$user->username}).",
-            'created_at' => now(),
-        ]);
+            AuditLog::create([
+                'id' => (string) Str::uuid(),
+                'user_id' => auth()->id(),
+                'aksi' => 'RESET_PASSWORD',
+                'deskripsi' => "Mereset kata sandi pengguna {$user->nama} ({$user->username}).",
+                'created_at' => now(),
+            ]);
 
-        return redirect()->route('pengguna.index')
-            ->with('success', "✓ Kata sandi untuk pengguna {$user->nama} ({$user->username}) berhasil diubah menjadi '{$request->password}'. Silakan beritahukan sandi baru ini kepada pedagang terkait.");
+            $pesan = "Kata sandi untuk pengguna {$user->nama} ({$user->username}) berhasil diubah menjadi '{$request->password}'. Silakan beritahukan sandi baru ini kepada yang bersangkutan.";
+
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $pesan,
+                    'user_id' => $user->id,
+                    'nama' => $user->nama,
+                    'username' => $user->username,
+                    'password_plain' => $request->password,
+                ]);
+            }
+
+            return redirect()->route('pengguna.index')->with('success', $pesan);
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            $firstError = collect($ve->errors())->flatten()->first() ?? 'Validasi kata sandi gagal.';
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $firstError,
+                ], 422);
+            }
+            throw $ve;
+        } catch (\Throwable $e) {
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengubah kata sandi: ' . $e->getMessage(),
+                ], 500);
+            }
+            return redirect()->route('pengguna.index')->with('error', 'Gagal mereset kata sandi: ' . $e->getMessage());
+        }
+    }
+
+    public function resetPasswordSemua(Request $request)
+    {
+        try {
+            $request->validate([
+                'password' => 'required|string|min:6',
+                'target_akun' => 'required|in:semua,pedagang,staf',
+            ], [
+                'password.required' => 'Kata sandi baru wajib diisi.',
+                'password.min' => 'Kata sandi minimal 6 karakter.',
+            ]);
+
+            $target = $request->input('target_akun', 'semua');
+            $query = User::query();
+
+            if ($target === 'pedagang') {
+                $query->where('role', 'pedagang');
+                $labelTarget = 'seluruh akun Mitra Pedagang';
+            } elseif ($target === 'staf') {
+                $query->whereIn('role', ['admin', 'petugas']);
+                $labelTarget = 'seluruh akun Staf Pengelola (Admin & Petugas)';
+            } else {
+                $labelTarget = 'seluruh akun pengguna di sistem';
+            }
+
+            $affectedCount = $query->count();
+            $newHashed = Hash::make($request->password);
+
+            $query->update([
+                'password' => $newHashed,
+                'password_plain' => $request->password,
+                'status_aktivasi' => 'aktif',
+                'activation_token' => null,
+                'activation_expires_at' => null,
+            ]);
+
+            AuditLog::create([
+                'id' => (string) Str::uuid(),
+                'user_id' => auth()->id(),
+                'aksi' => 'RESET_PASSWORD_MASSAL',
+                'deskripsi' => "Admin mereset kata sandi massal untuk {$labelTarget} ({$affectedCount} akun) menjadi '{$request->password}'.",
+                'created_at' => now(),
+            ]);
+
+            $pesan = "Berhasil! Kata sandi untuk {$labelTarget} ({$affectedCount} akun) telah otomatis diubah menjadi '{$request->password}'.";
+
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $pesan,
+                    'affected_count' => $affectedCount,
+                    'target' => $target,
+                    'password_plain' => $request->password,
+                ]);
+            }
+
+            return redirect()->route('pengguna.index')->with('success', $pesan);
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            $firstError = collect($ve->errors())->flatten()->first() ?? 'Validasi kata sandi gagal.';
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $firstError,
+                ], 422);
+            }
+            throw $ve;
+        } catch (\Throwable $e) {
+            if ($request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest' || $request->expectsJson() || $request->isJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal mengubah kata sandi massal: ' . $e->getMessage(),
+                ], 500);
+            }
+            return redirect()->route('pengguna.index')->with('error', 'Gagal mereset kata sandi massal: ' . $e->getMessage());
+        }
     }
 
     public function store(Request $request)

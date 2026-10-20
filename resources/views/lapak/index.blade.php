@@ -15,9 +15,6 @@
             </svg>
             Export Excel
         </a>
-        <button type="button" class="btn btn-primary" onclick="openTambahLapakModal()">
-            + Tambah Lapak
-        </button>
     </div>
 </div>
 
@@ -110,9 +107,74 @@
     </div>
 </div>
 
-<div style="margin-top: var(--space-md);">
-    {{ $lapaks->links() }}
-</div>
+@if($lapaks->hasPages())
+    <div class="pedagang-slide-dock" style="margin-top: 18px;">
+        @php
+            $currentPage = $lapaks->currentPage();
+            $lastPage = max(1, $lapaks->lastPage());
+            $hasPrev = $currentPage > 1;
+            $hasNext = $currentPage < $lastPage;
+        @endphp
+
+        <!-- Chevron Prev Button < -->
+        @if($hasPrev)
+            <a href="{{ $lapaks->previousPageUrl() }}" 
+               class="slide-chevron-btn" 
+               title="Slide Sebelumnya" 
+               aria-label="Slide Sebelumnya">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </a>
+        @else
+            <button type="button" class="slide-chevron-btn disabled" disabled aria-label="Slide Sebelumnya" title="Slide Pertama">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+        @endif
+
+        <!-- Focused Slide Numbers Viewport -->
+        <div class="slide-carousel-viewport">
+            <div class="slide-carousel-track">
+                @for($p = 1; $p <= $lastPage; $p++)
+                    @php
+                        $diff = abs($p - $currentPage);
+                    @endphp
+                    @if($p == $currentPage)
+                        <span class="slide-num-item active" title="Slide {{ $p }} (Sedang aktif)">{{ $p }}</span>
+                    @elseif($diff == 1)
+                        <a href="{{ $lapaks->url($p) }}" 
+                           class="slide-num-item neighbor-blurred" 
+                           title="Ke Slide {{ $p }}">{{ $p }}</a>
+                    @else
+                        <a href="{{ $lapaks->url($p) }}" 
+                           class="slide-num-item hidden-distant" 
+                           title="Ke Slide {{ $p }}">{{ $p }}</a>
+                    @endif
+                @endfor
+            </div>
+        </div>
+
+        <!-- Chevron Next Button > -->
+        @if($hasNext)
+            <a href="{{ $lapaks->nextPageUrl() }}" 
+               class="slide-chevron-btn" 
+               title="Slide Berikutnya" 
+               aria-label="Slide Berikutnya">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </a>
+        @else
+            <button type="button" class="slide-chevron-btn disabled" disabled aria-label="Slide Berikutnya" title="Slide Terakhir">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        @endif
+    </div>
+@endif
 
 <!-- Modal Tambah / Edit Lapak -->
 <div class="modal-overlay" id="modal-lapak">

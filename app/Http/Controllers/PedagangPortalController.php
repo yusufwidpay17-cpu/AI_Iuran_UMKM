@@ -275,7 +275,7 @@ class PedagangPortalController extends Controller
             'created_at' => now(),
         ]);
 
-        return back()->with('success_password', '✓ Kata sandi akun Anda berhasil diperbarui!');
+        return back()->with('success_password', 'Kata sandi akun Anda berhasil diperbarui!');
     }
 }
 

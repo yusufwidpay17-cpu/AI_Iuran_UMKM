@@ -102,7 +102,10 @@
 
 @if(session('demo_code'))
     <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-bottom: 18px; line-height: 1.5;">
-        <div style="font-weight: 700; margin-bottom: 4px;">💡 Mode Simulasi Pengujian Aktif:</div>
+        <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>Mode Simulasi Pengujian Aktif:</span>
+        </div>
         <div style="margin: 4px 0;">Kode verifikasi OTP 6-digit Anda adalah: <strong style="font-size: 1.25rem; letter-spacing: 2px; font-family: monospace; background: #ffffff; padding: 2px 8px; border-radius: 6px; border: 1px solid #93c5fd; color: #1d4ed8;">{{ session('demo_code') }}</strong></div>
         <div style="font-size: 11px; color: #64748b; margin-top: 2px;">(Ketikkan kode di atas ke kolom isian kode verifikasi di bawah)</div>
     </div>

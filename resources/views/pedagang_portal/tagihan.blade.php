@@ -7,7 +7,10 @@
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
     <div>
         <h2 class="page-title" style="margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--on-surface); display: flex; align-items: center; gap: 8px;">
-            <span>📋</span> Tagihan Iuran Saya
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <span>Tagihan Iuran Saya</span>
         </h2>
         <p class="page-subtitle" style="margin: 4px 0 0; color: var(--on-surface-variant); font-size: 0.875rem;">
             Daftar lengkap seluruh tagihan iuran pasar kios Anda (Kios {{ $pedagang->no_kios ?? '-' }} - {{ $pedagang->nama_usaha ?? $pedagang->nama_pedagang }}).
@@ -84,8 +87,11 @@
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="flex: 1; font-size: 0.85rem;">
-                🔍 Terapkan Filter
+            <button type="submit" class="btn btn-primary" style="flex: 1; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <span>Terapkan Filter</span>
             </button>
             <a href="{{ route('pedagang.tagihan') }}" class="btn btn-outline" style="font-size: 0.85rem;" title="Reset Filter">
                 Reset
@@ -171,7 +177,10 @@
                     <td style="padding: 14px 16px; vertical-align: middle; text-align: center;">
                         @if($tgh->nominal_dibayar > 0)
                             <a href="{{ route('riwayat.cetak', $tgh->id) }}" target="_blank" class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 3px 8px; display: inline-flex; align-items: center; gap: 4px; border-color: #10b981; color: #047857;" title="Cetak Kuitansi Pembayaran">
-                                🖨️ {{ $tgh->no_bukti ?: 'Kuitansi' }}
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2z M7 9V5a2 2 0 012-2h6a2 2 0 012 2v4"></path>
+                                </svg>
+                                <span>{{ $tgh->no_bukti ?: 'Kuitansi' }}</span>
                             </a>
                         @else
                             <span style="color: var(--outline); font-size: 0.8rem;">-</span>

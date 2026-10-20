@@ -228,6 +228,9 @@
             <div class="form-group">
                 <label for="tanggal_daftar" class="form-label">Tanggal Terdaftar <span style="color: var(--error);">*</span></label>
                 <input type="date" name="tanggal_daftar" id="tanggal_daftar" class="form-control" value="{{ old('tanggal_daftar', date('Y-m-d')) }}" required>
+                <small style="color: var(--on-surface-variant); font-size: 0.8125rem; display: block; margin-top: 4px;">
+                    Pedagang baru otomatis terhubung ke <strong>Transaksi Pembayaran</strong> dengan jatuh tempo iuran perdana mulai <strong>besok harinya (H+1)</strong>.
+                </small>
                 @error('tanggal_daftar')
                     <span class="form-error">{{ $message }}</span>
                 @enderror
@@ -268,7 +271,9 @@
             <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
                 <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                     <img id="preview-foto-profil" src="" alt="Preview Foto" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                    <span id="placeholder-foto-profil" style="font-size: 1.8rem; color: #64748b;">👤</span>
+                    <span id="placeholder-foto-profil" style="display: flex; align-items: center; justify-content: center; color: #64748b;">
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </span>
                 </div>
                 <div style="flex-grow: 1; min-width: 220px;">
                     <input type="file" name="foto_profil" id="foto_profil" class="form-control" style="padding-top: var(--space-sm);" accept="image/*" onchange="previewAvatar(this)">

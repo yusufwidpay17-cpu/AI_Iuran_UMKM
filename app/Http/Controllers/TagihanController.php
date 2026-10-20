@@ -43,8 +43,16 @@ class TagihanController extends Controller
         // 1. Check if bills are generated for this date
         $billCount = Tagihan::where('tanggal_tagihan', $tanggal)->count();
         
-        // Hanya generate otomatis jika BUKAN hari bebas iuran
-        if ($billCount == 0 && $tanggal == Carbon::today()->format('Y-m-d') && !$isBebasIuran) {
+        // Cek pedagang aktif yang berkewajiban (terdaftar sebelum tanggal tagihan)
+        $eligibleCount = Pedagang::where('status_pedagang', 'aktif')
+            ->where(function($q) use ($tanggal) {
+                $q->whereNull('tanggal_daftar')
+                  ->orWhere('tanggal_daftar', '<', $tanggal);
+            })
+            ->count();
+        
+        // Hanya generate otomatis jika BUKAN hari bebas iuran dan ada tagihan yang belum diterbitkan
+        if (($billCount == 0 || $billCount < $eligibleCount) && $tanggal == Carbon::today()->format('Y-m-d') && !$isBebasIuran) {
             $this->kalenderService->generateBillsForDate($tanggal);
         }
 

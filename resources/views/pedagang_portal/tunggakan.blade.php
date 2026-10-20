@@ -7,7 +7,10 @@
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
     <div>
         <h2 class="page-title" style="margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--on-surface); display: flex; align-items: center; gap: 8px;">
-            <span>⚠️</span> Tunggakan Iuran Saya
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #dc2626;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span>Tunggakan Iuran Saya</span>
         </h2>
         <p class="page-subtitle" style="margin: 4px 0 0; color: var(--on-surface-variant); font-size: 0.875rem;">
             Rincian tagihan iuran yang masih memiliki sisa kewajiban pembayaran (Kios {{ $pedagang->no_kios ?? '-' }} - {{ $pedagang->nama_usaha ?? $pedagang->nama_pedagang }}).
@@ -23,8 +26,10 @@
 @if($totalTunggakanNominal == 0 && $unpaidBills->isEmpty())
     <!-- TAMPILAN JIKA TIDAK ADA TUNGGAKAN SAMA SEKALI -->
     <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; border-radius: 16px; padding: 40px 24px; text-align: center; margin-bottom: 24px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.08);">
-        <div style="width: 72px; height: 72px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
-            ✓
+        <div style="width: 72px; height: 72px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);">
+            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
         </div>
         <h3 style="font-size: 1.4rem; font-weight: 800; color: #065f46; margin: 0 0 8px;">
             Alhamdulillah, Seluruh Tagihan Telah Lunas!
@@ -65,9 +70,17 @@
         </div>
 
         <div class="card" style="padding: 18px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; flex-direction: column; justify-content: center;">
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface); margin-bottom: 4px;">
-                💡 Cara Pelunasan Iuran:
+            <div style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; display: flex; align-items: center; gap: 5px;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Cara Pelunasan Iuran:</span>
             </div>
+            <div style="font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.5;">
+                Silakan siapkan dana saat petugas lapangan melakukan penarikan keliling harian, atau hubungi kantor kasir BUMPes Digital pasar.
+            </div>
+        </div>
+    </div>
             <div style="font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.5;">
                 Silakan siapkan dana saat petugas lapangan melakukan penarikan keliling harian, atau hubungi kantor kasir BUMPes Digital pasar.
             </div>

@@ -85,7 +85,8 @@
 
 <div class="info-card-activation">
     <div style="font-weight: 700; font-size: 14px; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-        <span>🔐</span> Hak Akses Telah Diberikan
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0110 0v4"></path></svg>
+        Hak Akses Telah Diberikan
     </div>
     <div>
         Halo <strong>{{ $user->nama }}</strong>, Anda telah disetujui untuk mengakses sistem privat <strong>{{ config('app.name', 'AmanahLedger') }}</strong>

@@ -256,10 +256,14 @@
                 <div style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; border: 2px solid var(--primary); flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
                     @if($pedagang->foto_profil_url)
                         <img id="preview-foto-profil" src="{{ $pedagang->foto_profil_url }}" alt="Preview Foto" style="width: 100%; height: 100%; object-fit: cover;">
-                        <span id="placeholder-foto-profil" style="font-size: 1.8rem; color: #64748b; display: none;">👤</span>
+                        <span id="placeholder-foto-profil" style="display: none; align-items: center; justify-content: center; color: #64748b;">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </span>
                     @else
                         <img id="preview-foto-profil" src="" alt="Preview Foto" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                        <span id="placeholder-foto-profil" style="font-size: 1.8rem; color: #64748b;">👤</span>
+                        <span id="placeholder-foto-profil" style="display: flex; align-items: center; justify-content: center; color: #64748b;">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </span>
                     @endif
                 </div>
                 <div style="flex-grow: 1; min-width: 220px;">

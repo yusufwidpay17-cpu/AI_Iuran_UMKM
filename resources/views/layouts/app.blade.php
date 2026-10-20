@@ -174,7 +174,7 @@
                 <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface-container); border: 1px solid var(--outline-variant); border-radius: var(--radius-md); padding: 6px 10px; margin-bottom: 10px;">
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.03em;">MODETEMA</span>
                     <button class="theme-toggle-btn" id="sidebar-theme-toggle" title="Ganti Tema (Gelap / Terang)">
-                        🌙
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
                 </div>
 
@@ -217,7 +217,7 @@
                 </div>
                 <div class="top-navbar-actions">
                     <button class="theme-toggle-btn top-navbar-theme" id="mobile-theme-toggle" title="Ganti Tema (Gelap / Terang)">
-                        🌙
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
                     <div class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
                         @if(Auth::user() && Auth::user()->foto_profil_url)
@@ -431,12 +431,14 @@
             }
 
             // Theme Toggle Switch Handler
+            const svgThemeSun = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>`;
+            const svgThemeMoon = `<svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`;
             const currentTheme = localStorage.getItem('app-theme') || 'light';
             const themeBtns = document.querySelectorAll('#sidebar-theme-toggle, #mobile-theme-toggle');
 
             function updateThemeUI(theme) {
                 themeBtns.forEach(btn => {
-                    btn.innerHTML = theme === 'dark' ? '☀️' : '🌙';
+                    btn.innerHTML = theme === 'dark' ? svgThemeSun : svgThemeMoon;
                     btn.setAttribute('title', theme === 'dark' ? 'Ganti ke Tema Terang' : 'Ganti ke Tema Gelap');
                 });
             }
@@ -454,6 +456,20 @@
 
             updateLiveAdminClock();
             setInterval(updateLiveAdminClock, 1000);
+
+            // Sticky Navbar Scroll Elevation Effect
+            const topNavbar = document.querySelector('.top-navbar');
+            if (topNavbar) {
+                const handleNavScroll = () => {
+                    if (window.scrollY > 8) {
+                        topNavbar.classList.add('is-scrolled');
+                    } else {
+                        topNavbar.classList.remove('is-scrolled');
+                    }
+                };
+                window.addEventListener('scroll', handleNavScroll, { passive: true });
+                handleNavScroll();
+            }
         });
     </script>
     

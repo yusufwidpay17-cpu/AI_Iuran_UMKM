@@ -67,8 +67,11 @@
             </svg>
             Export Excel
         </a>
-        <button class="btn btn-secondary" onclick="openGenerateModal()" style="border-radius: 8px; font-weight: 600;">
-            ⚡ Generate Batch Hari Ini
+        <button class="btn btn-secondary" onclick="openGenerateModal()" style="border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+            </svg>
+            Generate Batch Hari Ini
         </button>
         <button class="btn btn-primary" onclick="openTambahIuranModal()" style="border-radius: 8px; font-weight: 600;">
             + Input Pembayaran Manual
@@ -81,8 +84,10 @@
     @if ($isBebasIuran)
         <div style="background: #f0fdf4; border: 1px solid #86efac; border-left: 5px solid #16a34a; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <div style="background: #dcfce7; color: #16a34a; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                    🏖️
+                <div style="background: #dcfce7; color: #16a34a; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
                 </div>
                 <div>
                     <div style="font-weight: 800; font-size: 0.95rem; color: #166534; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -92,8 +97,11 @@
                     <div style="font-size: 0.85rem; color: #15803d; margin-top: 4px;">
                         <strong>Keterangan:</strong> {{ $rule->alasan }}
                     </div>
-                    <div style="font-size: 0.775rem; color: #166534; margin-top: 4px; opacity: 0.9;">
-                        ℹ️ Sistem tidak menerbitkan tagihan harian baru dan tidak menambah kewajiban/tunggakan pedagang pada tanggal ini.
+                    <div style="font-size: 0.775rem; color: #166534; margin-top: 4px; opacity: 0.9; display: flex; align-items: center; gap: 5px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Sistem tidak menerbitkan tagihan harian baru dan tidak menambah kewajiban/tunggakan pedagang pada tanggal ini.</span>
                     </div>
                 </div>
             </div>
@@ -104,8 +112,12 @@
     @elseif ($isPenagihanDiliburkan)
         <div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid #d97706; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 14px;">
             <div style="display: flex; align-items: flex-start; gap: 12px;">
-                <div style="background: #fef3c7; color: #d97706; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">
-                    ⏸️
+                <div style="background: #fef3c7; color: #d97706; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="10" y1="15" x2="10" y2="9"></line>
+                        <line x1="14" y1="15" x2="14" y2="9"></line>
+                    </svg>
                 </div>
                 <div>
                     <div style="font-weight: 800; font-size: 0.95rem; color: #92400e; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
@@ -115,8 +127,11 @@
                     <div style="font-size: 0.85rem; color: #b45309; margin-top: 4px;">
                         <strong>Keterangan:</strong> {{ $rule->alasan }}
                     </div>
-                    <div style="font-size: 0.775rem; color: #92400e; margin-top: 4px; opacity: 0.9;">
-                        ℹ️ Petugas tidak melakukan penagihan lapangan, namun kewajiban iuran pedagang tetap tercatat sebagai tagihan sah dan dapat dilunasi saat penagihan kembali beroperasi.
+                    <div style="font-size: 0.775rem; color: #92400e; margin-top: 4px; opacity: 0.9; display: flex; align-items: center; gap: 5px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Petugas tidak melakukan penagihan lapangan, namun kewajiban iuran pedagang tetap tercatat sebagai tagihan sah dan dapat dilunasi saat penagihan kembali beroperasi.</span>
                     </div>
                 </div>
             </div>
@@ -180,14 +195,24 @@
     <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; border-left: 4px solid #10b981;">
         <div class="stat-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #047857; letter-spacing: 0.5px;">TOTAL TERKUMPUL (SUDAH BAYAR)</div>
         <div class="stat-value numeric-display" style="font-size: 1.5rem; font-weight: 800; color: #10b981; margin: 4px 0;">Rp {{ number_format($tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
-        <div class="stat-sub" style="font-size: 0.8125rem; color: #047857; font-weight: 600;">✔ {{ $tagihanLunas->count() }} Pedagang Lunas Hari Ini</div>
+        <div class="stat-sub" style="font-size: 0.8125rem; color: #047857; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <span>{{ $tagihanLunas->count() }} Pedagang Lunas Hari Ini</span>
+        </div>
     </div>
 
     <!-- Card Belum Bayar -->
     <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; border-left: 4px solid #ef4444;">
         <div class="stat-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #b91c1c; letter-spacing: 0.5px;">BELUM TERBAYAR (MENUNGGAK)</div>
         <div class="stat-value numeric-display" style="font-size: 1.5rem; font-weight: 800; color: #ef4444; margin: 4px 0;">Rp {{ number_format($tagihans->where('status_bayar', '!=', 'dibatalkan')->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
-        <div class="stat-sub" style="font-size: 0.8125rem; color: #b91c1c; font-weight: 600;">⚠ {{ $tagihanBelum->count() }} Pedagang Belum Bayar</div>
+        <div class="stat-sub" style="font-size: 0.8125rem; color: #b91c1c; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span>{{ $tagihanBelum->count() }} Pedagang Belum Bayar</span>
+        </div>
     </div>
 </div>
 
@@ -196,11 +221,17 @@
     <button type="button" class="tab-btn active" id="tab-all" onclick="filterTab('all')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #2563eb; color: #ffffff; cursor: pointer; transition: all 0.2s;">
         Semua Transaksi ({{ $tagihans->count() }})
     </button>
-    <button type="button" class="tab-btn" id="tab-lunas" onclick="filterTab('lunas')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s;">
-        ✔ Sudah Bayar ({{ $tagihanLunas->count() }})
+    <button type="button" class="tab-btn" id="tab-lunas" onclick="filterTab('lunas')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span>Sudah Bayar ({{ $tagihanLunas->count() }})</span>
     </button>
-    <button type="button" class="tab-btn" id="tab-belum" onclick="filterTab('belum')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s;">
-        ⚠ Belum Bayar ({{ $tagihanBelum->count() }})
+    <button type="button" class="tab-btn" id="tab-belum" onclick="filterTab('belum')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <span>Belum Bayar ({{ $tagihanBelum->count() }})</span>
     </button>
 </div>
 
@@ -256,22 +287,36 @@
                             </div>
                             @if ($isLunas)
                                 <div style="font-size: 0.75rem; color: #059669; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                                    <span>✔ Diterima sah</span>
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Diterima sah</span>
                                     @if($tgh->waktu_bayar)
                                         <span style="color: #64748b;">({{ $tgh->waktu_bayar->format('H:i') }} WIB)</span>
                                     @endif
                                 </div>
                             @elseif ($isSebagian)
-                                <div style="font-size: 0.75rem; color: #d97706; font-weight: 500; margin-top: 2px;">
-                                    ⚠ Terbayar Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}
+                                <div style="font-size: 0.75rem; color: #d97706; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                    </svg>
+                                    <span>Terbayar Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}</span>
                                 </div>
                             @elseif ($isBatal)
-                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px;">
-                                    🚫 {{ $tgh->catatan ?? 'Dibatalkan / Bebas Iuran' }}
+                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                                    </svg>
+                                    <span>{{ $tgh->catatan ?? 'Dibatalkan / Bebas Iuran' }}</span>
                                 </div>
                             @elseif ($isTidakBerdagang)
-                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px;">
-                                    🚫 {{ $tgh->catatan ?? 'Lapak Libur / Tutup' }}
+                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                                    </svg>
+                                    <span>{{ $tgh->catatan ?? 'Lapak Libur / Tutup' }}</span>
                                 </div>
                             @else
                                 <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 500; margin-top: 2px;">
@@ -286,8 +331,11 @@
                                 Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
                             </div>
                             @if ($isLunas)
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #10b981; margin-top: 1px;">
-                                    ✔ Lunas
+                                <div style="font-size: 0.725rem; font-weight: 600; color: #10b981; margin-top: 1px; display: flex; align-items: center; gap: 3px;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                    <span>Lunas</span>
                                 </div>
                             @elseif ($isSebagian)
                                 <div style="font-size: 0.725rem; font-weight: 600; color: #d97706; margin-top: 1px;">
@@ -337,16 +385,22 @@
                         <td style="padding: 12px 16px; vertical-align: middle; text-align: right;">
                             <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
                                 @if ($isLunas)
-                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', 'lunas')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff;">
-                                        ✏️ Edit
+                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', 'lunas')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff; display: inline-flex; align-items: center; gap: 4px;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        </svg>
+                                        <span>Edit</span>
                                     </button>
                                 @elseif ($isBatal)
                                     <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; padding-right: 8px;">
                                         Bebas Iuran
                                     </span>
                                 @else
-                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', '{{ $isSebagian ? 'bayar_sebagian' : 'belum_bayar' }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2);">
-                                        💵 Bayar
+                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', '{{ $isSebagian ? 'bayar_sebagian' : 'belum_bayar' }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2); display: inline-flex; align-items: center; gap: 4px;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        <span>Bayar</span>
                                     </button>
                                     <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 6px; padding: 5px 8px; font-size: 0.725rem; color: #64748b; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Lapak Tutup / Libur">
                                         Tutup
@@ -359,9 +413,12 @@
                     <tr>
                         <td colspan="5" style="text-align: center; color: #64748b; padding: 48px 24px;">
                             <div style="font-size: 1.125rem; font-weight: 700; margin-bottom: 6px; color: #1e293b;">Belum Ada Transaksi Pembayaran Untuk Tanggal Ini</div>
-                            <p style="font-size: 0.875rem; margin-bottom: 20px; color: #64748b;">Silakan klik tombol <strong>⚡ Generate Batch Hari Ini</strong> untuk meng-generate tagihan harian pedagang secara otomatis.</p>
-                            <button class="btn btn-primary" onclick="openGenerateModal()" style="border-radius: 8px; padding: 10px 20px; font-weight: 600;">
-                                ⚡ Generate Tagihan Sekarang
+                            <p style="font-size: 0.875rem; margin-bottom: 20px; color: #64748b;">Silakan klik tombol <strong>Generate Batch Hari Ini</strong> untuk meng-generate tagihan harian pedagang secara otomatis.</p>
+                            <button class="btn btn-primary" onclick="openGenerateModal()" style="border-radius: 8px; padding: 10px 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                <span>Generate Tagihan Sekarang</span>
                             </button>
                         </td>
                     </tr>
@@ -375,7 +432,13 @@
 <div class="modal-overlay" id="modal-tambah-iuran">
     <div class="modal-container" style="max-width: 480px; border-radius: 12px;">
         <div class="modal-header">
-            <h3 class="modal-title" style="font-weight: 700; color: #0f172a;">💳 Input Pembayaran Transaksi</h3>
+            <h3 class="modal-title" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                <span>Input Pembayaran Transaksi</span>
+            </h3>
             <button class="modal-close" onclick="closeTambahIuranModal()">&times;</button>
         </div>
         <form action="{{ route('tagihan.store-manual') }}" method="POST">
@@ -424,7 +487,12 @@
             </div>
             <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button type="button" class="btn btn-secondary" onclick="closeTambahIuranModal()" style="border-radius: 8px;">Batal</button>
-                <button type="submit" class="btn btn-primary" style="border-radius: 8px; background: #047857; border-color: #047857; font-weight: 700;">✔ Simpan Pembayaran</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 8px; background: #047857; border-color: #047857; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Simpan Pembayaran</span>
+                </button>
             </div>
         </form>
     </div>
@@ -434,7 +502,12 @@
 <div class="modal-overlay" id="modal-generate">
     <div class="modal-container" style="max-width: 420px; border-radius: 12px;">
         <div class="modal-header">
-            <h3 class="modal-title" style="font-weight: 700; color: #0f172a;">⚡ Generate Tagihan Batch</h3>
+            <h3 class="modal-title" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                <span>Generate Tagihan Batch</span>
+            </h3>
             <button class="modal-close" onclick="closeGenerateModal()">&times;</button>
         </div>
         <form action="{{ route('tagihan.generate') }}" method="POST">
@@ -460,7 +533,13 @@
 <div class="modal-overlay" id="modal-quick-bayar">
     <div class="modal-container" style="max-width: 460px; border-radius: 12px;">
         <div class="modal-header">
-            <h3 class="modal-title" style="font-weight: 700; color: #0f172a;">💳 Input Transaksi Pembayaran</h3>
+            <h3 class="modal-title" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
+                <span>Input Transaksi Pembayaran</span>
+            </h3>
             <button class="modal-close" onclick="closeBayarModal()">&times;</button>
         </div>
         <form id="quick-bayar-form" method="POST">
@@ -491,11 +570,12 @@
                         <option value="belum_bayar">BELUM BAYAR</option>
                         <option value="bayar_sebagian">CICIL</option>
                     </select>
+                </div>
                 <div class="form-group" id="quick-bayar-mode-group" style="margin-bottom: 14px; display: none;">
                     <label class="form-label" style="font-weight: 700;">Tipe Input Transaksi</label>
                     <select name="mode_cicilan" id="quick-bayar-mode" class="form-select" style="border-radius: 8px; min-height: 42px;" onchange="handleModeCicilanChange()">
-                        <option value="tambah">➕ Tambah Cicilan Baru (Diakumulasikan)</option>
-                        <option value="koreksi">✏️ Koreksi Total Nominal Pembayaran</option>
+                        <option value="tambah">Tambah Cicilan Baru (Diakumulasikan)</option>
+                        <option value="koreksi">Koreksi Total Nominal Pembayaran</option>
                     </select>
                     <p id="quick-bayar-hint" style="font-size: 0.75rem; color: #0284c7; margin-top: 4px; font-weight: 600;"></p>
                 </div>
@@ -507,7 +587,12 @@
             </div>
             <div class="modal-footer" style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button type="button" class="btn btn-secondary" onclick="closeBayarModal()" style="border-radius: 8px;">Batal</button>
-                <button type="submit" class="btn btn-primary" style="border-radius: 8px; font-weight: 700; background: #047857; border-color: #047857;">✔ Simpan Pembayaran</button>
+                <button type="submit" class="btn btn-primary" style="border-radius: 8px; font-weight: 700; background: #047857; border-color: #047857; display: inline-flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    <span>Simpan Pembayaran</span>
+                </button>
             </div>
         </form>
     </div>
@@ -517,7 +602,13 @@
 <div class="modal-overlay" id="modal-tidak-berdagang">
     <div class="modal-container" style="max-width: 460px; border-radius: 12px;">
         <div class="modal-header">
-            <h3 class="modal-title" style="font-weight: 700; color: #0f172a;">🚫 Keterangan Tidak Berdagang</h3>
+            <h3 class="modal-title" style="font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                </svg>
+                <span>Keterangan Tidak Berdagang</span>
+            </h3>
             <button class="modal-close" onclick="closeTidakBerdagangModal()">&times;</button>
         </div>
         <form id="tidak-berdagang-form" method="POST">

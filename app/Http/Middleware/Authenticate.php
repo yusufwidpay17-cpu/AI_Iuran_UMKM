@@ -14,7 +14,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
+        if (! $request->expectsJson() && ! $request->ajax() && ! $request->wantsJson() && $request->header('X-Requested-With') !== 'XMLHttpRequest') {
             return route('login');
         }
     }

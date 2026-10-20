@@ -9,6 +9,8 @@ use App\Models\Tagihan;
 use App\Models\Lapak;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Services\KalenderOperasionalService;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,14 +42,19 @@ class PedagangController extends Controller
             $query->where('kategori_usaha', $request->input('kategori_usaha'));
         }
 
-        $pedagangs = $query->orderBy('no_kios', 'asc')->paginate(12)->withQueryString();
+        $perPage = (int) $request->input('per_page', 9);
+        if (!in_array($perPage, [6, 9, 12, 15, 18, 24])) {
+            $perPage = 9;
+        }
+
+        $pedagangs = $query->orderBy('no_kios', 'asc')->paginate($perPage)->withQueryString();
 
         $blokList = Pedagang::whereNotNull('blok_kios')
             ->where('blok_kios', '!=', '')
             ->distinct()
             ->pluck('blok_kios');
 
-        return view('pedagang.index', compact('pedagangs', 'blokList'));
+        return view('pedagang.index', compact('pedagangs', 'blokList', 'perPage'));
     }
 
     public function create()
@@ -138,15 +145,28 @@ class PedagangController extends Controller
             );
         }
 
+        // Hubungkan ke menu Transaksi Pembayaran: generate tagihan perdana jatuh tempo besok harinya (H+1 pendaftaran)
+        $tagihanPerdana = null;
+        if ($pedagang->status_pedagang === 'aktif') {
+            $kalenderService = app(KalenderOperasionalService::class);
+            $tagihanPerdana = $kalenderService->generateInitialBillNextDay($pedagang);
+        }
+
+        $tanggalJatuhTempo = $pedagang->tanggal_daftar 
+            ? Carbon::parse($pedagang->tanggal_daftar)->addDay() 
+            : Carbon::tomorrow();
+
         AuditLog::create([
             'id' => (string) Str::uuid(),
             'user_id' => Auth::id(),
             'aksi' => 'CREATE_PEDAGANG',
-            'deskripsi' => 'Menambahkan pedagang baru: ' . $pedagang->nama_pedagang . ' (Kios: ' . $pedagang->no_kios . ').',
+            'deskripsi' => 'Menambahkan pedagang baru: ' . $pedagang->nama_pedagang . ' (Kios: ' . $pedagang->no_kios . '). Tagihan perdana terhubung ke Transaksi Pembayaran (jatuh tempo: ' . $tanggalJatuhTempo->format('d/m/Y') . ').',
             'created_at' => now(),
         ]);
 
-        return redirect()->route('pedagang.index')->with('success', 'Data pedagang berhasil ditambahkan.');
+        $pesanSukses = 'Data pedagang ' . $pedagang->nama_pedagang . ' berhasil ditambahkan dan terhubung ke menu Transaksi Pembayaran (jatuh tempo mulai besok: ' . $tanggalJatuhTempo->isoFormat('D MMMM YYYY') . ').';
+
+        return redirect()->route('pedagang.index')->with('success', $pesanSukses);
     }
 
     public function show($id)

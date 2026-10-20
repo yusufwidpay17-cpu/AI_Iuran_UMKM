@@ -74,7 +74,13 @@ class KalenderOperasionalService
         // 2. Gunakan database transaction untuk atomic & concurrency safety
         DB::beginTransaction();
         try {
-            $activeMerchants = Pedagang::where('status_pedagang', 'aktif')->lockForUpdate()->get();
+            $activeMerchants = Pedagang::where('status_pedagang', 'aktif')
+                ->where(function($q) use ($tanggal) {
+                    $q->whereNull('tanggal_daftar')
+                      ->orWhere('tanggal_daftar', '<', $tanggal);
+                })
+                ->lockForUpdate()
+                ->get();
 
             foreach ($activeMerchants as $pdg) {
                 // Cek duplikasi tagihan (berdasarkan pedagang_id dan tanggal_tagihan)
@@ -241,5 +247,78 @@ class KalenderOperasionalService
             DB::rollBack();
             throw $e;
         }
+    }
+
+    /**
+     * Hubungkan pedagang baru ke Transaksi Pembayaran:
+     * Otomatis terbitkan tagihan perdana yang jatuh tempo pada besok harinya (H+1 pendaftaran).
+     */
+    public function generateInitialBillNextDay(Pedagang $pedagang)
+    {
+        if ($pedagang->status_pedagang !== 'aktif') {
+            return null;
+        }
+
+        // Tentukan tanggal jatuh tempo perdana: besok harinya (H+1 pendaftaran)
+        $tanggalDaftar = $pedagang->tanggal_daftar ? Carbon::parse($pedagang->tanggal_daftar) : Carbon::today();
+        $tanggalJatuhTempo = $tanggalDaftar->copy()->addDay()->format('Y-m-d');
+
+        // Proteksi idempotensi: Jangan duplikasi tagihan jika sudah ada
+        $existing = Tagihan::where('pedagang_id', $pedagang->id)
+            ->where('tanggal_tagihan', $tanggalJatuhTempo)
+            ->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
+        $rule = $this->getRuleForDate($tanggalJatuhTempo);
+        $isBebasIuran = $rule && $rule->isBebasIuran();
+
+        $tarif = $pedagang->tarif ?? \App\Models\Tarif::find($pedagang->tarif_id);
+        $nominal = (float) ($tarif->nominal_harian ?? 0);
+        $dibayar = 0.00;
+        $status = 'belum_bayar';
+        $metode = null;
+        $waktu = null;
+        $noBukti = null;
+        $catatan = 'Tagihan iuran perdana (jatuh tempo H+1 pendaftaran pedagang).';
+
+        if ($pedagang->saldo_deposit > 0) {
+            if ($pedagang->saldo_deposit >= $nominal) {
+                $dibayar = $nominal;
+                $pedagang->saldo_deposit -= $nominal;
+                $status = 'lunas';
+                $metode = 'tunai';
+                $waktu = now();
+                $noBukti = $this->generateNoBukti('DEP-AUTO-');
+                $catatan = 'Lunas otomatis menggunakan saldo deposit awal.';
+            } else {
+                $dibayar = (float) $pedagang->saldo_deposit;
+                $pedagang->saldo_deposit = 0.00;
+                $status = 'bayar_sebagian';
+                $metode = 'tunai';
+                $waktu = now();
+                $noBukti = $this->generateNoBukti('DEP-AUTO-');
+                $catatan = 'Dibayar sebagian menggunakan saldo deposit awal.';
+            }
+            $pedagang->save();
+        }
+
+        return Tagihan::create([
+            'id' => (string) Str::uuid(),
+            'pedagang_id' => $pedagang->id,
+            'tarif_id' => $pedagang->tarif_id,
+            'jenis_iuran' => 'Iuran Harian',
+            'petugas_id' => null,
+            'tanggal_tagihan' => $tanggalJatuhTempo,
+            'nominal_tagihan' => $nominal,
+            'nominal_dibayar' => $dibayar,
+            'status_bayar' => $status,
+            'waktu_bayar' => $waktu,
+            'metode_bayar' => $metode,
+            'no_bukti' => $noBukti,
+            'catatan' => $catatan
+        ]);
     }
 }

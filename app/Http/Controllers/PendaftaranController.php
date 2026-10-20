@@ -154,13 +154,19 @@ class PendaftaranController extends Controller
             );
         }
 
+        // Hubungkan ke menu Transaksi Pembayaran: generate tagihan perdana jatuh tempo besok harinya (H+1 pendaftaran)
+        if ($pedagang->status_pedagang === 'aktif') {
+            $kalenderService = app(\App\Services\KalenderOperasionalService::class);
+            $kalenderService->generateInitialBillNextDay($pedagang);
+        }
+
         $pendaftaran->update(['status_pendaftaran' => 'disetujui']);
 
         AuditLog::create([
             'id' => (string) Str::uuid(),
             'user_id' => Auth::id(),
             'aksi' => 'APPROVE_PENDAFTARAN',
-            'deskripsi' => 'Menyetujui pendaftaran pedagang: ' . $pendaftaran->nama_calon . ' (Kios: ' . $pendaftaran->no_kios . ').',
+            'deskripsi' => 'Menyetujui pendaftaran pedagang: ' . $pendaftaran->nama_calon . ' (Kios: ' . $pendaftaran->no_kios . '). Tagihan perdana terhubung ke Transaksi Pembayaran.',
             'created_at' => now(),
         ]);
 

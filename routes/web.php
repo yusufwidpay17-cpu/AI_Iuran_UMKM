@@ -360,6 +360,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/pengguna/{id}/kirim-ulang-aktivasi', [PenggunaController::class, 'resendActivation'])->name('pengguna.resend-activation');
         Route::post('/pengguna/beri-akses-pedagang', [PenggunaController::class, 'beriAksesPedagang'])->name('pengguna.beri-akses-pedagang');
         Route::post('/pengguna/{id}/cabut-akses-pedagang', [PenggunaController::class, 'cabutAksesPedagang'])->name('pengguna.cabut-akses-pedagang');
+        Route::post('/pengguna/reset-password-semua', [PenggunaController::class, 'resetPasswordSemua'])->name('pengguna.reset-password-semua');
         Route::post('/pengguna/{id}/reset-password', [PenggunaController::class, 'resetPassword'])->name('pengguna.reset-password');
     });
 });

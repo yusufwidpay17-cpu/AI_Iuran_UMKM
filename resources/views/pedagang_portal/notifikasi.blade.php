@@ -7,7 +7,10 @@
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
     <div>
         <h2 class="page-title" style="margin: 0; font-size: 1.4rem; font-weight: 700; color: var(--on-surface); display: flex; align-items: center; gap: 8px;">
-            <span>🔔</span> Notifikasi & Pengumuman Lapak
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            <span>Notifikasi & Pengumuman Lapak</span>
         </h2>
         <p class="page-subtitle" style="margin: 4px 0 0; color: var(--on-surface-variant); font-size: 0.875rem;">
             Pemberitahuan resmi terkait status tagihan, konfirmasi pembayaran, dan informasi pasar (Kios {{ $pedagang->no_kios ?? '-' }}).
@@ -19,8 +22,13 @@
     <!-- 1. Notifikasi Status Hari Ini -->
     @if($isBebasIuranHariIni)
         <div class="card" style="padding: 16px; border-radius: 12px; border: 1.5px solid #a7f3d0; background: #ecfdf5; display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-                📅
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #059669; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -34,8 +42,10 @@
         </div>
     @elseif($tagihanHariIni && $tagihanHariIni->status_bayar === 'lunas')
         <div class="card" style="padding: 16px; border-radius: 12px; border: 1.5px solid #a7f3d0; background: #f0fdf4; display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-                ✓
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #10b981; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -45,15 +55,21 @@
                 <p style="margin: 4px 0 8px; font-size: 0.85rem; color: #047857; line-height: 1.5;">
                     Pembayaran iuran harian sebesar <strong>Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }}</strong> telah diterima oleh petugas <em>{{ $tagihanHariIni->petugas->nama ?? 'Kasir Pasar' }}</em> dengan No. Bukti <code>{{ $tagihanHariIni->no_bukti }}</code>.
                 </p>
-                <a href="{{ route('riwayat.cetak', $tagihanHariIni->id) }}" target="_blank" class="btn btn-sm btn-primary" style="background: #059669; font-size: 0.775rem; padding: 4px 10px;">
-                    🖨️ Cetak Kuitansi Pembayaran
+                <a href="{{ route('riwayat.cetak', $tagihanHariIni->id) }}" target="_blank" class="btn btn-sm btn-primary" style="background: #059669; font-size: 0.775rem; padding: 4px 10px; display: inline-flex; align-items: center; gap: 5px;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2z M7 9V5a2 2 0 012-2h6a2 2 0 012 2v4"></path>
+                    </svg>
+                    <span>Cetak Kuitansi Pembayaran</span>
                 </a>
             </div>
         </div>
     @elseif($tagihanHariIni)
         <div class="card" style="padding: 16px; border-radius: 12px; border: 1.5px solid #fed7aa; background: #fffaf0; display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #f97316; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-                ⏳
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #f97316; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -67,8 +83,10 @@
         </div>
     @else
         <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-container-high); color: var(--on-surface); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-                🏪
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--surface-container-high); color: var(--on-surface); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h18l-1 9H4L3 3z M4 12v8a1 1 0 001 1h14a1 1 0 001-1v-8 M10 21V15h4v6"></path>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -85,8 +103,10 @@
     <!-- 2. Notifikasi Tunggakan (Jika Ada) -->
     @if($totalTunggakan > 0)
         <div class="card" style="padding: 16px; border-radius: 12px; border: 1.5px solid #fecaca; background: #fef2f2; display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background: #ef4444; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-                ⚠️
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #ef4444; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -106,8 +126,11 @@
     <!-- 3. Notifikasi Pembayaran Terakhir Berhasil -->
     @foreach($pembayaranTerakhir as $p)
         <div class="card" style="padding: 14px 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; gap: 14px; align-items: flex-start;">
-            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;">
-                💳
+            <div style="width: 36px; height: 36px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                    <line x1="2" y1="10" x2="22" y2="10"></line>
+                </svg>
             </div>
             <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
@@ -125,8 +148,10 @@
 
     <!-- 4. Pengumuman Manajemen Pasar -->
     <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid #bfdbfe; background: #eff6ff; display: flex; gap: 14px; align-items: flex-start;">
-        <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">
-            📢
+        <div style="width: 40px; height: 40px; border-radius: 50%; background: #3b82f6; color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+            </svg>
         </div>
         <div style="flex: 1;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">

@@ -30,8 +30,10 @@
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 24px;">
     <!-- Total Catatan -->
     <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(59, 130, 246, 0.12); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 22px;">
-            📅
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(59, 130, 246, 0.12); color: #2563eb; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
         </div>
         <div>
             <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Agenda Dicatat</div>
@@ -42,8 +44,10 @@
 
     <!-- Bebas Iuran -->
     <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #059669; display: flex; align-items: center; justify-content: center; font-size: 22px;">
-            ✨
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #059669; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
         </div>
         <div>
             <div style="font-size: 0.75rem; color: #047857; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Bebas Iuran Aktif</div>
@@ -54,8 +58,11 @@
 
     <!-- Penagihan Tertunda -->
     <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 22px;">
-            ⏳
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); color: #d97706; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"></path>
+            </svg>
         </div>
         <div>
             <div style="font-size: 0.75rem; color: #b45309; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Penagihan Tertunda</div>
@@ -66,8 +73,11 @@
 
     <!-- Dibatalkan -->
     <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(100, 116, 139, 0.12); color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 22px;">
-            🚫
+        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(100, 116, 139, 0.12); color: #64748b; display: flex; align-items: center; justify-content: center;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.93 4.93l14.14 14.14"></path>
+            </svg>
         </div>
         <div>
             <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Aturan Dibatalkan</div>
@@ -118,8 +128,12 @@
         </div>
 
         <div style="display: flex; gap: 8px;">
-            <button type="submit" class="btn btn-primary" style="flex: 1; border-radius: 8px; font-weight: 700; font-size: 0.85rem;">
-                🔍 Filter
+            <button type="submit" class="btn btn-primary" style="flex: 1; border-radius: 8px; font-weight: 700; font-size: 0.85rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="M21 21l-4.35-4.35"></path>
+                </svg>
+                Filter
             </button>
             <a href="{{ route('kalender.index') }}" class="btn btn-secondary" style="border-radius: 8px; font-weight: 600; font-size: 0.85rem;" title="Reset Filter">
                 Reset
@@ -167,17 +181,33 @@
 
                     <!-- Kategori -->
                     <td style="padding: 14px 16px; vertical-align: middle;">
-                        <span style="font-weight: 700; font-size: 0.825rem; color: var(--on-surface);">
+                        <span style="font-weight: 700; font-size: 0.825rem; color: var(--on-surface); display: inline-flex; align-items: center; gap: 6px;">
                             @if($rec->kategori === 'kegiatan_pesantren')
-                                🕌 {{ $rec->kategori_label }}
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #7c3aed;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                                {{ $rec->kategori_label }}
                             @elseif($rec->kategori === 'libur_nasional_pasar')
-                                🏖️ {{ $rec->kategori_label }}
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #0284c7;">
+                                    <circle cx="12" cy="12" r="5"></circle>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+                                </svg>
+                                {{ $rec->kategori_label }}
                             @elseif($rec->kategori === 'petugas_tugas_lain')
-                                📋 {{ $rec->kategori_label }}
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                                </svg>
+                                {{ $rec->kategori_label }}
                             @elseif($rec->kategori === 'keadaan_darurat')
-                                ⚠️ {{ $rec->kategori_label }}
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #dc2626;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                                {{ $rec->kategori_label }}
                             @else
-                                📌 {{ $rec->kategori_label }}
+                                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--outline);">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                                </svg>
+                                {{ $rec->kategori_label }}
                             @endif
                         </span>
                     </td>
@@ -188,8 +218,11 @@
                             {{ $rec->alasan }}
                         </div>
                         @if($rec->catatan_audit)
-                            <div style="font-size: 0.72rem; color: var(--outline); margin-top: 4px; font-family: monospace; white-space: pre-line;">
-                                📝 {{ Str::limit($rec->catatan_audit, 100) }}
+                            <div style="font-size: 0.72rem; color: var(--outline); margin-top: 4px; font-family: monospace; white-space: pre-line; display: flex; align-items: flex-start; gap: 4px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>{{ Str::limit($rec->catatan_audit, 100) }}</span>
                             </div>
                         @endif
                     </td>
@@ -197,12 +230,19 @@
                     <!-- Kebijakan Iuran -->
                     <td style="padding: 14px 16px; vertical-align: middle; text-align: center;">
                         @if($rec->kebijakan_iuran === 'bebas_iuran')
-                            <span style="background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 0.725rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-block;">
-                                ✨ BEBAS IURAN
+                            <span style="background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.35); font-size: 0.725rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                BEBAS IURAN
                             </span>
                         @else
-                            <span style="background: rgba(245, 158, 11, 0.15); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.725rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-block;">
-                                ⏳ TETAP BERUTANG
+                            <span style="background: rgba(245, 158, 11, 0.15); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.725rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"></path>
+                                </svg>
+                                TETAP BERUTANG
                             </span>
                         @endif
                     </td>
@@ -230,20 +270,31 @@
                     <td style="padding: 14px 16px; vertical-align: middle; text-align: right;">
                         <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap;">
                             @if($rec->kebijakan_iuran === 'bebas_iuran' && $rec->status === 'aktif')
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="bukaModalDampak('{{ $rec->id }}')" style="font-size: 0.75rem; padding: 4px 8px;" title="Tinjau & Koreksi Tagihan Terdampak">
-                                    🔍 Cek Dampak
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="bukaModalDampak('{{ $rec->id }}')" style="font-size: 0.75rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;" title="Tinjau & Koreksi Tagihan Terdampak">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="M21 21l-4.35-4.35"></path>
+                                    </svg>
+                                    Cek Dampak
                                 </button>
                             @endif
 
-                            <button type="button" class="btn btn-sm btn-outline" onclick='bukaModalEditKalender(@json($rec))' style="font-size: 0.75rem; padding: 4px 8px;">
-                                ✏️ Edit
+                            <button type="button" class="btn btn-sm btn-outline" onclick='bukaModalEditKalender(@json($rec))' style="font-size: 0.75rem; padding: 4px 8px; display: inline-flex; align-items: center; gap: 4px;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Edit
                             </button>
 
                             @if($rec->status === 'aktif')
                                 <form action="{{ route('kalender.batalkan', $rec->id) }}" method="POST" style="display: inline;" onsubmit="return confirm('Apakah Anda yakin ingin menonaktifkan / membatalkan catatan kalender operasional ini? Jadwal penagihan akan kembali normal.')">
                                     @csrf
-                                    <button type="submit" class="btn btn-sm btn-danger" style="font-size: 0.75rem; padding: 4px 8px; background: #fee2e2; color: #b91c1c; border-color: #fecaca;">
-                                        🚫 Batalkan
+                                    <button type="submit" class="btn btn-sm btn-danger" style="font-size: 0.75rem; padding: 4px 8px; background: #fee2e2; color: #b91c1c; border-color: #fecaca; display: inline-flex; align-items: center; gap: 4px;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.93 4.93l14.14 14.14"></path>
+                                        </svg>
+                                        Batalkan
                                     </button>
                                 </form>
                             @endif
@@ -276,7 +327,10 @@
     <div class="modal-dialog" style="max-width: 600px; width: 100%; background: var(--surface-container-lowest); border-radius: 16px; border: 1px solid var(--outline-variant); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
         <div style="padding: 18px 22px; border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--on-surface); display: flex; align-items: center; gap: 8px;">
-                <span>📅</span> Tambah Agenda Kalender Operasional
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="color: var(--primary);">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                Tambah Agenda Kalender Operasional
             </h3>
             <button type="button" class="modal-close" onclick="tutupModalTambahKalender()" style="background: none; border: none; font-size: 1.5rem; color: var(--outline); cursor: pointer;">&times;</button>
         </div>
@@ -302,12 +356,12 @@
             <div style="margin-bottom: 16px;">
                 <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface);">Kategori Kejadian <span style="color: #dc2626;">*</span></label>
                 <select name="kategori" class="form-select" required style="border-radius: 8px;">
-                    <option value="kegiatan_pesantren">🕌 Kegiatan Pesantren / Pengajian Akbar</option>
-                    <option value="libur_nasional_pasar">🏖️ Libur Nasional / Libur Pasar</option>
-                    <option value="petugas_tugas_lain">📋 Petugas Mendapat Tugas Lain</option>
-                    <option value="penagihan_dihentikan_sementara">⏸️ Penagihan Dihentikan Sementara</option>
-                    <option value="keadaan_darurat">⚠️ Keadaan Darurat / Cuaca Ekstrem</option>
-                    <option value="lainnya">📌 Alasan Lainnya</option>
+                    <option value="kegiatan_pesantren">Kegiatan Pesantren / Pengajian Akbar</option>
+                    <option value="libur_nasional_pasar">Libur Nasional / Libur Pasar</option>
+                    <option value="petugas_tugas_lain">Petugas Mendapat Tugas Lain</option>
+                    <option value="penagihan_dihentikan_sementara">Penagihan Dihentikan Sementara</option>
+                    <option value="keadaan_darurat">Keadaan Darurat / Cuaca Ekstrem</option>
+                    <option value="lainnya">Alasan Lainnya</option>
                 </select>
             </div>
 
@@ -321,7 +375,10 @@
                     <label style="border: 2px solid #10b981; background: #ecfdf5; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
                         <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; color: #047857; font-size: 0.88rem;">
                             <input type="radio" name="kebijakan_iuran" value="bebas_iuran" checked style="accent-color: #059669;">
-                            ✨ Iuran Tidak Dikenakan
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Iuran Tidak Dikenakan
                         </div>
                         <div style="font-size: 0.75rem; color: #065f46; line-height: 1.4;">
                             Bebas retribusi. Sistem <b>TIDAK</b> membuat tagihan baru, tidak menambah tunggakan, dan tidak memotong deposit pedagang.
@@ -332,7 +389,11 @@
                     <label style="border: 2px solid #f59e0b; background: #fffaf0; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
                         <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; color: #b45309; font-size: 0.88rem;">
                             <input type="radio" name="kebijakan_iuran" value="kewajiban_tetap_berlaku" style="accent-color: #d97706;">
-                            ⏳ Kewajiban Tetap Berlaku
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"></path>
+                            </svg>
+                            Kewajiban Tetap Berlaku
                         </div>
                         <div style="font-size: 0.75rem; color: #92400e; line-height: 1.4;">
                             Petugas tidak keliling hari ini, tetapi kewajiban iuran <b>tetap berlaku</b> dan dapat ditagih pada hari penagihan berikutnya.
@@ -365,7 +426,10 @@
     <div class="modal-dialog" style="max-width: 600px; width: 100%; background: var(--surface-container-lowest); border-radius: 16px; border: 1px solid var(--outline-variant); overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
         <div style="padding: 18px 22px; border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 700; color: var(--on-surface); display: flex; align-items: center; gap: 8px;">
-                <span>✏️</span> Edit Catatan Kalender Operasional
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+                Edit Catatan Kalender Operasional
             </h3>
             <button type="button" class="modal-close" onclick="tutupModalEditKalender()" style="background: none; border: none; font-size: 1.5rem; color: var(--outline); cursor: pointer;">&times;</button>
         </div>
@@ -388,12 +452,12 @@
             <div style="margin-bottom: 16px;">
                 <label class="form-label" style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface);">Kategori Kejadian <span style="color: #dc2626;">*</span></label>
                 <select name="kategori" id="edit_kategori" class="form-select" required style="border-radius: 8px;">
-                    <option value="kegiatan_pesantren">🕌 Kegiatan Pesantren / Pengajian Akbar</option>
-                    <option value="libur_nasional_pasar">🏖️ Libur Nasional / Libur Pasar</option>
-                    <option value="petugas_tugas_lain">📋 Petugas Mendapat Tugas Lain</option>
-                    <option value="penagihan_dihentikan_sementara">⏸️ Penagihan Dihentikan Sementara</option>
-                    <option value="keadaan_darurat">⚠️ Keadaan Darurat / Cuaca Ekstrem</option>
-                    <option value="lainnya">📌 Alasan Lainnya</option>
+                    <option value="kegiatan_pesantren">Kegiatan Pesantren / Pengajian Akbar</option>
+                    <option value="libur_nasional_pasar">Libur Nasional / Libur Pasar</option>
+                    <option value="petugas_tugas_lain">Petugas Mendapat Tugas Lain</option>
+                    <option value="penagihan_dihentikan_sementara">Penagihan Dihentikan Sementara</option>
+                    <option value="keadaan_darurat">Keadaan Darurat / Cuaca Ekstrem</option>
+                    <option value="lainnya">Alasan Lainnya</option>
                 </select>
             </div>
 
@@ -405,7 +469,10 @@
                     <label style="border: 2px solid #10b981; background: #ecfdf5; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
                         <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; color: #047857; font-size: 0.88rem;">
                             <input type="radio" name="kebijakan_iuran" id="edit_kebijakan_bebas" value="bebas_iuran" style="accent-color: #059669;">
-                            ✨ Bebas Iuran
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Bebas Iuran
                         </div>
                         <div style="font-size: 0.72rem; color: #065f46;">
                             Tidak menerbitkan tagihan harian & tidak ada tunggakan.
@@ -415,7 +482,11 @@
                     <label style="border: 2px solid #f59e0b; background: #fffaf0; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 4px;">
                         <div style="display: flex; align-items: center; gap: 6px; font-weight: 800; color: #b45309; font-size: 0.88rem;">
                             <input type="radio" name="kebijakan_iuran" id="edit_kebijakan_tertunda" value="kewajiban_tetap_berlaku" style="accent-color: #d97706;">
-                            ⏳ Tetap Berlaku
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"></path>
+                            </svg>
+                            Tetap Berlaku
                         </div>
                         <div style="font-size: 0.72rem; color: #92400e;">
                             Penagihan tertunda, kewajiban iuran tetap berjalan.
@@ -454,7 +525,10 @@
     <div class="modal-dialog" style="max-width: 650px; width: 100%; background: var(--surface-container-lowest); border-radius: 16px; border: 1.5px solid #a7f3d0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
         <div style="padding: 18px 22px; border-bottom: 1px solid var(--outline-variant); background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 95, 70, 0.05) 100%); display: flex; justify-content: space-between; align-items: center;">
             <h3 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #065f46; display: flex; align-items: center; gap: 8px;">
-                <span>🛡️</span> Tinjau & Koreksi Dampak Tagihan Bebas Iuran
+                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+                Tinjau & Koreksi Dampak Tagihan Bebas Iuran
             </h3>
             <button type="button" class="modal-close" onclick="tutupModalDampak()" style="background: none; border: none; font-size: 1.5rem; color: var(--outline); cursor: pointer;">&times;</button>
         </div>
@@ -492,7 +566,13 @@
 
                 <!-- Petunjuk Keamanan Data Finansial Sesuai Tahap 5 -->
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #1e40af; line-height: 1.5; margin-bottom: 18px;">
-                    <strong>ℹ️ Prinsip Keamanan & Integritas Data Keuangan:</strong>
+                    <div style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16v-4m0-4h.01"></path>
+                        </svg>
+                        Prinsip Keamanan & Integritas Data Keuangan:
+                    </div>
                     <ul style="margin: 4px 0 0 18px; padding: 0;">
                         <li>Tagihan <b>Belum Bayar</b> akan dibatalkan/dibebaskan secara aman sehingga tidak lagi menagih pedagang.</li>
                         <li>Transaksi yang <b>Sudah Dibayar / Cicilan</b> dan nomor kuitansi <b>TIDAK DIHAPUS</b>, melainkan dipertahankan sebagai rekam pembayaran sah yang diakui.</li>
@@ -511,8 +591,11 @@
 
                     <div style="display: flex; justify-content: flex-end; gap: 10px;">
                         <button type="button" class="btn btn-secondary" onclick="tutupModalDampak()">Tutup</button>
-                        <button type="submit" id="btnEksekusiKoreksi" class="btn btn-primary" style="background: #059669; border-color: #059669; font-weight: 700;">
-                            ⚡ Eksekusi Pembebasan Tagihan
+                        <button type="submit" id="btnEksekusiKoreksi" class="btn btn-primary" style="background: #059669; border-color: #059669; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            Eksekusi Pembebasan Tagihan
                         </button>
                     </div>
                 </form>
@@ -606,7 +689,7 @@
                     btn.textContent = 'Tidak Ada Tagihan yang Perlu Dikoreksi';
                 } else {
                     btn.disabled = false;
-                    btn.textContent = '⚡ Eksekusi Pembebasan Tagihan (' + data.dampak.belum_bayar_count + ' Belum Bayar)';
+                    btn.textContent = 'Eksekusi Pembebasan Tagihan (' + data.dampak.belum_bayar_count + ' Belum Bayar)';
                 }
             }
         })

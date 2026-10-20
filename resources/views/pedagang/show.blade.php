@@ -76,7 +76,9 @@
                     @if($pedagang->foto_profil_url)
                         <img src="{{ $pedagang->foto_profil_url }}" alt="Foto {{ $pedagang->nama_pedagang }}" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
-                        <span style="font-size: 1.8rem; color: #64748b;">👤</span>
+                        <span style="display: flex; align-items: center; justify-content: center; color: #64748b;">
+                            <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </span>
                     @endif
                 </div>
                 <div>
@@ -359,7 +361,10 @@
                         @empty
                             <tr>
                                 <td colspan="6" style="text-align: center; color: var(--secondary); padding: var(--space-lg); font-weight: 600;">
-                                    🎉 Pedagang ini tidak memiliki tunggakan!
+                                    <div style="display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+                                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--secondary);"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <span>Pedagang ini tidak memiliki tunggakan!</span>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse

@@ -31,7 +31,7 @@
             <span>PUSAT KONTROL DIGITAL BUMPES</span>
         </div>
         <h1 class="banner-title">
-            Halo, {{ Auth::user()->nama ?? 'Admin' }}! 👋
+            Halo, {{ Auth::user()->nama ?? 'Admin' }}!
         </h1>
         <p class="banner-desc">
             Selamat datang di pusat kontrol pengelolaan iuran harian pedagang. Mari wujudkan transparansi keuangan dan tingkatkan kedisiplinan penarikan lapak hari ini demi kemajuan bersama BUMPes Digital.
@@ -114,7 +114,12 @@
                 {{ \Carbon\Carbon::today()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
             </div>
             <div class="dpw-date-hijri" id="dpw-date-hijri">
-                <span class="dpw-crescent">☾</span> <span id="dpw-hijri-text">3 Jumadilawal 1448 H</span>
+                <span class="dpw-crescent">
+                    <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24" style="display: inline-block; vertical-align: -1px; margin-right: 2px;">
+                        <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/>
+                    </svg>
+                </span>
+                <span id="dpw-hijri-text">3 Jumadilawal 1448 H</span>
             </div>
         </div>
 
@@ -193,42 +198,7 @@
         <div class="stat-value">{{ number_format($totalLapak) }}</div>
         <div class="stat-sub">Unit Kios Market</div>
     </div>
-    <!-- Target Iuran Hari Ini -->
-    <div class="stat-card">
-        <div class="stat-label">Target Iuran Hari Ini</div>
-        <div class="stat-value numeric-display">Rp {{ number_format($targetIuranHariIni, 0, ',', '.') }}</div>
-        <div class="stat-sub">Target Nominal</div>
-    </div>
-    <!-- Terkumpul Hari Ini -->
-    <div class="stat-card" style="border-left: 3px solid var(--secondary);">
-        <div class="stat-label" style="color: var(--secondary);">Terkumpul Hari Ini</div>
-        <div class="stat-value numeric-display" style="color: var(--secondary);">Rp {{ number_format($totalIuranTerkumpulHariIni, 0, ',', '.') }}</div>
-        <div class="stat-sub" style="color: var(--secondary); font-weight: 600;">Total Masuk</div>
-    </div>
-    <!-- Belum Bayar Hari Ini -->
-    <div class="stat-card" style="border-left: 3px solid var(--error);">
-        <div class="stat-label" style="color: var(--error);">Belum Bayar Hari Ini</div>
-        <div class="stat-value numeric-display" style="color: var(--error);">Rp {{ number_format($sisaBelumBayarHariIni, 0, ',', '.') }}</div>
-        <div class="stat-sub" style="color: var(--error); font-weight: 600;">{{ $belumBayarHariIniCount }} Pedagang</div>
-    </div>
-    <!-- Sudah Bayar Count -->
-    <div class="stat-card">
-        <div class="stat-label">Sudah Bayar Hari Ini</div>
-        <div class="stat-value" style="color: var(--secondary);">{{ $sudahBayarHariIniCount }}</div>
-        <div class="stat-sub" style="color: var(--secondary); font-weight: 600;">Pedagang Lunas</div>
-    </div>
-    <!-- Total Tunggakan -->
-    <div class="stat-card" style="border-left: 3px solid var(--error);">
-        <div class="stat-label" style="color: var(--error);">Total Tunggakan</div>
-        <div class="stat-value numeric-display" style="color: var(--error);">Rp {{ number_format($totalTunggakan, 0, ',', '.') }}</div>
-        <div class="stat-sub" style="color: var(--error); font-weight: 600;">Akumulasi Piutang</div>
-    </div>
-    <!-- Pendapatan Bulan Ini -->
-    <div class="stat-card" style="border-left: 3px solid var(--primary);">
-        <div class="stat-label" style="color: var(--primary);">Pendapatan Bulan Ini</div>
-        <div class="stat-value numeric-display" style="color: var(--primary);">Rp {{ number_format($incomeThisMonth, 0, ',', '.') }}</div>
-        <div class="stat-sub" style="color: var(--primary); font-weight: 600;">{{ \Carbon\Carbon::now()->isoFormat('MMMM YYYY') }}</div>
-    </div>
+
 </div>
 
 <!-- 2. PROGRES REALISASI IURAN HARI INI -->
@@ -305,7 +275,12 @@
                     Rp {{ number_format($totalIuranTerkumpulHariIni, 0, ',', '.') }}
                 </div>
             </div>
-            <div style="font-size: 0.71875rem; color: var(--secondary); font-weight: 600; margin-top: 4px;">✓ {{ $sudahBayarHariIniCount }} Pedagang Lunas</div>
+            <div style="font-size: 0.71875rem; color: var(--secondary); font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span>{{ $sudahBayarHariIniCount }} Pedagang Lunas</span>
+            </div>
         </div>
 
         <!-- Sisa Belum Bayar -->
@@ -321,7 +296,13 @@
                     Rp {{ number_format($sisaBelumBayarHariIni, 0, ',', '.') }}
                 </div>
             </div>
-            <div style="font-size: 0.71875rem; color: var(--error); font-weight: 600; margin-top: 4px;">⏳ {{ $belumBayarHariIniCount }} Pedagang Menunggak</div>
+            <div style="font-size: 0.71875rem; color: var(--error); font-weight: 600; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>{{ $belumBayarHariIniCount }} Pedagang Menunggak</span>
+            </div>
         </div>
 
         <!-- Tingkat Capaian -->
@@ -339,11 +320,26 @@
             </div>
             <div style="font-size: 0.71875rem; font-weight: 600; margin-top: 4px;">
                 @if($persenPelunasanHariIni >= 80)
-                    <span style="color: #059669;">🔥 Performa Baik</span>
+                    <span style="color: #059669; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span>Performa Baik</span>
+                    </span>
                 @elseif($persenPelunasanHariIni >= 50)
-                    <span style="color: #0284c7;">📈 Progres Bagus</span>
+                    <span style="color: #0284c7; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                        <span>Progres Bagus</span>
+                    </span>
                 @else
-                    <span style="color: #d97706;">⚠️ Perlu Penagihan</span>
+                    <span style="color: #d97706; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <span>Perlu Penagihan</span>
+                    </span>
                 @endif
             </div>
         </div>
@@ -399,7 +395,12 @@
                     @empty
                         <tr>
                             <td colspan="5" style="text-align: center; color: var(--secondary); padding: 24px; font-weight: 600;">
-                                🎉 Semua pedagang sudah melunasi iuran hari ini!
+                                <span style="display: inline-flex; align-items: center; gap: 6px;">
+                                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>Semua pedagang sudah melunasi iuran hari ini!</span>
+                                </span>
                             </td>
                         </tr>
                     @endforelse
@@ -444,56 +445,41 @@
     </div>
 </div>
 
-<!-- 4. GRID SECTION D & E (TRANSAKSI TERBARU & GRAFIK TREN) -->
-<div class="grid-2" style="margin-bottom: 16px;">
-    
-    <!-- SECTION D: TRANSAKSI PEMBAYARAN TERBARU -->
-    <div class="card" style="margin-bottom: 0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 class="card-title" style="margin-bottom: 0;">Transaksi Pembayaran Terbaru</h3>
-            <a href="{{ route('riwayat.index') }}" style="font-size: 0.78125rem; font-weight: 600; color: var(--primary);">Lihat Semua &rarr;</a>
-        </div>
-        <div class="table-responsive">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Waktu</th>
-                        <th>Pedagang</th>
-                        <th>Nominal</th>
-                        <th>Metode</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($recentTransactions as $txn)
-                        <tr>
-                            <td style="font-size: 0.75rem; color: #64748b;">{{ $txn->waktu_bayar ? $txn->waktu_bayar->format('d/m/Y H:i') : '-' }}</td>
-                            <td style="font-weight: 600;">
-                                <a href="{{ route('pedagang.show', $txn->pedagang_id) }}" style="color: var(--primary); text-decoration: none;">
-                                    {{ $txn->pedagang->nama_pedagang ?? '-' }}
-                                </a>
-                            </td>
-                            <td class="numeric-display" style="color: var(--secondary); font-weight: 700;">Rp {{ number_format($txn->nominal_dibayar, 0, ',', '.') }}</td>
-                            <td><span class="badge badge-bayar-lunas" style="font-size: 0.6875rem;">{{ strtoupper($txn->metode_bayar) }}</span></td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="4" style="text-align: center; color: var(--outline); padding: 20px; font-size: 0.8125rem;">Belum ada transaksi hari ini.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+<!-- 4. SECTION D: TRANSAKSI PEMBAYARAN TERBARU -->
+<div class="card" style="margin-bottom: 16px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <h3 class="card-title" style="margin-bottom: 0;">Transaksi Pembayaran Terbaru</h3>
+        <a href="{{ route('riwayat.index') }}" style="font-size: 0.78125rem; font-weight: 600; color: var(--primary);">Lihat Semua &rarr;</a>
     </div>
-
-    <!-- SECTION E: GRAFIK TREN PENDAPATAN IURAN -->
-    <div class="card" style="margin-bottom: 0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 class="card-title" style="margin-bottom: 0;">Tren Pendapatan Iuran</h3>
-            <span style="font-size: 0.75rem; color: #64748b;">7 Hari Terakhir</span>
-        </div>
-        <div class="chart-container" style="position: relative; height: 230px; width: 100%;">
-            <canvas id="revenueChart"></canvas>
-        </div>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Pedagang</th>
+                    <th>Nominal</th>
+                    <th>Metode</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($recentTransactions as $txn)
+                    <tr>
+                        <td style="font-size: 0.75rem; color: #64748b;">{{ $txn->waktu_bayar ? $txn->waktu_bayar->format('d/m/Y H:i') : '-' }}</td>
+                        <td style="font-weight: 600;">
+                            <a href="{{ route('pedagang.show', $txn->pedagang_id) }}" style="color: var(--primary); text-decoration: none;">
+                                {{ $txn->pedagang->nama_pedagang ?? '-' }}
+                            </a>
+                        </td>
+                        <td class="numeric-display" style="color: var(--secondary); font-weight: 700;">Rp {{ number_format($txn->nominal_dibayar, 0, ',', '.') }}</td>
+                        <td><span class="badge badge-bayar-lunas" style="font-size: 0.6875rem;">{{ strtoupper($txn->metode_bayar) }}</span></td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--outline); padding: 20px; font-size: 0.8125rem;">Belum ada transaksi hari ini.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -539,71 +525,7 @@
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: {!! json_encode($chart7Labels) !!},
-                datasets: [{
-                    label: 'Pendapatan (Rp)',
-                    data: {!! json_encode($chart7Values) !!},
-                    backgroundColor: '#003d9b',
-                    hoverBackgroundColor: '#00317e',
-                    borderRadius: 6,
-                    borderSkipped: false
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        top: 12,
-                        bottom: 0,
-                        left: 0,
-                        right: 0
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        backgroundColor: '#0f172a',
-                        titleFont: { size: 12, weight: '600', family: 'Inter' },
-                        bodyFont: { size: 13, weight: '700', family: 'Inter' },
-                        padding: 10,
-                        cornerRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return 'Rp ' + context.raw.toLocaleString('id-ID');
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        grid: { display: false },
-                        ticks: { font: { size: 11, family: 'Inter' }, color: '#64748b' }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        grace: '15%',
-                        border: { dash: [4, 4] },
-                        grid: { color: '#f1f5f9' },
-                        ticks: {
-                            font: { size: 11, family: 'Inter' },
-                            color: '#64748b',
-                            callback: function(value) {
-                                if (value >= 1000000) return 'Rp ' + (value/1000000).toFixed(1) + 'M';
-                                if (value >= 1000) return 'Rp ' + (value/1000).toFixed(0) + 'rb';
-                                return 'Rp ' + value;
-                            }
-                        }
-                    }
-                }
-            }
-        });
-    });
+
 
     function openBayarModal(tagihanId, namaPedagang, nominal) {
         document.getElementById('quick-bayar-form').action = '/tagihan/' + tagihanId + '/bayar';

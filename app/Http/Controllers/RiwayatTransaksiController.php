@@ -30,12 +30,45 @@ class RiwayatTransaksiController extends Controller
             });
         }
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('tanggal_tagihan', '>=', $request->input('start_date'));
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Pilihan Periode Praktis
+        if ($periode === 'hari_ini') {
+            $startDate = now()->toDateString();
+            $endDate = now()->toDateString();
+        } elseif ($periode === '7_hari') {
+            $startDate = now()->subDays(6)->toDateString();
+            $endDate = now()->toDateString();
+        } elseif ($periode === 'bulan_ini') {
+            $startDate = now()->startOfMonth()->toDateString();
+            $endDate = now()->endOfMonth()->toDateString();
+        } elseif ($periode === 'semua') {
+            $startDate = null;
+            $endDate = null;
         }
-        if ($request->filled('end_date')) {
-            $query->whereDate('tanggal_tagihan', '<=', $request->input('end_date'));
+
+        // Filter berdasarkan tanggal pembayaran (waktu_bayar)
+        if (!empty($startDate)) {
+            $query->where(function($q) use ($startDate) {
+                $q->whereDate('waktu_bayar', '>=', $startDate)
+                  ->orWhere(function($sub) use ($startDate) {
+                      $sub->whereNull('waktu_bayar')
+                          ->whereDate('tanggal_tagihan', '>=', $startDate);
+                  });
+            });
         }
+        if (!empty($endDate)) {
+            $query->where(function($q) use ($endDate) {
+                $q->whereDate('waktu_bayar', '<=', $endDate)
+                  ->orWhere(function($sub) use ($endDate) {
+                      $sub->whereNull('waktu_bayar')
+                          ->whereDate('tanggal_tagihan', '<=', $endDate);
+                  });
+            });
+        }
+
         if ($request->filled('pedagang_id') && (!$user || $user->role !== 'pedagang')) {
             $query->where('pedagang_id', $request->input('pedagang_id'));
         }
@@ -50,7 +83,8 @@ class RiwayatTransaksiController extends Controller
             return redirect()->route('riwayat.index');
         }
 
-        $transaksis = $query->orderByRaw("COALESCE(waktu_bayar, CONCAT(tanggal_tagihan, ' 23:59:59')) desc")
+        // Transaksi terbaru tampil paling atas berdasarkan waktu transaksi
+        $transaksis = $query->orderByRaw("COALESCE(waktu_bayar, CONCAT(tanggal_tagihan, ' 00:00:00')) desc")
             ->orderBy('id', 'desc')
             ->paginate(15)
             ->withQueryString();
@@ -60,7 +94,7 @@ class RiwayatTransaksiController extends Controller
             ? collect([]) 
             : Pedagang::orderBy('nama_pedagang', 'asc')->get();
 
-        return view('riwayat.index', compact('transaksis', 'pedagangs'));
+        return view('riwayat.index', compact('transaksis', 'pedagangs', 'startDate', 'endDate', 'periode'));
     }
 
     public function cetak($id)

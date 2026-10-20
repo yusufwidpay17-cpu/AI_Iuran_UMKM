@@ -213,16 +213,71 @@ class ExportExcelController extends Controller
 
     public function riwayat(Request $request)
     {
+        $user = auth()->user();
         $query = Tagihan::with(['pedagang', 'petugas'])->where('nominal_dibayar', '>', 0);
 
-        if ($request->filled('start_date')) {
-            $query->whereDate('tanggal_tagihan', '>=', $request->input('start_date'));
-        }
-        if ($request->filled('end_date')) {
-            $query->whereDate('tanggal_tagihan', '<=', $request->input('end_date'));
+        // Jika user adalah pedagang, hanya ekspor riwayat miliknya
+        if ($user && $user->role === 'pedagang') {
+            $query->where('pedagang_id', $user->pedagang_id);
         }
 
-        $transaksis = $query->orderBy('waktu_bayar', 'desc')->get();
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('no_bukti', 'like', "%{$search}%")
+                  ->orWhereHas('pedagang', function($qp) use ($search) {
+                      $qp->where('nama_pedagang', 'like', "%{$search}%")
+                        ->orWhere('no_kios', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $periode = $request->input('periode');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        // Pilihan Periode Praktis
+        if ($periode === 'hari_ini') {
+            $startDate = now()->toDateString();
+            $endDate = now()->toDateString();
+        } elseif ($periode === '7_hari') {
+            $startDate = now()->subDays(6)->toDateString();
+            $endDate = now()->toDateString();
+        } elseif ($periode === 'bulan_ini') {
+            $startDate = now()->startOfMonth()->toDateString();
+            $endDate = now()->endOfMonth()->toDateString();
+        } elseif ($periode === 'semua') {
+            $startDate = null;
+            $endDate = null;
+        }
+
+        // Filter berdasarkan tanggal pembayaran (waktu_bayar)
+        if (!empty($startDate)) {
+            $query->where(function($q) use ($startDate) {
+                $q->whereDate('waktu_bayar', '>=', $startDate)
+                  ->orWhere(function($sub) use ($startDate) {
+                      $sub->whereNull('waktu_bayar')
+                          ->whereDate('tanggal_tagihan', '>=', $startDate);
+                  });
+            });
+        }
+        if (!empty($endDate)) {
+            $query->where(function($q) use ($endDate) {
+                $q->whereDate('waktu_bayar', '<=', $endDate)
+                  ->orWhere(function($sub) use ($endDate) {
+                      $sub->whereNull('waktu_bayar')
+                          ->whereDate('tanggal_tagihan', '<=', $endDate);
+                  });
+            });
+        }
+
+        if ($request->filled('status_bayar')) {
+            $query->where('status_bayar', $request->input('status_bayar'));
+        }
+
+        $transaksis = $query->orderByRaw("COALESCE(waktu_bayar, CONCAT(tanggal_tagihan, ' 00:00:00')) desc")
+            ->orderBy('id', 'desc')
+            ->get();
 
         $headers = ['Waktu Bayar', 'No Bukti', 'Kode Kios', 'Nama Pedagang', 'Nominal Dibayar', 'Metode Bayar', 'Status Bayar', 'Petugas'];
         $rows = [];

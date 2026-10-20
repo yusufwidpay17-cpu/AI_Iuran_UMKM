@@ -101,7 +101,10 @@
         <h3 class="card-title">Karakteristik & Kebijakan Segmen</h3>
         <div style="display: flex; flex-direction: column; gap: var(--space-md);">
             <div style="background-color: #e6f7ed; padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid #6cf8bb;">
-                <h4 style="color: #0d8a43; font-size: 0.9375rem; font-weight: 700;">🟢 Pembayar Rajin (Disiplin Tinggi)</h4>
+                <h4 style="color: #0d8a43; font-size: 0.9375rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Pembayar Rajin (Disiplin Tinggi)
+                </h4>
                 <p style="font-size: 0.8125rem; color: #0a5c2d; margin-top: 4px; line-height: 1.5;">
                     Pedagang memiliki rasio ketepatan bayar mendekati 100% dengan total keterlambatan hampir 0 hari.
                     <br><strong>Rekomendasi Tindakan:</strong> Berikan prioritas perpanjangan masa sewa kios dan tawarkan insentif deposit diskon jika memungkinkan.
@@ -109,7 +112,10 @@
             </div>
             
             <div style="background-color: #fff9eb; padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid #ffeaa8;">
-                <h4 style="color: #a67200; font-size: 0.9375rem; font-weight: 700;">🟡 Cukup Rajin (Terlambat Ringan)</h4>
+                <h4 style="color: #a67200; font-size: 0.9375rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Cukup Rajin (Terlambat Ringan)
+                </h4>
                 <p style="font-size: 0.8125rem; color: #704d00; margin-top: 4px; line-height: 1.5;">
                     Pedagang selalu menyelesaikan tagihannya tetapi seringkali terlambat beberapa hari. Rasio bayar berkisar 60% s/d 90%.
                     <br><strong>Rekomendasi Tindakan:</strong> Kirimkan notifikasi WA otomatis tepat pada pagi hari penagihan dan lakukan pendekatan personal.
@@ -117,7 +123,10 @@
             </div>
 
             <div style="background-color: #fff1f1; padding: var(--space-md); border-radius: var(--radius-md); border: 1px solid #ffdad6;">
-                <h4 style="color: #c92323; font-size: 0.9375rem; font-weight: 700;">🔴 Berisiko (Tunggakan & Kredit Macet)</h4>
+                <h4 style="color: #c92323; font-size: 0.9375rem; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    Berisiko (Tunggakan & Kredit Macet)
+                </h4>
                 <p style="font-size: 0.8125rem; color: #871414; margin-top: 4px; line-height: 1.5;">
                     Pedagang sangat jarang membayar, memiliki banyak hari belum terbayar, dan menumpuk saldo tunggakan yang tinggi.
                     <br><strong>Rekomendasi Tindakan:</strong> Berikan SP-1, terapkan pembatasan pembayaran bertahap, atau lakukan inspeksi langsung oleh petugas keamanan/pengelola pasar.
