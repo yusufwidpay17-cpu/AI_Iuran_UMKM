@@ -97,6 +97,31 @@ Route::get('/sync-db', function () {
             \Illuminate\Support\Facades\DB::statement("UPDATE users SET password_plain = 'password123' WHERE password_plain IS NULL OR password_plain = ''");
         } catch (\Exception $e) {}
 
+        // 3b. Pastikan tabel kalender_operasional ada di Cloud Database
+        try {
+            \Illuminate\Support\Facades\DB::statement("CREATE TABLE IF NOT EXISTS kalender_operasional (
+                id VARCHAR(36) NOT NULL PRIMARY KEY,
+                tanggal_mulai DATE NOT NULL,
+                tanggal_selesai DATE NOT NULL,
+                kategori VARCHAR(50) NOT NULL,
+                alasan TEXT NOT NULL,
+                kebijakan_iuran ENUM('bebas_iuran', 'kewajiban_tetap_berlaku') NOT NULL DEFAULT 'kewajiban_tetap_berlaku',
+                status ENUM('aktif', 'dibatalkan') NOT NULL DEFAULT 'aktif',
+                created_by VARCHAR(36) NULL,
+                updated_by VARCHAR(36) NULL,
+                catatan_audit TEXT NULL,
+                created_at TIMESTAMP NULL,
+                updated_at TIMESTAMP NULL,
+                INDEX idx_kalender_tanggal_range (tanggal_mulai, tanggal_selesai),
+                INDEX idx_kalender_status (status),
+                INDEX idx_kalender_kebijakan (kebijakan_iuran)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        } catch (\Exception $e) {}
+
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE tagihan MODIFY COLUMN status_bayar ENUM('lunas', 'belum_bayar', 'bayar_sebagian', 'dibatalkan') NOT NULL DEFAULT 'belum_bayar'");
+        } catch (\Exception $e) {}
+
         // 4. Sinkronkan Akun Superadmin yusuf123
         $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
         if ($superadmin) {
