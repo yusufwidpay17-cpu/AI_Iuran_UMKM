@@ -97,77 +97,80 @@
 
         <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg); margin-top: var(--space-xl);">Alamat Pedagang</h3>
         
-        <div class="grid-2">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
             <!-- Alamat Lengkap -->
-            <div class="form-group" style="grid-column: 1 / -1;">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="alamat_lengkap" class="form-label">Alamat Lengkap</label>
-                <textarea name="alamat_lengkap" id="alamat_lengkap" class="form-control" rows="3" placeholder="Masukkan jalan, nomor rumah, atau rincian tempat tinggal">{{ old('alamat_lengkap') }}</textarea>
+                <textarea name="alamat_lengkap" id="alamat_lengkap" class="form-control" rows="2" placeholder="Masukkan jalan, nomor rumah, atau rincian tempat tinggal">{{ old('alamat_lengkap') }}</textarea>
                 @error('alamat_lengkap')
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
 
-            <!-- RT -->
-            <div class="form-group">
-                <label for="rt" class="form-label">RT</label>
-                <input type="text" name="rt" id="rt" class="form-control" value="{{ old('rt') }}" placeholder="Contoh: 001">
-                @error('rt')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
+            <!-- Baris Detail Alamat Bersampingan: RT/RW, Desa, Kecamatan -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                <!-- RT & RW Bersampingan -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">RT / RW</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <div>
+                            <input type="text" name="rt" id="rt" class="form-control" value="{{ old('rt') }}" placeholder="RT (001)">
+                        </div>
+                        <div>
+                            <input type="text" name="rw" id="rw" class="form-control" value="{{ old('rw') }}" placeholder="RW (005)">
+                        </div>
+                    </div>
+                    @error('rt') <span class="form-error">{{ $message }}</span> @enderror
+                    @error('rw') <span class="form-error">{{ $message }}</span> @enderror
+                </div>
+
+                <!-- Desa/Kelurahan -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="desa_kelurahan" class="form-label">Desa / Kelurahan</label>
+                    <input type="text" name="desa_kelurahan" id="desa_kelurahan" class="form-control" value="{{ old('desa_kelurahan') }}" placeholder="Nama Desa / Kelurahan">
+                    @error('desa_kelurahan')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Kecamatan -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="kecamatan" class="form-label">Kecamatan</label>
+                    <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="{{ old('kecamatan') }}" placeholder="Nama Kecamatan">
+                    @error('kecamatan')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
-            <!-- RW -->
-            <div class="form-group">
-                <label for="rw" class="form-label">RW</label>
-                <input type="text" name="rw" id="rw" class="form-control" value="{{ old('rw') }}" placeholder="Contoh: 005">
-                @error('rw')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
+            <!-- Baris Detail Alamat Bersampingan: Kab/Kota, Provinsi, Kode Pos -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                <!-- Kabupaten/Kota -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="kabupaten_kota" class="form-label">Kabupaten / Kota</label>
+                    <input type="text" name="kabupaten_kota" id="kabupaten_kota" class="form-control" value="{{ old('kabupaten_kota') }}" placeholder="Nama Kabupaten / Kota">
+                    @error('kabupaten_kota')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
 
-            <!-- Desa/Kelurahan -->
-            <div class="form-group">
-                <label for="desa_kelurahan" class="form-label">Desa / Kelurahan</label>
-                <input type="text" name="desa_kelurahan" id="desa_kelurahan" class="form-control" value="{{ old('desa_kelurahan') }}" placeholder="Masukkan desa atau kelurahan">
-                @error('desa_kelurahan')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
+                <!-- Provinsi -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="provinsi" class="form-label">Provinsi</label>
+                    <input type="text" name="provinsi" id="provinsi" class="form-control" value="{{ old('provinsi') }}" placeholder="Nama Provinsi">
+                    @error('provinsi')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
 
-            <!-- Kecamatan -->
-            <div class="form-group">
-                <label for="kecamatan" class="form-label">Kecamatan</label>
-                <input type="text" name="kecamatan" id="kecamatan" class="form-control" value="{{ old('kecamatan') }}" placeholder="Masukkan kecamatan">
-                @error('kecamatan')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Kabupaten/Kota -->
-            <div class="form-group">
-                <label for="kabupaten_kota" class="form-label">Kabupaten / Kota</label>
-                <input type="text" name="kabupaten_kota" id="kabupaten_kota" class="form-control" value="{{ old('kabupaten_kota') }}" placeholder="Masukkan kabupaten atau kota">
-                @error('kabupaten_kota')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Provinsi -->
-            <div class="form-group">
-                <label for="provinsi" class="form-label">Provinsi</label>
-                <input type="text" name="provinsi" id="provinsi" class="form-control" value="{{ old('provinsi') }}" placeholder="Masukkan provinsi">
-                @error('provinsi')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Kode Pos -->
-            <div class="form-group">
-                <label for="kode_pos" class="form-label">Kode Pos</label>
-                <input type="text" name="kode_pos" id="kode_pos" class="form-control" value="{{ old('kode_pos') }}" placeholder="Contoh: 12345">
-                @error('kode_pos')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
+                <!-- Kode Pos -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="kode_pos" class="form-label">Kode Pos</label>
+                    <input type="text" name="kode_pos" id="kode_pos" class="form-control" value="{{ old('kode_pos') }}" placeholder="Contoh: 12345">
+                    @error('kode_pos')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
         </div>
 
@@ -256,9 +259,7 @@
                 <label for="status_legal" class="form-label">Status Legalitas <span style="color: var(--error);">*</span></label>
                 <select name="status_legal" id="status_legal" class="form-control" required style="min-height: 48px;">
                     <option value="legal" {{ old('status_legal', 'legal') == 'legal' ? 'selected' : '' }}>Legal</option>
-                    <option value="proses_izin" {{ old('status_legal') == 'proses_izin' ? 'selected' : '' }}>Proses Izin</option>
                     <option value="ilegal" {{ old('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
-                    <option value="tutup_sementara" {{ old('status_legal') == 'tutup_sementara' ? 'selected' : '' }}>Tutup Sementara</option>
                 </select>
                 @error('status_legal')
                     <span class="form-error">{{ $message }}</span>
