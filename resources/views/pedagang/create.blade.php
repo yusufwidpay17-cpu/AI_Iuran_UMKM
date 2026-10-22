@@ -30,9 +30,9 @@
 
         <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg);">Identitas Pribadi & Usaha</h3>
         
-        <div class="grid-2">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: var(--space-xl);">
             <!-- Nama Pedagang -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="nama_pedagang" class="form-label">Nama Pedagang <span style="color: var(--error);">*</span></label>
                 <input type="text" name="nama_pedagang" id="nama_pedagang" class="form-control" value="{{ old('nama_pedagang') }}" required placeholder="Masukkan nama lengkap pedagang">
                 @error('nama_pedagang')
@@ -41,16 +41,16 @@
             </div>
 
             <!-- Nomor KTP -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="no_ktp" class="form-label">Nomor KTP <span style="color: var(--error);">*</span></label>
-                <input type="text" name="no_ktp" id="no_ktp" class="form-control" value="{{ old('no_ktp') }}" required placeholder="16 digit Nomor Induk Kependudukan">
+                <input type="text" name="no_ktp" id="no_ktp" class="form-control" value="{{ old('no_ktp') }}" required placeholder="16 digit NIK KTP">
                 @error('no_ktp')
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
 
             <!-- Nomor Telepon -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="no_telepon" class="form-label">Nomor Telepon / WhatsApp</label>
                 <input type="text" name="no_telepon" id="no_telepon" class="form-control" value="{{ old('no_telepon') }}" placeholder="Contoh: 08123456789">
                 @error('no_telepon')
@@ -59,7 +59,7 @@
             </div>
 
             <!-- Nama Usaha -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="nama_usaha" class="form-label">Nama Kios / Usaha</label>
                 <input type="text" name="nama_usaha" id="nama_usaha" class="form-control" value="{{ old('nama_usaha') }}" placeholder="Contoh: Toko Sembako Makmur">
                 @error('nama_usaha')
@@ -68,7 +68,7 @@
             </div>
 
             <!-- Kategori Usaha -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="kategori_usaha" class="form-label">Kategori Usaha <span style="color: var(--error);">*</span></label>
                 <select name="kategori_usaha" id="kategori_usaha" class="form-control" required style="min-height: 48px;">
                     <option value="">-- Pilih Kategori --</option>
@@ -86,7 +86,7 @@
             </div>
 
             <!-- Detail Kategori -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0;">
                 <label for="kategori_usaha_detail" class="form-label">Detail Usaha</label>
                 <input type="text" name="kategori_usaha_detail" id="kategori_usaha_detail" class="form-control" value="{{ old('kategori_usaha_detail') }}" placeholder="Contoh: Jual Sate Ayam, Nasi Padang">
                 @error('kategori_usaha_detail')
@@ -97,7 +97,7 @@
 
         <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg); margin-top: var(--space-xl);">Alamat Pedagang</h3>
         
-        <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: var(--space-xl);">
             <!-- Alamat Lengkap -->
             <div class="form-group" style="margin-bottom: 0;">
                 <label for="alamat_lengkap" class="form-label">Alamat Lengkap</label>
@@ -107,20 +107,19 @@
                 @enderror
             </div>
 
-            <!-- Baris Detail Alamat Bersampingan: RT/RW, Desa, Kecamatan -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
-                <!-- RT & RW Bersampingan -->
+            <!-- Baris Detail Alamat Bersampingan: RT, RW, Desa, Kecamatan -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+                <!-- RT -->
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label">RT / RW</label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div>
-                            <input type="text" name="rt" id="rt" class="form-control" value="{{ old('rt') }}" placeholder="RT (001)">
-                        </div>
-                        <div>
-                            <input type="text" name="rw" id="rw" class="form-control" value="{{ old('rw') }}" placeholder="RW (005)">
-                        </div>
-                    </div>
+                    <label for="rt" class="form-label">RT</label>
+                    <input type="text" name="rt" id="rt" class="form-control" value="{{ old('rt') }}" placeholder="Contoh: 001">
                     @error('rt') <span class="form-error">{{ $message }}</span> @enderror
+                </div>
+
+                <!-- RW -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="rw" class="form-label">RW</label>
+                    <input type="text" name="rw" id="rw" class="form-control" value="{{ old('rw') }}" placeholder="Contoh: 005">
                     @error('rw') <span class="form-error">{{ $message }}</span> @enderror
                 </div>
 
@@ -176,94 +175,97 @@
 
         <h3 class="card-title" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: var(--space-sm); margin-bottom: var(--space-lg); margin-top: var(--space-xl);">Penempatan Kios & Tarif</h3>
         
-        <div class="grid-2">
-            <!-- Blok Kios -->
-            <div class="form-group">
-                <label for="blok_kios" class="form-label">Blok Kios <span style="color: var(--error);">*</span></label>
-                <select name="blok_kios" id="blok_kios" class="form-control" required style="min-height: 48px;">
-                    <option value="">-- Pilih Blok Kios --</option>
-                    <option value="Blok A" {{ old('blok_kios') == 'Blok A' ? 'selected' : '' }}>Blok A</option>
-                    <option value="Blok B" {{ old('blok_kios') == 'Blok B' ? 'selected' : '' }}>Blok B</option>
-                    <option value="Blok C" {{ old('blok_kios') == 'Blok C' ? 'selected' : '' }}>Blok C</option>
-                    <option value="Blok D" {{ old('blok_kios') == 'Blok D' ? 'selected' : '' }}>Blok D</option>
-                    <option value="Blok E" {{ old('blok_kios') == 'Blok E' ? 'selected' : '' }}>Blok E</option>
-                </select>
-                @error('blok_kios')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Nomor Kios (Auto Generated) -->
-            <div class="form-group">
-                <label for="no_kios" class="form-label">Nomor Kios <span style="color: var(--error);">*</span></label>
-                <input type="text" name="no_kios" id="no_kios" class="form-control" value="{{ old('no_kios') }}" required placeholder="Pilih blok untuk generate otomatis" style="font-weight: 700;">
-                @error('no_kios')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Tarif Sewa Harian (Pencatatan Manual) -->
-            <div class="form-group">
-                <label for="nominal_tarif" class="form-label">Tarif Sewa Harian (Rp/hari) <span style="color: var(--error);">*</span></label>
-                <div style="position: relative;">
-                    <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.95rem;">Rp</span>
-                    <input type="number" name="nominal_tarif" id="nominal_tarif" class="form-control" 
-                        value="{{ old('nominal_tarif', 15000) }}" 
-                        placeholder="Contoh: 15000" min="0" step="500" required 
-                        style="padding-left: 44px; font-weight: 700; font-size: 1.05rem; min-height: 48px;">
+        <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: var(--space-xl);">
+            <!-- Baris 1 Penempatan & Tarif: Blok Kios, Nomor Kios, Tarif Sewa Harian, Saldo Deposit -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px;">
+                <!-- Blok Kios -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="blok_kios" class="form-label">Blok Kios <span style="color: var(--error);">*</span></label>
+                    <select name="blok_kios" id="blok_kios" class="form-control" required style="min-height: 48px;">
+                        <option value="">-- Pilih Blok Kios --</option>
+                        <option value="Blok A" {{ old('blok_kios') == 'Blok A' ? 'selected' : '' }}>Blok A</option>
+                        <option value="Blok B" {{ old('blok_kios') == 'Blok B' ? 'selected' : '' }}>Blok B</option>
+                        <option value="Blok C" {{ old('blok_kios') == 'Blok C' ? 'selected' : '' }}>Blok C</option>
+                        <option value="Blok D" {{ old('blok_kios') == 'Blok D' ? 'selected' : '' }}>Blok D</option>
+                        <option value="Blok E" {{ old('blok_kios') == 'Blok E' ? 'selected' : '' }}>Blok E</option>
+                    </select>
+                    @error('blok_kios')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
                 </div>
-                <small style="color: #64748b; font-size: 0.78rem; margin-top: 4px; display: block;">
-                    * Masukkan nominal tarif sewa per hari secara manual.
-                </small>
-                @error('nominal_tarif')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
+
+                <!-- Nomor Kios (Auto Generated) -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="no_kios" class="form-label">Nomor Kios <span style="color: var(--error);">*</span></label>
+                    <input type="text" name="no_kios" id="no_kios" class="form-control" value="{{ old('no_kios') }}" required placeholder="Pilih blok untuk nomor otomatis" style="font-weight: 700;">
+                    @error('no_kios')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Tarif Sewa Harian (Pencatatan Manual) -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="nominal_tarif" class="form-label">Tarif Sewa Harian (Rp/hari) <span style="color: var(--error);">*</span></label>
+                    <div style="position: relative;">
+                        <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.95rem;">Rp</span>
+                        <input type="number" name="nominal_tarif" id="nominal_tarif" class="form-control" 
+                            value="{{ old('nominal_tarif', 15000) }}" 
+                            placeholder="Contoh: 15000" min="0" step="500" required 
+                            style="padding-left: 44px; font-weight: 700; font-size: 1.05rem; min-height: 48px;">
+                    </div>
+                    @error('nominal_tarif')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <!-- Saldo Deposit Awal -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="saldo_deposit" class="form-label">Saldo Deposit Awal (Rp)</label>
+                    <input type="number" name="saldo_deposit" id="saldo_deposit" class="form-control" value="{{ old('saldo_deposit', 0) }}" min="0" step="1">
+                    @error('saldo_deposit')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
-            <!-- Saldo Deposit Awal -->
-            <div class="form-group">
-                <label for="saldo_deposit" class="form-label">Saldo Deposit Awal (Rp)</label>
-                <input type="number" name="saldo_deposit" id="saldo_deposit" class="form-control" value="{{ old('saldo_deposit', 0) }}" min="0" step="1">
-                @error('saldo_deposit')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
+            <!-- Baris 2 Penempatan & Status: Tanggal Daftar, Status Pedagang, Status Legalitas -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+                <!-- Tanggal Daftar -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="tanggal_daftar" class="form-label">Tanggal Terdaftar <span style="color: var(--error);">*</span></label>
+                    <input type="date" name="tanggal_daftar" id="tanggal_daftar" class="form-control" value="{{ old('tanggal_daftar', date('Y-m-d')) }}" required>
+                    <small style="color: var(--on-surface-variant); font-size: 0.78rem; display: block; margin-top: 4px;">
+                        Jatuh tempo iuran perdana mulai <strong>besok harinya (H+1)</strong>.
+                    </small>
+                    @error('tanggal_daftar')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
 
-            <!-- Tanggal Daftar -->
-            <div class="form-group">
-                <label for="tanggal_daftar" class="form-label">Tanggal Terdaftar <span style="color: var(--error);">*</span></label>
-                <input type="date" name="tanggal_daftar" id="tanggal_daftar" class="form-control" value="{{ old('tanggal_daftar', date('Y-m-d')) }}" required>
-                <small style="color: var(--on-surface-variant); font-size: 0.8125rem; display: block; margin-top: 4px;">
-                    Pedagang baru otomatis terhubung ke <strong>Transaksi Pembayaran</strong> dengan jatuh tempo iuran perdana mulai <strong>besok harinya (H+1)</strong>.
-                </small>
-                @error('tanggal_daftar')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
+                <!-- Status Pedagang -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="status_pedagang" class="form-label">Status Pedagang <span style="color: var(--error);">*</span></label>
+                    <select name="status_pedagang" id="status_pedagang" class="form-control" required style="min-height: 48px;">
+                        <option value="aktif" {{ old('status_pedagang', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="sementara_tutup" {{ old('status_pedagang') == 'sementara_tutup' ? 'selected' : '' }}>Sementara Tutup</option>
+                        <option value="nonaktif" {{ old('status_pedagang') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                    </select>
+                    @error('status_pedagang')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
 
-            <!-- Status Pedagang -->
-            <div class="form-group">
-                <label for="status_pedagang" class="form-label">Status Pedagang <span style="color: var(--error);">*</span></label>
-                <select name="status_pedagang" id="status_pedagang" class="form-control" required style="min-height: 48px;">
-                    <option value="aktif" {{ old('status_pedagang', 'aktif') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                    <option value="sementara_tutup" {{ old('status_pedagang') == 'sementara_tutup' ? 'selected' : '' }}>Sementara Tutup</option>
-                    <option value="nonaktif" {{ old('status_pedagang') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                </select>
-                @error('status_pedagang')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <!-- Status Legalitas -->
-            <div class="form-group">
-                <label for="status_legal" class="form-label">Status Legalitas <span style="color: var(--error);">*</span></label>
-                <select name="status_legal" id="status_legal" class="form-control" required style="min-height: 48px;">
-                    <option value="legal" {{ old('status_legal', 'legal') == 'legal' ? 'selected' : '' }}>Legal</option>
-                    <option value="ilegal" {{ old('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
-                </select>
-                @error('status_legal')
-                    <span class="form-error">{{ $message }}</span>
-                @enderror
+                <!-- Status Legalitas -->
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="status_legal" class="form-label">Status Legalitas <span style="color: var(--error);">*</span></label>
+                    <select name="status_legal" id="status_legal" class="form-control" required style="min-height: 48px;">
+                        <option value="legal" {{ old('status_legal', 'legal') == 'legal' ? 'selected' : '' }}>Legal</option>
+                        <option value="ilegal" {{ old('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
+                    </select>
+                    @error('status_legal')
+                        <span class="form-error">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
         </div>
 
