@@ -13,6 +13,7 @@ use App\Services\KalenderOperasionalService;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PedagangController extends Controller
 {
@@ -144,7 +145,23 @@ class PedagangController extends Controller
             $data['foto_izin_usaha'] = 'uploads/izin/' . $filename;
         }
 
-        $pedagang = Pedagang::create($data);
+        try {
+            $pedagang = Pedagang::create($data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (str_contains($e->getMessage(), 'status_legal') || str_contains($e->getMessage(), '1265')) {
+                try {
+                    DB::statement("ALTER TABLE pedagang MODIFY COLUMN status_legal VARCHAR(50) NOT NULL DEFAULT 'legal'");
+                    $pedagang = Pedagang::create($data);
+                } catch (\Exception $ex) {
+                    if (!in_array($data['status_legal'], ['legal', 'ilegal', 'proses_izin'])) {
+                        $data['status_legal'] = 'legal';
+                    }
+                    $pedagang = Pedagang::create($data);
+                }
+            } else {
+                throw $e;
+            }
+        }
 
         // Sync Lapak if table exists
         if (\Illuminate\Support\Facades\Schema::hasTable('lapak')) {
@@ -318,7 +335,23 @@ class PedagangController extends Controller
             $data['foto_izin_usaha'] = 'uploads/izin/' . $filename;
         }
 
-        $pedagang->update($data);
+        try {
+            $pedagang->update($data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if (str_contains($e->getMessage(), 'status_legal') || str_contains($e->getMessage(), '1265')) {
+                try {
+                    DB::statement("ALTER TABLE pedagang MODIFY COLUMN status_legal VARCHAR(50) NOT NULL DEFAULT 'legal'");
+                    $pedagang->update($data);
+                } catch (\Exception $ex) {
+                    if (!in_array($data['status_legal'], ['legal', 'ilegal', 'proses_izin'])) {
+                        $data['status_legal'] = 'legal';
+                    }
+                    $pedagang->update($data);
+                }
+            } else {
+                throw $e;
+            }
+        }
 
         // Sinkronisasi tagihan belum bayar yang belum dicicil untuk hari ini / mendatang
         if (isset($data['tarif_id'])) {

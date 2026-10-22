@@ -209,18 +209,8 @@
                         placeholder="Contoh: 15000" min="0" step="500" required 
                         style="padding-left: 44px; font-weight: 700; font-size: 1.05rem; min-height: 48px;">
                 </div>
-                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center;">
-                    <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">Pilihan cepat:</span>
-                    @foreach($tarifs as $trf)
-                        <button type="button" class="btn-preset-tarif" onclick="document.getElementById('nominal_tarif').value = '{{ (int)$trf->nominal_harian }}'" 
-                            title="{{ $trf->nama_tarif }}"
-                            style="padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer; color: #334155; font-weight: 500; transition: all 0.2s ease;">
-                            {{ $trf->nama_tarif }} (Rp {{ number_format($trf->nominal_harian, 0, ',', '.') }})
-                        </button>
-                    @endforeach
-                </div>
                 <small style="color: #64748b; font-size: 0.78rem; margin-top: 4px; display: block;">
-                    * Masukkan nominal tarif sewa per hari secara manual atau gunakan pilihan cepat di atas.
+                    * Masukkan nominal tarif sewa per hari secara manual.
                 </small>
                 @error('nominal_tarif')
                     <span class="form-error">{{ $message }}</span>
@@ -266,6 +256,8 @@
                 <label for="status_legal" class="form-label">Status Legalitas <span style="color: var(--error);">*</span></label>
                 <select name="status_legal" id="status_legal" class="form-control" required style="min-height: 48px;">
                     <option value="legal" {{ old('status_legal', 'legal') == 'legal' ? 'selected' : '' }}>Legal</option>
+                    <option value="proses_izin" {{ old('status_legal') == 'proses_izin' ? 'selected' : '' }}>Proses Izin</option>
+                    <option value="ilegal" {{ old('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
                     <option value="tutup_sementara" {{ old('status_legal') == 'tutup_sementara' ? 'selected' : '' }}>Tutup Sementara</option>
                 </select>
                 @error('status_legal')
