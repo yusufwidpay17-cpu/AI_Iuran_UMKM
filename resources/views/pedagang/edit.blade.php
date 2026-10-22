@@ -187,17 +187,30 @@
                 @enderror
             </div>
 
-            <!-- Pilih Tarif Sewa -->
+            <!-- Tarif Sewa Harian (Pencatatan Manual) -->
             <div class="form-group">
-                <label for="tarif_id" class="form-label">Tarif Sewa Harian <span style="color: var(--error);">*</span></label>
-                <select name="tarif_id" id="tarif_id" class="form-control" required style="min-height: 48px;">
+                <label for="nominal_tarif" class="form-label">Tarif Sewa Harian (Rp/hari) <span style="color: var(--error);">*</span></label>
+                <div style="position: relative;">
+                    <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: #64748b; font-size: 0.95rem;">Rp</span>
+                    <input type="number" name="nominal_tarif" id="nominal_tarif" class="form-control" 
+                        value="{{ old('nominal_tarif', (int)($pedagang->tarif->nominal_harian ?? 0)) }}" 
+                        placeholder="Contoh: 15000" min="0" step="500" required 
+                        style="padding-left: 44px; font-weight: 700; font-size: 1.05rem; min-height: 48px;">
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center;">
+                    <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">Pilihan cepat:</span>
                     @foreach($tarifs as $trf)
-                        <option value="{{ $trf->id }}" {{ old('tarif_id', $pedagang->tarif_id) == $trf->id ? 'selected' : '' }}>
-                            {{ $trf->nama_tarif }} (Rp {{ number_format($trf->nominal_harian, 0, ',', '.') }}/hari)
-                        </option>
+                        <button type="button" class="btn-preset-tarif" onclick="document.getElementById('nominal_tarif').value = '{{ (int)$trf->nominal_harian }}'" 
+                            title="{{ $trf->nama_tarif }}"
+                            style="padding: 3px 8px; font-size: 0.75rem; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; cursor: pointer; color: #334155; font-weight: 500; transition: all 0.2s ease;">
+                            {{ $trf->nama_tarif }} (Rp {{ number_format($trf->nominal_harian, 0, ',', '.') }})
+                        </button>
                     @endforeach
-                </select>
-                @error('tarif_id')
+                </div>
+                <small style="color: #64748b; font-size: 0.78rem; margin-top: 4px; display: block;">
+                    * Masukkan nominal tarif sewa per hari secara manual atau gunakan pilihan cepat di atas.
+                </small>
+                @error('nominal_tarif')
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>

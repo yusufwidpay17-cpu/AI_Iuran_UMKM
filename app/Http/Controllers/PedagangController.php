@@ -89,11 +89,29 @@ class PedagangController extends Controller
             'foto_ktp' => 'nullable|image|max:2048',
             'foto_izin_usaha' => 'nullable|image|max:2048',
             'catatan' => 'nullable|string',
-            'tarif_id' => 'required|exists:tarif,id',
+            'tarif_id' => 'required_without:nominal_tarif|nullable|exists:tarif,id',
+            'nominal_tarif' => 'required_without:tarif_id|nullable|numeric|min:0',
             'saldo_deposit' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha']);
+        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha', 'nominal_tarif']);
+
+        if ($request->filled('nominal_tarif')) {
+            $nominal = (float) $request->input('nominal_tarif');
+            $tarif = Tarif::where('nominal_harian', $nominal)->first();
+            if (!$tarif) {
+                $tarif = Tarif::create([
+                    'id' => (string) Str::uuid(),
+                    'nama_tarif' => 'Tarif Rp ' . number_format($nominal, 0, ',', '.'),
+                    'kategori' => $request->input('kategori_usaha', 'manual'),
+                    'nominal_harian' => $nominal,
+                    'berlaku_mulai' => now()->toDateString(),
+                    'aktif' => 1,
+                ]);
+            }
+            $data['tarif_id'] = $tarif->id;
+        }
+
         $pedagangId = (string) Str::uuid();
         $data['id'] = $pedagangId;
         $data['saldo_deposit'] = $request->input('saldo_deposit') ?? 0;
@@ -235,11 +253,29 @@ class PedagangController extends Controller
             'foto_ktp' => 'nullable|image|max:2048',
             'foto_izin_usaha' => 'nullable|image|max:2048',
             'catatan' => 'nullable|string',
-            'tarif_id' => 'required|exists:tarif,id',
+            'tarif_id' => 'required_without:nominal_tarif|nullable|exists:tarif,id',
+            'nominal_tarif' => 'required_without:tarif_id|nullable|numeric|min:0',
             'saldo_deposit' => 'nullable|numeric|min:0',
         ]);
 
-        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha']);
+        $data = $request->except(['foto_profil', 'foto_ktp', 'foto_izin_usaha', 'nominal_tarif']);
+
+        if ($request->filled('nominal_tarif')) {
+            $nominal = (float) $request->input('nominal_tarif');
+            $tarif = Tarif::where('nominal_harian', $nominal)->first();
+            if (!$tarif) {
+                $tarif = Tarif::create([
+                    'id' => (string) Str::uuid(),
+                    'nama_tarif' => 'Tarif Rp ' . number_format($nominal, 0, ',', '.'),
+                    'kategori' => $request->input('kategori_usaha', 'manual'),
+                    'nominal_harian' => $nominal,
+                    'berlaku_mulai' => now()->toDateString(),
+                    'aktif' => 1,
+                ]);
+            }
+            $data['tarif_id'] = $tarif->id;
+        }
+
         $data['saldo_deposit'] = $request->input('saldo_deposit') ?? 0;
 
         if ($request->hasFile('foto_profil')) {
@@ -283,6 +319,19 @@ class PedagangController extends Controller
         }
 
         $pedagang->update($data);
+
+        // Sinkronisasi tagihan belum bayar yang belum dicicil untuk hari ini / mendatang
+        if (isset($data['tarif_id'])) {
+            $pedagang->load('tarif');
+            Tagihan::where('pedagang_id', $pedagang->id)
+                ->where('status_bayar', 'belum_bayar')
+                ->where('nominal_dibayar', 0)
+                ->whereDate('tanggal_tagihan', '>=', now()->toDateString())
+                ->update([
+                    'tarif_id' => $pedagang->tarif_id,
+                    'nominal_tagihan' => (float) ($pedagang->tarif->nominal_harian ?? 0),
+                ]);
+        }
 
         // Sync Lapak if table exists
         if (\Illuminate\Support\Facades\Schema::hasTable('lapak')) {
