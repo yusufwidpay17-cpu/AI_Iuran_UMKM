@@ -27,62 +27,62 @@
 </div>
 
 <!-- KPI Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="kalender-kpi-grid">
     <!-- Total Catatan -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(59, 130, 246, 0.12); color: #2563eb; display: flex; align-items: center; justify-content: center;">
+    <div class="card kalender-kpi-card">
+        <div class="kalender-kpi-icon" style="background: rgba(59, 130, 246, 0.12); color: #2563eb;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Agenda Dicatat</div>
-            <div style="font-size: 1.45rem; font-weight: 800; color: var(--on-surface); line-height: 1.2;">{{ $stats['total'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Kejadian</span></div>
-            <div style="font-size: 0.725rem; color: #2563eb; margin-top: 2px;">{{ $stats['aktif'] }} Berstatus Aktif</div>
+        <div class="kalender-kpi-content">
+            <div class="kalender-kpi-title" style="color: var(--on-surface-variant);">Total Agenda Dicatat</div>
+            <div class="kalender-kpi-value" style="color: var(--on-surface);">{{ $stats['total'] }} <span class="kalender-kpi-unit">Kejadian</span></div>
+            <div class="kalender-kpi-sub" style="color: #2563eb;">{{ $stats['aktif'] }} Berstatus Aktif</div>
         </div>
     </div>
 
     <!-- Bebas Iuran -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #059669; display: flex; align-items: center; justify-content: center;">
+    <div class="card kalender-kpi-card">
+        <div class="kalender-kpi-icon" style="background: rgba(16, 185, 129, 0.12); color: #059669;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: #047857; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Bebas Iuran Aktif</div>
-            <div style="font-size: 1.45rem; font-weight: 800; color: #059669; line-height: 1.2;">{{ $stats['bebas_iuran'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Agenda</span></div>
-            <div style="font-size: 0.725rem; color: #059669; margin-top: 2px;">Pedagang tidak ditagih</div>
+        <div class="kalender-kpi-content">
+            <div class="kalender-kpi-title" style="color: #047857;">Bebas Iuran Aktif</div>
+            <div class="kalender-kpi-value" style="color: #059669;">{{ $stats['bebas_iuran'] }} <span class="kalender-kpi-unit">Agenda</span></div>
+            <div class="kalender-kpi-sub" style="color: #059669;">Pedagang tidak ditagih</div>
         </div>
     </div>
 
     <!-- Penagihan Tertunda -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); color: #d97706; display: flex; align-items: center; justify-content: center;">
+    <div class="card kalender-kpi-card">
+        <div class="kalender-kpi-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: #b45309; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Penagihan Tertunda</div>
-            <div style="font-size: 1.45rem; font-weight: 800; color: #d97706; line-height: 1.2;">{{ $stats['tertunda'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Agenda</span></div>
-            <div style="font-size: 0.725rem; color: #b45309; margin-top: 2px;">Kewajiban tetap berjalan</div>
+        <div class="kalender-kpi-content">
+            <div class="kalender-kpi-title" style="color: #b45309;">Penagihan Tertunda</div>
+            <div class="kalender-kpi-value" style="color: #d97706;">{{ $stats['tertunda'] }} <span class="kalender-kpi-unit">Agenda</span></div>
+            <div class="kalender-kpi-sub" style="color: #b45309;">Kewajiban tetap berjalan</div>
         </div>
     </div>
 
     <!-- Dibatalkan -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(100, 116, 139, 0.12); color: #64748b; display: flex; align-items: center; justify-content: center;">
+    <div class="card kalender-kpi-card">
+        <div class="kalender-kpi-icon" style="background: rgba(100, 116, 139, 0.12); color: #64748b;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.93 4.93l14.14 14.14"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Aturan Dibatalkan</div>
-            <div style="font-size: 1.45rem; font-weight: 800; color: var(--outline); line-height: 1.2;">{{ $stats['dibatalkan'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Catatan</span></div>
-            <div style="font-size: 0.725rem; color: var(--outline); margin-top: 2px;">Jadwal normal berlaku</div>
+        <div class="kalender-kpi-content">
+            <div class="kalender-kpi-title" style="color: var(--on-surface-variant);">Aturan Dibatalkan</div>
+            <div class="kalender-kpi-value" style="color: var(--outline);">{{ $stats['dibatalkan'] }} <span class="kalender-kpi-unit">Catatan</span></div>
+            <div class="kalender-kpi-sub" style="color: var(--outline);">Jadwal normal berlaku</div>
         </div>
     </div>
 </div>

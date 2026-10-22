@@ -23,30 +23,51 @@
     </div>
 </div>
 
-<!-- KPI Cards Ringkasan Tagihan -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-bottom: 20px;">
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
-        <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Tagihan Tercatat</div>
-        <div style="font-size: 1.35rem; font-weight: 800; color: var(--on-surface); margin: 4px 0;">
+<!-- KPI Cards Ringkasan Tagihan (Compact & Rapi) -->
+<div class="tagihan-kpi-grid">
+    <div class="tagihan-kpi-card">
+        <div class="tagihan-kpi-header">
+            <span class="tagihan-kpi-title">Total Tagihan</span>
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--on-surface-variant); flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+        </div>
+        <div class="tagihan-kpi-value" style="color: var(--on-surface);">
             Rp {{ number_format($totalTagihanNominal, 0, ',', '.') }}
         </div>
-        <div style="font-size: 0.75rem; color: var(--on-surface-variant);">Akumulasi seluruh tagihan lapak</div>
+        <div class="tagihan-kpi-sub">
+            Akumulasi tagihan lapak
+        </div>
     </div>
 
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
-        <div style="font-size: 0.75rem; color: #047857; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Sudah Dibayar</div>
-        <div style="font-size: 1.35rem; font-weight: 800; color: #059669; margin: 4px 0;">
+    <div class="tagihan-kpi-card">
+        <div class="tagihan-kpi-header">
+            <span class="tagihan-kpi-title" style="color: #047857;">Sudah Dibayar</span>
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669; flex-shrink: 0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <div class="tagihan-kpi-value" style="color: #059669;">
             Rp {{ number_format($totalTerbayarNominal, 0, ',', '.') }}
         </div>
-        <div style="font-size: 0.75rem; color: #059669;">Telah diterima kasir/petugas</div>
+        <div class="tagihan-kpi-sub" style="color: #059669;">
+            Telah diterima kasir/petugas
+        </div>
     </div>
 
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
-        <div style="font-size: 0.75rem; color: {{ $totalSisaNominal > 0 ? '#b91c1c' : '#047857' }}; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Total Sisa Tagihan</div>
-        <div style="font-size: 1.35rem; font-weight: 800; color: {{ $totalSisaNominal > 0 ? '#dc2626' : '#059669' }}; margin: 4px 0;">
+    <div class="tagihan-kpi-card" style="border: 1px solid {{ $totalSisaNominal > 0 ? '#fecaca' : '#a7f3d0' }};">
+        <div class="tagihan-kpi-header">
+            <span class="tagihan-kpi-title" style="color: {{ $totalSisaNominal > 0 ? '#b91c1c' : '#047857' }};">Sisa Tagihan</span>
+            @if($totalSisaNominal > 0)
+                <span class="badge" style="background: #fee2e2; color: #b91c1c; font-size: 0.63rem; padding: 1px 6px; border-radius: 6px; font-weight: 700;">Tertunda</span>
+            @else
+                <span class="badge" style="background: #d1fae5; color: #047857; font-size: 0.63rem; padding: 1px 6px; border-radius: 6px; font-weight: 700;">Lunas</span>
+            @endif
+        </div>
+        <div class="tagihan-kpi-value" style="color: {{ $totalSisaNominal > 0 ? '#dc2626' : '#059669' }};">
             Rp {{ number_format($totalSisaNominal, 0, ',', '.') }}
         </div>
-        <div style="font-size: 0.75rem; color: {{ $totalSisaNominal > 0 ? '#dc2626' : '#059669' }};">
+        <div class="tagihan-kpi-sub" style="color: {{ $totalSisaNominal > 0 ? '#dc2626' : '#059669' }};">
             {{ $totalSisaNominal > 0 ? 'Perlu diselesaikan saat penarikan' : 'Alhamdulillah seluruhnya lunas' }}
         </div>
     </div>

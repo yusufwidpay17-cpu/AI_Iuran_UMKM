@@ -122,6 +122,10 @@ Route::get('/sync-db', function () {
             \Illuminate\Support\Facades\DB::statement("ALTER TABLE tagihan MODIFY COLUMN status_bayar ENUM('lunas', 'belum_bayar', 'bayar_sebagian', 'dibatalkan') NOT NULL DEFAULT 'belum_bayar'");
         } catch (\Exception $e) {}
 
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE pedagang MODIFY COLUMN status_legal VARCHAR(50) NOT NULL DEFAULT 'legal'");
+        } catch (\Exception $e) {}
+
         // 4. Sinkronkan Akun Superadmin yusuf123
         $superadmin = \App\Models\User::where('username', 'yusuf123')->first();
         if ($superadmin) {

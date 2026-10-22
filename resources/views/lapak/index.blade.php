@@ -108,7 +108,7 @@
 </div>
 
 @if($lapaks->hasPages())
-    <div class="pedagang-slide-dock" style="margin-top: 18px;">
+    <div class="pedagang-slide-dock" style="margin-top: auto;">
         @php
             $currentPage = $lapaks->currentPage();
             $lastPage = max(1, $lapaks->lastPage());

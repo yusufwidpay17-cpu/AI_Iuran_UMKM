@@ -154,8 +154,10 @@ class AuthController extends Controller
         $redirect = redirect()->route('password.reset', ['email' => $email])
             ->with('success', $genericSuccessMessage);
 
-        // Jika dalam mode pengujian lokal / driver log, kirimkan demo_code untuk kemudahan testing
+        // Jika dalam mode pengujian lokal / driver log, simpan dan kirimkan demo_code untuk kemudahan testing
         if (config('mail.default') === 'log' || config('app.env') === 'local') {
+            session(['active_reset_code_' . md5($email) => $code]);
+            \Illuminate\Support\Facades\Cache::put('active_reset_code_' . md5($email), $code, now()->addMinutes(15));
             $redirect->with('demo_code', $code);
         }
 
@@ -165,10 +167,16 @@ class AuthController extends Controller
     public function showResetForm(Request $request, $token = null)
     {
         $email = $request->input('email', old('email'));
+        $demoCode = session('demo_code');
+        if (!$demoCode && $email) {
+            $demoCode = session('active_reset_code_' . md5($email)) 
+                     ?: \Illuminate\Support\Facades\Cache::get('active_reset_code_' . md5($email));
+        }
         
         return view('auth.reset-password')->with([
             'token' => null,
-            'email' => $email
+            'email' => $email,
+            'active_code' => $demoCode
         ]);
     }
 
@@ -254,6 +262,8 @@ class AuthController extends Controller
         // Hapus token setelah berhasil digunakan satu kali (Single-use)
         \Illuminate\Support\Facades\DB::table('password_resets')->where('email', $email)->delete();
         \Illuminate\Support\Facades\RateLimiter::clear($throttleKey);
+        \Illuminate\Support\Facades\Cache::forget('active_reset_code_' . md5($email));
+        session()->forget('active_reset_code_' . md5($email));
 
         // Catat Audit Log
         \App\Models\AuditLog::create([

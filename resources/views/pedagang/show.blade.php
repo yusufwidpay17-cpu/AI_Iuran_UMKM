@@ -164,7 +164,7 @@
                         <div class="profile-details-item">
                             <span class="label">Status Legalitas</span>
                             <span class="badge badge-legal-{{ $pedagang->status_legal }}">
-                                {{ str_replace('_', ' ', $pedagang->status_legal) }}
+                                {{ $pedagang->status_legal === 'tutup_sementara' ? 'Tutup Sementara' : ucfirst(str_replace('_', ' ', $pedagang->status_legal)) }}
                             </span>
                         </div>
                         @if ($pedagang->segmentasi)

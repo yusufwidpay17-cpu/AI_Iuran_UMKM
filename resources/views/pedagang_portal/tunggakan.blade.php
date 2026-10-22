@@ -47,42 +47,47 @@
         </div>
     </div>
 @else
-    <!-- RINGKASAN TUNGGAKAN AKTIF -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 20px;">
-        <div class="card" style="padding: 18px; border-radius: 12px; border: 1.5px solid #fecaca; background: #fff5f5;">
-            <div style="font-size: 0.75rem; color: #991b1b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Total Sisa Tunggakan</div>
-            <div style="font-size: 1.6rem; font-weight: 800; color: #dc2626; margin: 6px 0;">
+    <!-- RINGKASAN TUNGGAKAN AKTIF (Compact & Rapi) -->
+    <div class="tagihan-kpi-grid">
+        <div class="tagihan-kpi-card" style="border: 1px solid #fecaca; background: #fff5f5;">
+            <div class="tagihan-kpi-header">
+                <span class="tagihan-kpi-title" style="color: #991b1b;">Total Sisa Tunggakan</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #dc2626; flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <div class="tagihan-kpi-value" style="color: #dc2626;">
                 Rp {{ number_format($totalTunggakanNominal, 0, ',', '.') }}
             </div>
-            <div style="font-size: 0.8rem; color: #b91c1c;">
-                Akumulasi seluruh sisa tagihan yang belum lunas
+            <div class="tagihan-kpi-sub" style="color: #b91c1c;">
+                Akumulasi seluruh sisa tagihan belum lunas
             </div>
         </div>
 
-        <div class="card" style="padding: 18px; border-radius: 12px; border: 1.5px solid #fed7aa; background: #fffaf0;">
-            <div style="font-size: 0.75rem; color: #9a3412; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Jumlah Hari / Transaksi Menunggak</div>
-            <div style="font-size: 1.6rem; font-weight: 800; color: #ea580c; margin: 6px 0;">
-                {{ $jumlahHariMenunggak }} <span style="font-size: 0.95rem; font-weight: 600;">Hari</span>
+        <div class="tagihan-kpi-card" style="border: 1px solid #fed7aa; background: #fffaf0;">
+            <div class="tagihan-kpi-header">
+                <span class="tagihan-kpi-title" style="color: #9a3412;">Hari Menunggak</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #ea580c; flex-shrink: 0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
             </div>
-            <div style="font-size: 0.8rem; color: #c2410c;">
-                Terdiri dari tagihan belum bayar & cicilan
+            <div class="tagihan-kpi-value" style="color: #ea580c;">
+                {{ $jumlahHariMenunggak }} <span style="font-size: 0.78rem; font-weight: 600;">Hari</span>
+            </div>
+            <div class="tagihan-kpi-sub" style="color: #c2410c;">
+                Tagihan belum bayar & cicilan aktif
             </div>
         </div>
 
-        <div class="card" style="padding: 18px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; flex-direction: column; justify-content: center;">
-            <div style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface); margin-bottom: 4px; display: flex; align-items: center; gap: 5px;">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706;">
+        <div class="tagihan-kpi-card">
+            <div class="tagihan-kpi-header">
+                <span class="tagihan-kpi-title" style="color: var(--on-surface);">Cara Pelunasan</span>
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706; flex-shrink: 0;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <span>Cara Pelunasan Iuran:</span>
             </div>
-            <div style="font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.5;">
-                Silakan siapkan dana saat petugas lapangan melakukan penarikan keliling harian, atau hubungi kantor kasir BUMPes Digital pasar.
-            </div>
-        </div>
-    </div>
-            <div style="font-size: 0.8rem; color: var(--on-surface-variant); line-height: 1.5;">
-                Silakan siapkan dana saat petugas lapangan melakukan penarikan keliling harian, atau hubungi kantor kasir BUMPes Digital pasar.
+            <div class="tagihan-kpi-sub" style="color: var(--on-surface-variant); font-size: 0.68rem; line-height: 1.35; margin-top: 4px;">
+                Siapkan dana tunai/QRIS saat petugas keliling, atau hubungi kantor kasir BUMPes.
             </div>
         </div>
     </div>

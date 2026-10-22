@@ -195,9 +195,15 @@
                 </div>
                 <div>
                     <span style="color: var(--on-surface-variant); display: block; font-size: 0.775rem;">Status Legalitas:</span>
-                    <span style="display: inline-block; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 2px;">
-                        {{ strtoupper($pedagang->status_legal ?: 'Legal / Terdaftar') }}
-                    </span>
+                    @if($pedagang->status_legal === 'tutup_sementara')
+                        <span style="display: inline-block; background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 2px;">
+                            TUTUP SEMENTARA
+                        </span>
+                    @else
+                        <span style="display: inline-block; background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; font-weight: 700; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-top: 2px;">
+                            LEGAL / TERDAFTAR
+                        </span>
+                    @endif
                 </div>
             </div>
 

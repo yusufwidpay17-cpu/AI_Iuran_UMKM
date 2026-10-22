@@ -238,7 +238,7 @@
 <!-- TRANSACTIONS TABLE -->
 <div class="card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid #cbd5e1; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
     <div class="table-responsive">
-        <table class="data-table" style="width: 100%; border-collapse: collapse; font-family: 'Inter', system-ui, -apple-system, sans-serif;">
+        <table class="data-table" style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-transform: uppercase; font-size: 0.75rem; color: #334155; letter-spacing: 0.05em; font-weight: 700;">
                     <th style="padding: 12px 16px; text-align: left; width: 260px;">Kios & Nama Pedagang</th>
@@ -327,7 +327,7 @@
 
                         <!-- Nominal Tagihan & Sisa -->
                         <td style="padding: 12px 16px; vertical-align: middle;" class="numeric-display">
-                            <div style="font-family: 'Inter', monospace; font-size: 0.925rem; font-weight: 700; color: #0f172a;">
+                            <div style="font-size: 0.925rem; font-weight: 700; color: #0f172a;">
                                 Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
                             </div>
                             @if ($isLunas)

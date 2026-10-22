@@ -6,6 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Amanah Ledger') - SI Iuran UMKM</title>
     
+    <!-- Google Fonts: Poppins (Clean & Geometric SaaS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    
     <!-- Design System CSS -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     
@@ -36,7 +41,7 @@
             <nav class="sidebar-nav" style="gap: 4px;">
                 @if((Auth::user()->role ?? '') === 'pedagang')
                     <!-- ========================================== -->
-                    <!-- MENU PORTAL MITRA PEDAGANG (6 MENU UTAMA)  -->
+                    <!-- MENU PORTAL MITRA PEDAGANG (3 MENU UTAMA)  -->
                     <!-- ========================================== -->
                     <!-- 1. Dashboard Pedagang -->
                     <a href="{{ route('dashboard') }}" class="sidebar-nav-item {{ Route::is('dashboard') ? 'active' : '' }}">
@@ -47,7 +52,7 @@
                     </a>
 
                     <!-- 2. Tagihan Iuran Saya -->
-                    <a href="{{ route('pedagang.tagihan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tagihan*') ? 'active' : '' }}">
+                    <a href="{{ route('pedagang.tagihan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tagihan*') || Route::is('pedagang.tunggakan*') ? 'active' : '' }}">
                         <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
                         </svg>
@@ -60,30 +65,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                         Riwayat Pembayaran
-                    </a>
-
-                    <!-- 4. Tunggakan Saya -->
-                    <a href="{{ route('pedagang.tunggakan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tunggakan*') ? 'active' : '' }}">
-                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                        </svg>
-                        Tunggakan Saya
-                    </a>
-
-                    <!-- 5. Notifikasi -->
-                    <a href="{{ route('pedagang.notifikasi') }}" class="sidebar-nav-item {{ Route::is('pedagang.notifikasi*') ? 'active' : '' }}">
-                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                        </svg>
-                        Notifikasi
-                    </a>
-
-                    <!-- 6. Profil dan Data Lapak -->
-                    <a href="{{ route('pedagang.profil') }}" class="sidebar-nav-item {{ Route::is('pedagang.profil*') ? 'active' : '' }}">
-                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        Profil dan Data Lapak
                     </a>
                 @else
                     <!-- ========================================== -->
@@ -178,19 +159,42 @@
                     </button>
                 </div>
 
-                <div class="user-profile-widget">
-                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        @if(Auth::user() && Auth::user()->foto_profil_url)
-                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                        @else
-                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
-                        @endif
+                @if((Auth::user()->role ?? '') === 'pedagang')
+                    <a href="{{ route('pedagang.profil') }}" class="user-profile-widget {{ Route::is('pedagang.profil*') ? 'profile-active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: -4px -6px 8px -6px; border-radius: var(--radius-md); transition: all 0.2s; border: 1px solid {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'transparent' }}; background: {{ Route::is('pedagang.profil*') ? 'var(--primary-container)' : 'transparent' }};" title="Buka Profil & Data Lapak Anda">
+                        <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            @if(Auth::user() && Auth::user()->foto_profil_url)
+                                <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                            @endif
+                        </div>
+                        <div class="user-info" style="flex: 1; min-width: 0;">
+                            <div class="user-name" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--on-surface)' }};">{{ Auth::user()->nama ?? 'Pengguna' }}</span>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--on-surface-variant)' }}; flex-shrink: 0;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                            <div class="user-role" style="color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--outline)' }}; font-weight: 600; font-size: 0.7rem; display: flex; align-items: center; gap: 4px;">
+                                <span>Profil & Data Lapak</span>
+                            </div>
+                        </div>
+                    </a>
+                @else
+                    <div class="user-profile-widget">
+                        <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            @if(Auth::user() && Auth::user()->foto_profil_url)
+                                <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                            @endif
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
+                            <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
+                        </div>
                     </div>
-                    <div class="user-info">
-                        <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
-                        <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
-                    </div>
-                </div>
+                @endif
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
                     <button type="submit" class="logout-btn">
@@ -219,13 +223,23 @@
                     <button class="theme-toggle-btn top-navbar-theme" id="mobile-theme-toggle" title="Ganti Tema (Gelap / Terang)">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
-                    <div class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                        @if(Auth::user() && Auth::user()->foto_profil_url)
-                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                        @else
-                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
-                        @endif
-                    </div>
+                    @if((Auth::user()->role ?? '') === 'pedagang')
+                        <a href="{{ route('pedagang.profil') }}" class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; border: 2px solid {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'transparent' }};" title="Buka Profil & Data Lapak Anda">
+                            @if(Auth::user() && Auth::user()->foto_profil_url)
+                                <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                            @endif
+                        </a>
+                    @else
+                        <div class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                            @if(Auth::user() && Auth::user()->foto_profil_url)
+                                <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            @else
+                                {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </header>
             
@@ -246,7 +260,7 @@
                                 </a>
 
                                 <!-- 2. Tagihan Iuran Saya -->
-                                <a href="{{ route('pedagang.tagihan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tagihan*') ? 'active' : '' }}">
+                                <a href="{{ route('pedagang.tagihan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tagihan*') || Route::is('pedagang.tunggakan*') ? 'active' : '' }}">
                                     <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                                     Tagihan Iuran Saya
                                 </a>
@@ -255,24 +269,6 @@
                                 <a href="{{ route('riwayat.index') }}" class="sidebar-nav-item {{ Route::is('riwayat.*') ? 'active' : '' }}">
                                     <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     Riwayat Pembayaran
-                                </a>
-
-                                <!-- 4. Tunggakan Saya -->
-                                <a href="{{ route('pedagang.tunggakan') }}" class="sidebar-nav-item {{ Route::is('pedagang.tunggakan*') ? 'active' : '' }}">
-                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                                    Tunggakan Saya
-                                </a>
-
-                                <!-- 5. Notifikasi -->
-                                <a href="{{ route('pedagang.notifikasi') }}" class="sidebar-nav-item {{ Route::is('pedagang.notifikasi*') ? 'active' : '' }}">
-                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                                    Notifikasi
-                                </a>
-
-                                <!-- 6. Profil dan Data Lapak -->
-                                <a href="{{ route('pedagang.profil') }}" class="sidebar-nav-item {{ Route::is('pedagang.profil*') ? 'active' : '' }}">
-                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                    Profil dan Data Lapak
                                 </a>
                             @else
                                 <a href="{{ route('dashboard') }}" class="sidebar-nav-item {{ Route::is('dashboard') ? 'active' : '' }}">
@@ -324,19 +320,42 @@
                             @endif
                         </nav>
                         <div style="margin-top: var(--space-md);">
-                            <div class="user-profile-widget" style="margin-bottom: var(--space-md);">
-                                <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
-                                    @if(Auth::user() && Auth::user()->foto_profil_url)
-                                        <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                    @else
-                                        {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
-                                    @endif
+                            @if((Auth::user()->role ?? '') === 'pedagang')
+                                <a href="{{ route('pedagang.profil') }}" class="user-profile-widget {{ Route::is('pedagang.profil*') ? 'profile-active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin-bottom: var(--space-md); border-radius: var(--radius-md); transition: all 0.2s; border: 1px solid {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--outline-variant)' }}; background: {{ Route::is('pedagang.profil*') ? 'var(--primary-container)' : 'var(--surface-container)' }};" title="Buka Profil & Data Lapak Anda">
+                                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        @if(Auth::user() && Auth::user()->foto_profil_url)
+                                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                        @else
+                                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                                        @endif
+                                    </div>
+                                    <div class="user-info" style="flex: 1; min-width: 0;">
+                                        <div class="user-name" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--on-surface)' }};">{{ Auth::user()->nama ?? 'Pengguna' }}</span>
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--on-surface-variant)' }}; flex-shrink: 0;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="user-role" style="color: {{ Route::is('pedagang.profil*') ? 'var(--primary)' : 'var(--outline)' }}; font-weight: 600; font-size: 0.7rem; display: flex; align-items: center; gap: 4px;">
+                                            <span>Profil & Data Lapak</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            @else
+                                <div class="user-profile-widget" style="margin-bottom: var(--space-md);">
+                                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                        @if(Auth::user() && Auth::user()->foto_profil_url)
+                                            <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                        @else
+                                            {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
+                                        @endif
+                                    </div>
+                                    <div class="user-info">
+                                        <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
+                                        <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
+                                    </div>
                                 </div>
-                                <div class="user-info">
-                                    <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
-                                    <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
-                                </div>
-                            </div>
+                            @endif
                             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="logout-btn">

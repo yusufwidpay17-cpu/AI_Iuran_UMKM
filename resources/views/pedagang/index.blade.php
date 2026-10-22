@@ -101,8 +101,7 @@
             <select name="status_legal" class="form-select" style="min-height: 36px; padding: 4px 10px; font-size: 0.8125rem;">
                 <option value="">Semua Legalitas</option>
                 <option value="legal" {{ request('status_legal') == 'legal' ? 'selected' : '' }}>Legal</option>
-                <option value="ilegal" {{ request('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
-                <option value="proses_izin" {{ request('status_legal') == 'proses_izin' ? 'selected' : '' }}>Proses Izin</option>
+                <option value="tutup_sementara" {{ request('status_legal') == 'tutup_sementara' ? 'selected' : '' }}>Tutup Sementara</option>
             </select>
         </div>
 
@@ -142,7 +141,7 @@
 </div>
 
 <!-- Slide System Wrapper (Supports Dynamic AJAX & Infinite Slides) -->
-<div id="pedagang-slide-content">
+<div id="pedagang-slide-content" class="pedagang-slide-content">
     <!-- Pedagang Slide Container (Animasi Transisi Halus) -->
     <div id="pedagang-slide-wrapper" class="pedagang-slide-wrapper">
         <div id="pedagang-slide-pane" class="pedagang-slide-pane">
@@ -384,6 +383,9 @@
             if (newContent && targetContainer) {
                 targetContainer.innerHTML = newContent.innerHTML;
                 window.history.pushState({ path: targetUrl }, '', targetUrl);
+
+                // Scroll view smoothly to top when switching slides
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
                 // Re-animate in
                 const newPane = document.getElementById('pedagang-slide-pane');

@@ -254,8 +254,7 @@
                 <label for="status_legal" class="form-label">Status Legalitas <span style="color: var(--error);">*</span></label>
                 <select name="status_legal" id="status_legal" class="form-control" required style="min-height: 48px;">
                     <option value="legal" {{ old('status_legal', 'legal') == 'legal' ? 'selected' : '' }}>Legal</option>
-                    <option value="proses_izin" {{ old('status_legal') == 'proses_izin' ? 'selected' : '' }}>Proses Izin</option>
-                    <option value="ilegal" {{ old('status_legal') == 'ilegal' ? 'selected' : '' }}>Ilegal</option>
+                    <option value="tutup_sementara" {{ old('status_legal') == 'tutup_sementara' ? 'selected' : '' }}>Tutup Sementara</option>
                 </select>
                 @error('status_legal')
                     <span class="form-error">{{ $message }}</span>

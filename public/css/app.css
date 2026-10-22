@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Inter:wght@400;500;600;700&display=swap');
 
 /* ====================================================================
    MODERN SAAS & UMKM MANAGEMENT DESIGN SYSTEM TOKENS
@@ -43,9 +43,9 @@
     --outline: #94a3b8;
     --outline-variant: #e2e8f0;
     
-    /* Typography */
-    --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    /* Typography - Poppins Clean Geometric SaaS (Matching Reference) */
+    --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     
     /* Border Radius - Modern SaaS standard */
     --radius-xs: 4px;
@@ -258,6 +258,7 @@ html {
     scroll-behavior: smooth;
     max-width: 100%;
     overflow-x: clip;
+    min-height: 100%;
 }
 
 body {
@@ -271,6 +272,16 @@ body {
     overflow-x: clip;
     width: 100%;
     position: relative;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+button, input, select, textarea, optgroup {
+    font-family: var(--font-body);
+}
+
+table, th, td {
+    font-family: var(--font-body);
 }
 
 img, svg, canvas {
@@ -299,6 +310,7 @@ a:hover {
 .app-wrapper {
     display: flex;
     min-height: 100vh;
+    min-height: 100dvh;
     width: 100%;
     max-width: 100%;
     overflow-x: clip;
@@ -466,6 +478,8 @@ a:hover {
     overflow-x: clip;
     background-color: var(--background);
     transition: margin-left 0.2s ease, width 0.2s ease;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .top-navbar {
@@ -493,6 +507,8 @@ a:hover {
 
 .content-body {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     max-width: 1400px;
     width: 100%;
@@ -1017,6 +1033,16 @@ a:hover {
     background-color: #f1f5f9;
     color: #475569;
     border: 1px solid #cbd5e1;
+}
+
+.badge-legal-legal {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+
+.badge-legal-tutup_sementara, .badge-legal-sementara_tutup {
+    background-color: #fef3c7;
+    color: #b45309;
 }
 
 /* ====================================================================
@@ -1629,15 +1655,30 @@ a:hover {
     pointer-events: none;
 }
 
+#pedagang-slide-content,
+.pedagang-slide-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+}
+
 .pedagang-slide-wrapper {
     position: relative;
     width: 100%;
-    min-height: 250px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 14px;
     overflow: hidden;
 }
 
 .pedagang-slide-pane {
     width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     transition: opacity 0.2s ease;
 }
 
@@ -1686,7 +1727,8 @@ a:hover {
     border: 1px solid var(--outline-variant);
     border-radius: 14px;
     padding: 8px 14px;
-    margin-top: 14px;
+    margin-top: auto;
+    margin-bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1978,6 +2020,475 @@ nav svg.w-5,
     gap: 10px;
 }
 
+/* ====================================================================
+   KALENDER & PENGGUNA OPERASIONAL KPI CARDS
+   ==================================================================== */
+.kalender-kpi-grid,
+.pengguna-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kalender-kpi-card,
+.pengguna-kpi-card {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container-lowest);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-sizing: border-box;
+}
+
+.kalender-kpi-icon,
+.pengguna-kpi-icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.kalender-kpi-icon svg,
+.pengguna-kpi-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.kalender-kpi-content,
+.pengguna-kpi-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.kalender-kpi-title,
+.pengguna-kpi-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+}
+
+.kalender-kpi-value,
+.pengguna-kpi-value {
+    font-size: 1.45rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 2px 0;
+}
+
+.kalender-kpi-unit,
+.pengguna-kpi-unit {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--on-surface-variant);
+}
+
+.kalender-kpi-sub,
+.pengguna-kpi-sub {
+    font-size: 0.725rem;
+    margin-top: 2px;
+    line-height: 1.25;
+}
+
+/* ====================================================================
+   PENGGUNA & OTORITAS RESPONSIVE DESIGN (TABS, BANNERS, MOBILE CARDS)
+   ==================================================================== */
+.pengguna-header-btn-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.pengguna-search-container {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pengguna-search-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex: 1;
+    max-width: 520px;
+    margin: 0;
+}
+
+.pengguna-search-info {
+    font-size: 0.8125rem;
+    color: var(--on-surface-variant);
+    font-weight: 500;
+}
+
+.pengguna-tab-bar {
+    display: flex;
+    border-bottom: 2px solid var(--outline-variant);
+    margin-bottom: 20px;
+    gap: 8px;
+}
+
+.pengguna-tab-btn {
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--on-surface-variant);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.pengguna-tab-btn.active {
+    color: var(--primary) !important;
+    border-bottom-color: var(--primary) !important;
+}
+
+.pengguna-tab-badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.pengguna-tab-badge.badge-pedagang {
+    background: rgba(16, 185, 129, 0.15);
+    color: #047857;
+}
+
+.pengguna-tab-badge.badge-staf {
+    background: var(--surface-container-high);
+    color: var(--on-surface-variant);
+}
+
+.pengguna-desktop-table {
+    display: block;
+}
+
+.pengguna-mobile-list {
+    display: none;
+}
+
+/* Mobile & Tablet Card Layout */
+.pengguna-user-card {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.user-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+
+.user-card-kios-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.user-card-kios-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    border: 1px solid #bae6fd;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.user-card-blok {
+    font-size: 0.75rem;
+    color: var(--on-surface-variant);
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.user-card-shop-name {
+    font-weight: 700;
+    color: var(--on-surface);
+    font-size: 0.875rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-card-status {
+    flex-shrink: 0;
+}
+
+.badge-status-active {
+    background-color: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.badge-status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.badge-status-none {
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 3px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.user-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.user-card-pedagang-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.user-card-nama {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--on-surface);
+}
+
+.user-card-kategori {
+    font-size: 0.72rem;
+    color: var(--on-surface-variant);
+    background: var(--surface-container);
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
+.user-card-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.75rem;
+}
+
+.user-card-telp {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--on-surface-variant);
+}
+
+.badge-lapak-aktif {
+    font-size: 0.6875rem;
+    background: #dcfce7;
+    color: #166534;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-lapak-tutup {
+    font-size: 0.6875rem;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-lapak-nonaktif {
+    font-size: 0.6875rem;
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+/* Kredensial Box in Card */
+.user-card-cred-box {
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    border-radius: 8px;
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.cred-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.cred-label {
+    color: var(--outline);
+    font-weight: 600;
+    font-size: 0.72rem;
+}
+
+.cred-code {
+    background: var(--surface-container-lowest);
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.78rem;
+    border: 1px solid var(--outline-variant);
+}
+
+.btn-copy-cred {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 2px;
+    color: var(--outline);
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+}
+
+.btn-copy-cred:hover {
+    color: var(--primary);
+}
+
+.cred-sub-row {
+    justify-content: space-between;
+    font-size: 0.72rem;
+}
+
+.cred-pass {
+    color: #059669;
+    font-weight: 600;
+}
+
+.cred-email {
+    color: var(--on-surface-variant);
+    font-size: 0.72rem;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cred-empty {
+    font-size: 0.75rem;
+    color: var(--outline);
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot-empty {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    display: inline-block;
+}
+
+.user-card-footer {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px dashed var(--outline-variant);
+}
+
+.user-btn-action {
+    flex: 1;
+    min-height: 32px !important;
+    height: 32px !important;
+    font-size: 0.75rem !important;
+    padding: 0 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    font-weight: 600 !important;
+    border-radius: 7px !important;
+}
+
+.user-btn-full {
+    width: 100%;
+    min-height: 34px !important;
+    height: 34px !important;
+    font-size: 0.8rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+}
+
+.user-card-empty {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 10px;
+    padding: 30px 16px;
+    text-align: center;
+    color: var(--outline);
+    font-size: 0.84rem;
+}
+
 /* Tablet Breakpoint (<= 992px) */
 @media (max-width: 992px) {
     .app-wrapper {
@@ -2011,10 +2522,132 @@ nav svg.w-5,
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 10px;
     }
+
+    /* Kalender & Pengguna KPI 2x2 Grid for Android, iOS & Tablet */
+    .kalender-kpi-grid,
+    .pengguna-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .kalender-kpi-card,
+    .pengguna-kpi-card {
+        padding: 10px 10px !important;
+        border-radius: 10px !important;
+        gap: 8px !important;
+    }
+
+    .kalender-kpi-icon,
+    .pengguna-kpi-icon {
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        border-radius: 8px !important;
+    }
+
+    .kalender-kpi-icon svg,
+    .pengguna-kpi-icon svg {
+        width: 17px !important;
+        height: 17px !important;
+    }
+
+    .kalender-kpi-title,
+    .pengguna-kpi-title {
+        font-size: 0.625rem !important;
+        letter-spacing: 0.2px !important;
+        line-height: 1.2 !important;
+    }
+
+    .kalender-kpi-value,
+    .pengguna-kpi-value {
+        font-size: 1.15rem !important;
+        line-height: 1.2 !important;
+        margin: 1px 0 !important;
+    }
+
+    .kalender-kpi-unit,
+    .pengguna-kpi-unit {
+        font-size: 0.7rem !important;
+    }
+
+    .kalender-kpi-sub,
+    .pengguna-kpi-sub {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+        margin-top: 1px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Pengguna Responsive Rules for Tablet & Mobile */
+    .pengguna-desktop-table {
+        display: none !important;
+    }
+
+    .pengguna-mobile-list {
+        display: flex !important;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pengguna-tab-bar {
+        gap: 4px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .pengguna-tab-btn {
+        flex: 1 1 0 !important;
+        padding: 10px 6px !important;
+        font-size: 0.8125rem !important;
+        justify-content: center !important;
+        text-align: center !important;
+        gap: 6px !important;
+    }
+
+    .pengguna-tab-btn svg {
+        width: 16px !important;
+        height: 16px !important;
+        flex-shrink: 0;
+    }
+
+    .pengguna-tab-badge {
+        font-size: 0.6875rem !important;
+        padding: 1px 6px !important;
+    }
+
+    .pengguna-search-container {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    .pengguna-search-form {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+    .pengguna-search-info {
+        text-align: center !important;
+        width: 100% !important;
+        font-size: 0.775rem !important;
+    }
 }
 
 /* Mobile Devices (<= 768px: Android & iPhone) */
 @media (max-width: 768px) {
+    .pengguna-header-btn-row {
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 8px !important;
+    }
+
+    .pengguna-header-btn-row .btn {
+        width: 100% !important;
+        justify-content: center !important;
+        min-height: 38px;
+    }
     /* Top Navbar Mobile - Clean, Balanced & Guaranteed Single Row */
     .top-navbar {
         display: flex !important;
@@ -2129,6 +2762,9 @@ nav svg.w-5,
         padding: 10px calc(10px + var(--sar)) calc(20px + var(--sab)) calc(10px + var(--sal));
         max-width: 100%;
         overflow-x: hidden;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Page Header */
@@ -3150,4 +3786,492 @@ nav svg.w-5,
         font-size: 0.82rem;
     }
 }
+
+/* ====================================================================
+   DASHBOARD PEDAGANG: 2 KOTAK 2 KOTAK RESPONSIVE GRIDS (MOBILE & TABLET)
+   ==================================================================== */
+.pedagang-info-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.pedagang-stat-grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.pedagang-kpi-card {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 74px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pedagang-kpi-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.pedagang-kpi-card {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 12px;
+    padding: 11px 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 76px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.pedagang-kpi-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.pedagang-kpi-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3px;
+    gap: 4px;
+}
+
+.pedagang-kpi-card-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--on-surface-variant);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pedagang-kpi-card-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 2px 0 2px;
+    letter-spacing: -0.01em;
+}
+
+.pedagang-kpi-card-sub {
+    font-size: 0.7rem;
+    color: var(--on-surface-variant);
+    line-height: 1.35;
+    font-weight: 400;
+}
+
+/* ====================================================================
+   TAGIHAN IURAN SAYA: COMPACT CARDS & RESPONSIVE GRID
+   ==================================================================== */
+.tagihan-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.tagihan-kpi-card {
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 12px;
+    padding: 11px 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 76px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.tagihan-kpi-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border-color: #cbd5e1;
+}
+
+.tagihan-kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    gap: 4px;
+}
+
+.tagihan-kpi-title {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--on-surface-variant);
+}
+
+.tagihan-kpi-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 2px 0 2px;
+    letter-spacing: -0.01em;
+}
+
+.tagihan-kpi-sub {
+    font-size: 0.7rem;
+    color: var(--on-surface-variant);
+    line-height: 1.35;
+    font-weight: 400;
+}
+
+/* Buku Kas Mandiri */
+.pedagang-bukukas-card {
+    background: var(--surface-container-lowest);
+    border: 1.5px solid var(--outline-variant);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.bukukas-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--outline-variant);
+    padding-bottom: 12px;
+    gap: 12px;
+}
+
+.bukukas-title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.bukukas-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: rgba(11, 83, 49, 0.1);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.bukukas-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--on-surface);
+}
+
+.bukukas-subtitle {
+    font-size: 0.75rem;
+    color: var(--on-surface-variant);
+    margin: 2px 0 0;
+}
+
+.bukukas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.bukukas-input-card {
+    background: var(--surface-container-low);
+    border: 1px solid var(--outline-variant);
+    border-radius: 9px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bukukas-label {
+    font-size: 0.74rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 6px;
+    color: var(--on-surface);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bukukas-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.bukukas-dot-green {
+    background-color: #10b981;
+}
+
+.bukukas-dot-amber {
+    background-color: #f59e0b;
+}
+
+.bukukas-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--surface-container-lowest);
+    border: 1px solid var(--outline-variant);
+    border-radius: 7px;
+    overflow: hidden;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bukukas-input-wrap:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(11, 83, 49, 0.15);
+}
+
+.bukukas-currency {
+    padding: 0 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--on-surface-variant);
+    background: var(--surface-container-low);
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid var(--outline-variant);
+}
+
+.bukukas-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 7px 9px !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    color: var(--on-surface) !important;
+    width: 100% !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.bukukas-result-box {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 95, 70, 0.04) 100%);
+    border: 1.5px solid #a7f3d0;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bukukas-result-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.bukukas-result-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #065f46;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.bukukas-result-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #059669;
+    letter-spacing: -0.01em;
+}
+
+.bukukas-footer {
+    font-size: 0.72rem;
+    color: var(--on-surface-variant);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+}
+
+/* Tablet & Mobile responsive for Pedagang (Android, iOS, Tablet) */
+@media (max-width: 991px) {
+    .pedagang-stat-grid-2x2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .pedagang-info-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .tagihan-kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .pedagang-kpi-card, .tagihan-kpi-card {
+        padding: 10px 12px !important;
+        border-radius: 11px !important;
+        min-height: 72px !important;
+    }
+    .pedagang-kpi-card-title, .tagihan-kpi-title {
+        font-size: 0.69rem !important;
+        font-weight: 600 !important;
+    }
+    .pedagang-kpi-card-value, .tagihan-kpi-value {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        margin: 2px 0 !important;
+    }
+    .pedagang-kpi-card-sub, .tagihan-kpi-sub {
+        font-size: 0.68rem !important;
+        line-height: 1.3 !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .pedagang-stat-grid-2x2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+    .pedagang-info-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+    .pedagang-kpi-card {
+        padding: 9px 10px !important;
+        border-radius: 10px !important;
+        min-height: 68px !important;
+    }
+    .pedagang-kpi-card-title {
+        font-size: 0.66rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
+    }
+    .pedagang-kpi-card-value {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        margin: 2px 0 !important;
+    }
+    .pedagang-kpi-card-sub {
+        font-size: 0.65rem !important;
+        line-height: 1.3 !important;
+    }
+    .tagihan-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+    }
+    .tagihan-kpi-grid > :nth-child(3) {
+        grid-column: 1 / -1 !important;
+    }
+    .tagihan-kpi-card {
+        padding: 9px 10px !important;
+        border-radius: 10px !important;
+        min-height: 68px !important;
+    }
+    .tagihan-kpi-title {
+        font-size: 0.66rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.02em !important;
+    }
+    .tagihan-kpi-value {
+        font-size: 1.05rem !important;
+        font-weight: 700 !important;
+        margin: 2px 0 !important;
+    }
+    .tagihan-kpi-sub {
+        font-size: 0.65rem !important;
+        line-height: 1.3 !important;
+    }
+    .pedagang-info-card {
+        padding: 10px 11px !important;
+        border-radius: 10px !important;
+    }
+    .pedagang-info-card h3 {
+        font-size: 0.82rem !important;
+        font-weight: 600 !important;
+    }
+    .pedagang-info-card p,
+    .pedagang-info-card blockquote {
+        font-size: 0.68rem !important;
+        line-height: 1.35 !important;
+    }
+    .pedagang-info-badge-icon {
+        width: 26px !important;
+        height: 26px !important;
+    }
+    .pedagang-info-badge-icon svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+    .pedagang-bukukas-card {
+        padding: 10px !important;
+        border-radius: 10px !important;
+    }
+    .bukukas-header {
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 10px !important;
+    }
+    .bukukas-title {
+        font-size: 0.88rem !important;
+        font-weight: 600 !important;
+    }
+    .bukukas-subtitle {
+        font-size: 0.68rem !important;
+    }
+    .bukukas-icon {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .bukukas-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+        margin-bottom: 8px !important;
+    }
+    .bukukas-input-card {
+        padding: 7px 8px !important;
+    }
+    .bukukas-label {
+        font-size: 0.65rem !important;
+        margin-bottom: 4px !important;
+    }
+    .bukukas-input {
+        padding: 5px 6px !important;
+        font-size: 0.82rem !important;
+    }
+    .bukukas-currency {
+        padding: 0 5px 0 6px !important;
+        font-size: 0.72rem !important;
+    }
+    .bukukas-result-box {
+        padding: 8px 10px !important;
+    }
+    .bukukas-result-label {
+        font-size: 0.72rem !important;
+    }
+    .bukukas-result-value {
+        font-size: 1.05rem !important;
+    }
+}
+
 

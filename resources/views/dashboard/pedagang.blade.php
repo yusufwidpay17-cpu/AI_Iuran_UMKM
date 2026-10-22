@@ -182,42 +182,42 @@
         </div>
     </div>
 
-    <!-- 3. KARTU APRESIASI MITRA & MUTIARA HIKMAH BERKAH -->
-    <div class="responsive-grid-2" style="margin-bottom: 18px;">
+    <!-- 3. KARTU APRESIASI MITRA & MUTIARA HIKMAH BERKAH (2 KOTAK BERDAMPINGAN) -->
+    <div class="pedagang-info-grid-2">
         <!-- Card Apresiasi Kedisiplinan -->
-        <div class="card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; border-radius: var(--radius-lg);">
-            <div style="display: flex; align-items: flex-start; justify-content: space-between;">
-                <div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">STATUS KEPATUHAN LAPAK</span>
+        <div class="card pedagang-info-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #a7f3d0; border-radius: var(--radius-lg); margin-bottom: 0;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;">
+                <div style="min-width: 0; flex: 1;">
+                    <span style="font-size: 0.68rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px; display: block;">STATUS KEPATUHAN LAPAK</span>
                     @if($totalTunggakanPedagang == 0)
-                        <h3 style="font-size: 1.2rem; font-weight: 800; color: #065f46; margin: 6px 0 4px; display: flex; align-items: center; gap: 6px;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669;">
+                        <h3 style="font-size: 1.05rem; font-weight: 800; color: #065f46; margin: 4px 0 3px; display: flex; align-items: center; gap: 4px;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669; flex-shrink: 0;">
                                 <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                             </svg>
-                            <span>Mitra Teladan & Amanah</span>
+                            <span>Mitra Teladan</span>
                         </h3>
-                        <p style="font-size: 0.85rem; color: #047857; margin: 0; line-height: 1.5;">
-                            Alhamdulillah, tidak ada tunggakan iuran harian. Terima kasih atas kedisiplinan Anda dalam memajukan pasar pesantren!
+                        <p style="font-size: 0.785rem; color: #047857; margin: 0; line-height: 1.4;">
+                            Alhamdulillah, tidak ada tunggakan iuran harian. Terima kasih atas kedisiplinan Anda!
                         </p>
                     @else
-                        <h3 style="font-size: 1.2rem; font-weight: 800; color: #b45309; margin: 6px 0 4px; display: flex; align-items: center; gap: 6px;">
-                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706;">
+                        <h3 style="font-size: 1.05rem; font-weight: 800; color: #b45309; margin: 4px 0 3px; display: flex; align-items: center; gap: 4px;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #d97706; flex-shrink: 0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
-                            <span>Perhatian Iuran Tertunda</span>
+                            <span>Iuran Tertunda</span>
                         </h3>
-                        <p style="font-size: 0.85rem; color: #92400e; margin: 0; line-height: 1.5;">
-                            Terdapat {{ $jumlahHariMenunggak }} hari iuran yang belum lunas. Silakan hubungi petugas saat penarikan keliling harian.
+                        <p style="font-size: 0.785rem; color: #92400e; margin: 0; line-height: 1.4;">
+                            Terdapat {{ $jumlahHariMenunggak }} hari iuran belum lunas. Silakan selesaikan ke petugas keliling.
                         </p>
                     @endif
                 </div>
-                <div style="background: white; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); flex-shrink: 0;">
+                <div class="pedagang-info-badge-icon" style="background: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.06); flex-shrink: 0;">
                     @if($totalTunggakanPedagang == 0)
-                        <svg width="22" height="22" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 3h14v4a5 5 0 01-5 5h-4a5 5 0 01-5-5V3z M12 12v5m-4 4h8"></path>
                         </svg>
                     @else
-                        <svg width="22" height="22" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
+                        <svg width="18" height="18" fill="none" stroke="#d97706" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
                     @endif
@@ -226,123 +226,128 @@
         </div>
 
         <!-- Card Mutiara Hikmah Perniagaan -->
-        <div class="card" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: var(--radius-lg);">
-            <span style="font-size: 0.75rem; font-weight: 700; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px;">MUTIARA PERNIAGAAN BERKAH</span>
-            <blockquote style="margin: 8px 0 0; font-size: 0.85rem; color: #1e3a8a; font-style: italic; line-height: 1.5;">
-                “Pedagang yang senantiasa jujur dan terpercaya kelak akan dikumpulkan bersama para Nabi, orang-orang benar, dan para syuhada.”
-            </blockquote>
-            <div style="font-size: 0.75rem; color: #3b82f6; font-weight: 600; margin-top: 6px; text-align: right;">
-                — Hadits Riwayat At-Tirmidzi
+        <div class="card pedagang-info-card" style="background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%); border: 1.5px solid #bfdbfe; border-radius: var(--radius-lg); margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="font-size: 0.68rem; font-weight: 700; color: #1e40af; text-transform: uppercase; letter-spacing: 0.5px; display: block;">MUTIARA PERNIAGAAN BERKAH</span>
+                <blockquote style="margin: 6px 0 0; font-size: 0.785rem; color: #1e3a8a; font-style: italic; line-height: 1.4;">
+                    “Pedagang yang senantiasa jujur & terpercaya kelak bersama para Nabi, shalihin, dan para syuhada.”
+                </blockquote>
+            </div>
+            <div style="font-size: 0.7rem; color: #3b82f6; font-weight: 600; margin-top: 6px; text-align: right;">
+                — HR. At-Tirmidzi
             </div>
         </div>
     </div>
 
-    <!-- 3. RINGKASAN KEUANGAN UTAMA KIOS (PERIODE BERJALAN & DATABASE SAH) -->
+    <!-- 3. RINGKASAN KEUANGAN UTAMA KIOS (2 KOTAK 2 KOTAK PADA ANDROID, IOS, TABLET) -->
     <div style="margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--on-surface); margin: 0; display: flex; align-items: center; gap: 8px;">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--primary);">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                 </svg>
-                <span>Ringkasan Keuangan Kios (Periode {{ date('F Y') }})</span>
+                <span>Ringkasan Keuangan Kios (Periode {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM Y') }})</span>
             </h3>
             <span style="font-size: 0.775rem; color: var(--on-surface-variant);">
                 Data sah real-time tersinkronisasi kasir pasar
             </span>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px;">
+        <div class="pedagang-stat-grid-2x2">
             <!-- 1. Total Tagihan Periode Berjalan -->
-            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Total Tagihan Bulan Ini</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--on-surface-variant);">
+            <div class="pedagang-kpi-card">
+                <div class="pedagang-kpi-card-header">
+                    <span class="pedagang-kpi-card-title">Total Tagihan Bulan Ini</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--on-surface-variant); flex-shrink: 0;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
                 </div>
-                <div style="font-size: 1.45rem; font-weight: 800; color: var(--on-surface);">
+                <div class="pedagang-kpi-card-value" style="color: var(--on-surface);">
                     Rp {{ number_format($totalTagihanBulanIni, 0, ',', '.') }}
                 </div>
-                <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                    Total seluruh tagihan terbit: Rp {{ number_format($totalTagihanSemua, 0, ',', '.') }}
+                <div class="pedagang-kpi-card-sub">
+                    Total terbit: Rp {{ number_format($totalTagihanSemua, 0, ',', '.') }}
                 </div>
             </div>
 
             <!-- 2. Total Pembayaran Tercatat -->
-            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: #047857; text-transform: uppercase; letter-spacing: 0.5px;">Total Pembayaran Tercatat</span>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669;">
+            <div class="pedagang-kpi-card">
+                <div class="pedagang-kpi-card-header">
+                    <span class="pedagang-kpi-card-title" style="color: #047857;">Total Pembayaran</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: #059669; flex-shrink: 0;">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <div style="font-size: 1.45rem; font-weight: 800; color: #059669;">
+                <div class="pedagang-kpi-card-value" style="color: #059669;">
                     Rp {{ number_format($totalDibayarBulanIni, 0, ',', '.') }}
                 </div>
-                <div style="font-size: 0.75rem; color: #059669; margin-top: 4px;">
-                    Total akumulasi terbayar: Rp {{ number_format($totalDibayarSemua, 0, ',', '.') }}
+                <div class="pedagang-kpi-card-sub" style="color: #059669;">
+                    Akumulasi: Rp {{ number_format($totalDibayarSemua, 0, ',', '.') }}
                 </div>
             </div>
 
             <!-- 3. Total Sisa Tagihan atau Tunggakan -->
-            <div class="card" style="background: var(--surface-container-lowest); border: 1.5px solid {{ $totalTunggakanPedagang > 0 ? '#fecaca' : '#a7f3d0' }}; border-radius: 12px; padding: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: {{ $totalTunggakanPedagang > 0 ? '#b91c1c' : '#047857' }}; text-transform: uppercase; letter-spacing: 0.5px;">Sisa Tagihan / Tunggakan</span>
+            <div class="pedagang-kpi-card" style="border: 1.5px solid {{ $totalTunggakanPedagang > 0 ? '#fecaca' : '#a7f3d0' }};">
+                <div class="pedagang-kpi-card-header">
+                    <span class="pedagang-kpi-card-title" style="color: {{ $totalTunggakanPedagang > 0 ? '#b91c1c' : '#047857' }};">Sisa Tagihan / Tunggakan</span>
                     @if($totalTunggakanPedagang > 0)
-                        <span style="background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700;">{{ $jumlahHariMenunggak }} Hari</span>
+                        <span style="background: #fee2e2; color: #b91c1c; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; white-space: nowrap;">{{ $jumlahHariMenunggak }} Hari</span>
                     @else
-                        <span style="background: #d1fae5; color: #047857; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 700;">Lancar</span>
+                        <span style="background: #d1fae5; color: #047857; padding: 2px 6px; border-radius: 8px; font-size: 0.65rem; font-weight: 700; white-space: nowrap;">Lancar</span>
                     @endif
                 </div>
-                <div style="font-size: 1.45rem; font-weight: 800; color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#059669' }};">
+                <div class="pedagang-kpi-card-value" style="color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#059669' }};">
                     Rp {{ number_format($totalTunggakanPedagang, 0, ',', '.') }}
                 </div>
-                <div style="font-size: 0.75rem; color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#047857' }}; margin-top: 4px;">
-                    {{ $totalTunggakanPedagang > 0 ? 'Harap diselesaikan ke petugas' : 'Alhamdulillah bebas tunggakan' }}
+                <div class="pedagang-kpi-card-sub" style="color: {{ $totalTunggakanPedagang > 0 ? '#dc2626' : '#047857' }}; display: flex; justify-content: space-between; align-items: center;">
+                    <span>{{ $totalTunggakanPedagang > 0 ? 'Harap diselesaikan' : 'Alhamdulillah lancar' }}</span>
+                    @if($totalTunggakanPedagang > 0)
+                        <a href="{{ route('pedagang.tagihan', ['status' => 'belum_bayar']) }}" style="font-weight: 700; color: #b91c1c; text-decoration: underline; font-size: 0.68rem;">Rincian &rarr;</a>
+                    @endif
                 </div>
             </div>
 
             <!-- 4. Status Iuran Hari Ini -->
-            <div class="card" style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px;">Status Iuran Hari Ini</span>
-                    <span style="font-size: 0.75rem; color: var(--on-surface-variant);">{{ date('d M Y') }}</span>
+            <div class="pedagang-kpi-card">
+                <div class="pedagang-kpi-card-header">
+                    <span class="pedagang-kpi-card-title">Status Iuran Hari Ini</span>
+                    <span style="font-size: 0.68rem; color: var(--on-surface-variant); white-space: nowrap;">{{ date('d M Y') }}</span>
                 </div>
                 @if($tagihanHariIni && $tagihanHariIni->status_bayar === 'lunas')
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.45rem; font-weight: 800; color: #059669;">LUNAS</span>
-                        <span style="background: #d1fae5; color: #065f46; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <div style="display: flex; align-items: center; gap: 6px; margin: 2px 0 4px;">
+                        <span class="pedagang-kpi-card-value" style="color: #059669; margin: 0;">LUNAS</span>
+                        <span style="background: #d1fae5; color: #065f46; font-size: 0.65rem; padding: 2px 6px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 3px;">
+                            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                             </svg>
                             <span>Terbayar</span>
                         </span>
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                        Nominal: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }} ({{ $tagihanHariIni->metode_bayar ?: 'Tunai' }})
+                    <div class="pedagang-kpi-card-sub">
+                        Nominal: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }}
                     </div>
                 @elseif($tagihanHariIni && $tagihanHariIni->status_bayar === 'bayar_sebagian')
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.35rem; font-weight: 800; color: #d97706;">CICIL</span>
-                        <span style="background: #fef3c7; color: #92400e; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Sebagian</span>
+                    <div style="display: flex; align-items: center; gap: 6px; margin: 2px 0 4px;">
+                        <span class="pedagang-kpi-card-value" style="color: #d97706; margin: 0;">CICIL</span>
+                        <span style="background: #fef3c7; color: #92400e; font-size: 0.65rem; padding: 2px 6px; border-radius: 8px; font-weight: 700;">Sebagian</span>
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                        Dibayar: Rp {{ number_format($tagihanHariIni->nominal_dibayar, 0, ',', '.') }} | Sisa: Rp {{ number_format($tagihanHariIni->nominal_tagihan - $tagihanHariIni->nominal_dibayar, 0, ',', '.') }}
+                    <div class="pedagang-kpi-card-sub">
+                        Sisa: Rp {{ number_format($tagihanHariIni->nominal_tagihan - $tagihanHariIni->nominal_dibayar, 0, ',', '.') }}
                     </div>
                 @elseif($tagihanHariIni)
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 1.35rem; font-weight: 800; color: #dc2626;">BELUM BAYAR</span>
-                        <span style="background: #fee2e2; color: #b91c1c; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Menunggu</span>
+                    <div style="display: flex; align-items: center; gap: 6px; margin: 2px 0 4px;">
+                        <span class="pedagang-kpi-card-value" style="color: #dc2626; margin: 0;">BELUM BAYAR</span>
+                        <span style="background: #fee2e2; color: #b91c1c; font-size: 0.65rem; padding: 2px 6px; border-radius: 8px; font-weight: 700;">Menunggu</span>
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
+                    <div class="pedagang-kpi-card-sub">
                         Tagihan: Rp {{ number_format($tagihanHariIni->nominal_tagihan, 0, ',', '.') }}
                     </div>
                 @else
-                    <div style="font-size: 1.25rem; font-weight: 700; color: var(--on-surface-variant);">
+                    <div class="pedagang-kpi-card-value" style="color: var(--on-surface-variant); font-size: 1.15rem;">
                         Belum Ditarik
                     </div>
-                    <div style="font-size: 0.75rem; color: var(--on-surface-variant); margin-top: 4px;">
-                        Tarif Kios: Rp {{ number_format($pedagang->tarif->nominal_harian ?? 0, 0, ',', '.') }} / hari
+                    <div class="pedagang-kpi-card-sub">
+                        Tarif: Rp {{ number_format($pedagang->tarif->nominal_harian ?? 0, 0, ',', '.') }} / hari
                     </div>
                 @endif
             </div>
@@ -478,41 +483,66 @@
     </div>
 
     <!-- 6. FITUR MENARIK KHUSUS: BUKU KAS HARIAN KIOS MANDIRI (Catatan Penjualan & Pengeluaran Toko) -->
-    <div id="section-buku-kas" class="card" style="background: var(--surface-container-lowest); border: 1.5px solid var(--outline-variant); border-radius: var(--radius-lg); margin-bottom: 20px; box-shadow: var(--shadow-sm);">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid var(--outline-variant); padding-bottom: 12px; flex-wrap: wrap; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(11, 83, 49, 0.1); color: var(--primary); display: flex; align-items: center; justify-content: center;">
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <div id="section-buku-kas" class="pedagang-bukukas-card">
+        <div class="bukukas-header">
+            <div class="bukukas-title-group">
+                <div class="bukukas-icon">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                 </div>
                 <div>
-                    <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--on-surface);">Buku Kas Mandiri Kios (Catatan Omzet Hari Ini)</h3>
-                    <p style="font-size: 0.8rem; color: var(--on-surface-variant); margin: 2px 0 0;">Fitur pembantu khusus pedagang untuk mencatat perkiraan keuntungan harian kios Anda</p>
+                    <h3 class="bukukas-title">Buku Kas Mandiri Kios (Catatan Omzet Hari Ini)</h3>
+                    <p class="bukukas-subtitle">Fitur pembantu khusus pedagang untuk mencatat perkiraan keuntungan harian kios Anda</p>
                 </div>
             </div>
-            <button type="button" class="btn btn-secondary btn-sm" onclick="resetBukuKas()" style="font-size: 0.75rem;">
-                Bersihkan Catatan
+            <button type="button" class="btn btn-secondary btn-sm" onclick="resetBukuKas()" style="font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                <span>Bersihkan Catatan</span>
             </button>
         </div>
 
-        <div class="responsive-kpi-4" style="margin-bottom: 14px;">
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface); display: block; margin-bottom: 4px;">Total Penjualan / Pemasukan (Rp):</label>
-                <input type="number" id="kasPemasukan" class="form-control" placeholder="Contoh: 350000" oninput="hitungLabaHarian()" style="font-size: 0.9rem; font-weight: 600;">
+        <div class="bukukas-grid">
+            <div class="bukukas-input-card">
+                <label class="bukukas-label bukukas-label-in">
+                    <span class="bukukas-dot bukukas-dot-green"></span>
+                    Total Penjualan / Pemasukan:
+                </label>
+                <div class="bukukas-input-wrap">
+                    <span class="bukukas-currency">Rp</span>
+                    <input type="number" id="kasPemasukan" class="bukukas-input" placeholder="0" oninput="hitungLabaHarian()">
+                </div>
             </div>
-            <div>
-                <label style="font-size: 0.8rem; font-weight: 600; color: var(--on-surface); display: block; margin-bottom: 4px;">Pengeluaran / Kulakan / Iuran (Rp):</label>
-                <input type="number" id="kasPengeluaran" class="form-control" placeholder="Contoh: 150000" oninput="hitungLabaHarian()" style="font-size: 0.9rem; font-weight: 600;">
+            <div class="bukukas-input-card">
+                <label class="bukukas-label bukukas-label-out">
+                    <span class="bukukas-dot bukukas-dot-amber"></span>
+                    Pengeluaran / Kulakan / Iuran:
+                </label>
+                <div class="bukukas-input-wrap">
+                    <span class="bukukas-currency">Rp</span>
+                    <input type="number" id="kasPengeluaran" class="bukukas-input" placeholder="0" oninput="hitungLabaHarian()">
+                </div>
             </div>
-            <div style="background: var(--surface-container-low); padding: 12px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center;">
-                <span style="font-size: 0.75rem; font-weight: 600; color: var(--on-surface-variant); text-transform: uppercase;">Estimasi Keuntungan Bersih:</span>
-                <span id="kasLabaBersih" style="font-size: 1.3rem; font-weight: 800; color: #059669; margin-top: 2px;">
+            <div class="bukukas-result-box" id="bukukas-result-box">
+                <div class="bukukas-result-info">
+                    <div class="bukukas-result-label">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Estimasi Keuntungan Bersih:</span>
+                    </div>
+                    <div id="kasStatusBadge">
+                        <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Siap Dihitung</span>
+                    </div>
+                </div>
+                <div class="bukukas-result-value" id="kasLabaBersih">
                     Rp 0
-                </span>
+                </div>
             </div>
         </div>
-        <div style="font-size: 0.75rem; color: var(--on-surface-variant); line-height: 1.4; display: flex; align-items: center; gap: 5px;">
+        <div class="bukukas-footer">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
@@ -815,10 +845,23 @@
         const outVal = parseFloat(document.getElementById('kasPengeluaran').value) || 0;
         const laba = inVal - outVal;
         const labaEl = document.getElementById('kasLabaBersih');
+        const badgeEl = document.getElementById('kasStatusBadge');
 
         if (labaEl) {
             labaEl.textContent = 'Rp ' + laba.toLocaleString('id-ID');
-            labaEl.style.color = laba >= 0 ? '#059669' : '#dc2626';
+            if (inVal === 0 && outVal === 0) {
+                labaEl.style.color = 'var(--on-surface)';
+                if (badgeEl) badgeEl.innerHTML = '<span class="badge" style="background: var(--surface-container); color: var(--on-surface-variant); font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Siap Dihitung</span>';
+            } else if (laba > 0) {
+                labaEl.style.color = '#059669';
+                if (badgeEl) badgeEl.innerHTML = '<span class="badge" style="background: #dcfce7; color: #15803d; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Untung Bersih</span>';
+            } else if (laba === 0) {
+                labaEl.style.color = '#0284c7';
+                if (badgeEl) badgeEl.innerHTML = '<span class="badge" style="background: #e0f2fe; color: #0369a1; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Impas (BEP)</span>';
+            } else {
+                labaEl.style.color = '#dc2626';
+                if (badgeEl) badgeEl.innerHTML = '<span class="badge" style="background: #fee2e2; color: #b91c1c; font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Defisit / Rugi</span>';
+            }
         }
 
         localStorage.setItem('bukukas_in', inVal);
@@ -828,8 +871,15 @@
     function resetBukuKas() {
         document.getElementById('kasPemasukan').value = '';
         document.getElementById('kasPengeluaran').value = '';
-        document.getElementById('kasLabaBersih').textContent = 'Rp 0';
-        document.getElementById('kasLabaBersih').style.color = '#059669';
+        const labaEl = document.getElementById('kasLabaBersih');
+        const badgeEl = document.getElementById('kasStatusBadge');
+        if (labaEl) {
+            labaEl.textContent = 'Rp 0';
+            labaEl.style.color = 'var(--on-surface)';
+        }
+        if (badgeEl) {
+            badgeEl.innerHTML = '<span class="badge" style="background: var(--surface-container); color: var(--on-surface-variant); font-size: 0.72rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">Siap Dihitung</span>';
+        }
         localStorage.removeItem('bukukas_in');
         localStorage.removeItem('bukukas_out');
     }

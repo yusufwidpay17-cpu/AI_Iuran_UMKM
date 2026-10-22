@@ -16,7 +16,7 @@
             Otoritas penuh Superadmin dalam mengelola staf pengelola pasar dan memberikan hak akses login resmi untuk mitra pedagang.
         </p>
     </div>
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <div class="pengguna-header-btn-row">
         <button type="button" class="btn btn-outline" onclick="bukaModalResetSemua()" style="display: flex; align-items: center; gap: 8px; font-weight: 600; border-color: #f59e0b; color: #b45309; background: rgba(245, 158, 11, 0.08);" title="Ubah kata sandi banyak akun sekaligus dalam 1 klik">
             <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
@@ -39,60 +39,61 @@
 </div>
 
 <!-- Kartu Ringkasan Otoritas Akses (KPI Cards) -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;">
+<div class="pengguna-kpi-grid">
     <!-- Staf Pengelola -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(99, 102, 241, 0.12); color: #6366f1; display: flex; align-items: center; justify-content: center;">
+    <div class="card pengguna-kpi-card">
+        <div class="pengguna-kpi-icon" style="background: rgba(99, 102, 241, 0.12); color: #6366f1;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Staf Pengelola</div>
-            <div style="font-size: 1.35rem; font-weight: 700; color: var(--on-surface); line-height: 1.2;">{{ $stats['total_staf'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Akun</span></div>
-            <div style="font-size: 0.725rem; color: #6366f1; margin-top: 2px;">Superadmin, Admin, Petugas</div>
+        <div class="pengguna-kpi-content">
+            <div class="pengguna-kpi-title" style="color: var(--on-surface-variant);">Staf Pengelola</div>
+            <div class="pengguna-kpi-value" style="color: var(--on-surface);">{{ $stats['total_staf'] }} <span class="pengguna-kpi-unit">Akun</span></div>
+            <div class="pengguna-kpi-sub" style="color: #6366f1;">Superadmin, Admin, Petugas</div>
         </div>
     </div>
 
     <!-- Total Pedagang -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(14, 165, 233, 0.12); color: #0284c7; display: flex; align-items: center; justify-content: center;">
+    <div class="card pengguna-kpi-card">
+        <div class="pengguna-kpi-icon" style="background: rgba(14, 165, 233, 0.12); color: #0284c7;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Mitra Pedagang Pasar</div>
-            <div style="font-size: 1.35rem; font-weight: 700; color: var(--on-surface); line-height: 1.2;">{{ $stats['total_pedagang'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Lapak</span></div>
-            <div style="font-size: 0.725rem; color: #0284c7; margin-top: 2px;">Terdaftar di database</div>
+        <div class="pengguna-kpi-content">
+            <div class="pengguna-kpi-title" style="color: var(--on-surface-variant);">Mitra Pedagang Pasar</div>
+            <div class="pengguna-kpi-value" style="color: var(--on-surface);">{{ $stats['total_pedagang'] }} <span class="pengguna-kpi-unit">Lapak</span></div>
+            <div class="pengguna-kpi-sub" style="color: #0284c7;">Terdaftar di database</div>
         </div>
     </div>
 
     <!-- Pedagang Berhak Akses -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center;">
+    <div class="card pengguna-kpi-card">
+        <div class="pengguna-kpi-icon" style="background: rgba(16, 185, 129, 0.12); color: #10b981;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Akses Login Aktif</div>
-            <div style="font-size: 1.35rem; font-weight: 700; color: #059669; line-height: 1.2;">{{ $stats['pedagang_punya_akses'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Pedagang</span></div>
-            <div style="font-size: 0.725rem; color: #059669; margin-top: 2px;">Memiliki akun & dapat login</div>
+        <div class="pengguna-kpi-content">
+            <div class="pengguna-kpi-title" style="color: var(--on-surface-variant);">Akses Login Aktif</div>
+            <div class="pengguna-kpi-value" style="color: #059669;">{{ $stats['pedagang_punya_akses'] }} <span class="pengguna-kpi-unit">Pedagang</span></div>
+            <div class="pengguna-kpi-sub" style="color: #059669;">Memiliki akun & dapat login</div>
         </div>
     </div>
 
     <!-- Pedagang Belum Ada Akses / Dicabut -->
-    <div class="card" style="padding: 16px; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest); display: flex; align-items: center; gap: 14px;">
-        <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); color: #d97706; display: flex; align-items: center; justify-content: center;">
+    <div class="card pengguna-kpi-card">
+        <div class="pengguna-kpi-icon" style="background: rgba(245, 158, 11, 0.12); color: #d97706;">
             <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
             </svg>
         </div>
-        <div>
-            <div style="font-size: 0.75rem; color: var(--on-surface-variant); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Belum Memiliki Akses</div>
-            <div style="font-size: 1.35rem; font-weight: 700; color: {{ $stats['pedagang_belum_akses'] > 0 ? '#d97706' : 'var(--on-surface)' }}; line-height: 1.2;">{{ $stats['pedagang_belum_akses'] }} <span style="font-size: 0.8rem; font-weight: 500; color: var(--on-surface-variant);">Lapak</span></div>
-            <div style="font-size: 0.725rem; color: var(--on-surface-variant); margin-top: 2px;">Perlu diotorisasi Superadmin</div>
+        <div class="pengguna-kpi-content">
+            <div class="pengguna-kpi-title" style="color: var(--on-surface-variant);">Belum Memiliki Akses</div>
+            <div class="pengguna-kpi-value" style="color: {{ $stats['pedagang_belum_akses'] > 0 ? '#d97706' : 'var(--on-surface)' }};">{{ $stats['pedagang_belum_akses'] }} <span class="pengguna-kpi-unit">Lapak</span></div>
+            <div class="pengguna-kpi-sub" style="color: var(--on-surface-variant);">Perlu diotorisasi Superadmin</div>
         </div>
     </div>
 </div>
@@ -124,20 +125,20 @@
 @endif
 
 <!-- Tab Switcher Navigasi Otoritas Pengguna -->
-<div style="display: flex; border-bottom: 2px solid var(--outline-variant); margin-bottom: 20px; gap: 8px;">
-    <button type="button" id="tabBtnPedagang" onclick="switchTab('pedagang')" style="padding: 12px 20px; font-weight: 700; font-size: 0.95rem; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--primary); border-bottom: 3px solid var(--primary); margin-bottom: -2px; transition: all 0.2s;">
+<div class="pengguna-tab-bar">
+    <button type="button" id="tabBtnPedagang" class="pengguna-tab-btn active" onclick="switchTab('pedagang')">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
         </svg>
-        Hak Akses Mitra Pedagang
-        <span style="background: rgba(16, 185, 129, 0.15); color: #047857; padding: 2px 8px; border-radius: 999px; font-size: 0.75rem;">{{ $mitraPedagang->total() }}</span>
+        <span>Hak Akses Mitra</span>
+        <span class="pengguna-tab-badge badge-pedagang">{{ $mitraPedagang->total() }}</span>
     </button>
-    <button type="button" id="tabBtnStaf" onclick="switchTab('staf')" style="padding: 12px 20px; font-weight: 700; font-size: 0.95rem; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--on-surface-variant); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s;">
+    <button type="button" id="tabBtnStaf" class="pengguna-tab-btn" onclick="switchTab('staf')">
         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
         </svg>
-        Staf & Pengelola Pasar
-        <span style="background: var(--surface-container-high); color: var(--on-surface-variant); padding: 2px 8px; border-radius: 999px; font-size: 0.75rem;">{{ $stafPengguna->count() }}</span>
+        <span>Staf & Pengelola</span>
+        <span class="pengguna-tab-badge badge-staf">{{ $stafPengguna->count() }}</span>
     </button>
 </div>
 
@@ -163,8 +164,8 @@
     </div>
 
     <!-- Menu Pencarian Nama / Toko / Kios / Username Mitra Pedagang -->
-    <div style="background: var(--surface-container-lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
-        <form action="{{ route('pengguna.index') }}" method="GET" style="display: flex; gap: 8px; align-items: center; flex: 1; max-width: 520px; margin: 0;">
+    <div class="pengguna-search-container">
+        <form action="{{ route('pengguna.index') }}" method="GET" class="pengguna-search-form">
             <div style="position: relative; width: 100%;">
                 <input type="text" name="search_pedagang" id="search_pedagang_input" class="form-input" 
                        placeholder="Cari nama pedagang, toko, kios, atau username..." 
@@ -186,12 +187,12 @@
             @endif
         </form>
 
-        <div style="font-size: 0.8125rem; color: var(--on-surface-variant); font-weight: 500;">
+        <div class="pengguna-search-info">
             Menampilkan <strong>{{ $mitraPedagang->firstItem() ?? 0 }} - {{ $mitraPedagang->lastItem() ?? 0 }}</strong> dari total <strong>{{ $mitraPedagang->total() }}</strong> pedagang
         </div>
     </div>
 
-    <div class="card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
+    <div class="pengguna-desktop-table card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
         <div class="table-responsive">
             <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
                 <thead style="background-color: var(--surface-container-low); border-bottom: 1px solid var(--outline-variant);">
@@ -266,7 +267,7 @@
                                     {{ $pdg->user->email ?: 'Tanpa email terdaftar' }}
                                 </div>
                                 <div style="font-size: 0.725rem; color: #059669; margin-top: 2px;">
-                                    Sandi: <span id="sandi_pedagang_display_{{ $pdg->user->id }}" style="font-family: monospace; letter-spacing: 1px; font-weight: 600;">{{ $pdg->user->password_plain ?? '••••••••' }}</span>
+                                    Sandi: <span id="sandi_pedagang_display_{{ $pdg->user->id }}" class="sandi-pedagang-val-{{ $pdg->user->id }}" style="font-family: monospace; letter-spacing: 1px; font-weight: 600;">{{ $pdg->user->password_plain ?? '••••••••' }}</span>
                                 </div>
                             @else
                                 <div style="color: var(--outline); font-size: 0.8rem; font-style: italic; display: flex; align-items: center; gap: 6px;">
@@ -350,9 +351,121 @@
         </div>
     </div>
 
+    <!-- Mobile & Tablet Card View (<= 992px) -->
+    <div class="pengguna-mobile-list">
+        @forelse($mitraPedagang as $pdg)
+        <div class="pengguna-user-card">
+            <!-- Header: Kios + Usaha & Status Hak Akses -->
+            <div class="user-card-header">
+                <div class="user-card-kios-group">
+                    <span class="user-card-kios-badge">{{ $pdg->no_kios ?: 'Kios -' }}</span>
+                    @if($pdg->blok_kios)
+                        <span class="user-card-blok">({{ $pdg->blok_kios }})</span>
+                    @endif
+                    <span class="user-card-shop-name">{{ $pdg->nama_usaha ?: 'Usaha Pedagang' }}</span>
+                </div>
+                <div class="user-card-status">
+                    @if($pdg->user)
+                        @if(($pdg->user->status_aktivasi ?? 'aktif') === 'pending')
+                            <span class="badge-status-pending">Menunggu Sandi</span>
+                        @else
+                            <span class="badge-status-active">Akses Aktif</span>
+                        @endif
+                    @else
+                        <span class="badge-status-none">Belum Ada Akses</span>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Body: Nama Pedagang, Telepon, Kategori, Status Lapak -->
+            <div class="user-card-body">
+                <div class="user-card-pedagang-row">
+                    <span class="user-card-nama">{{ $pdg->nama_pedagang }}</span>
+                    <span class="user-card-kategori">{{ $pdg->kategori_usaha ?: 'Umum' }}</span>
+                </div>
+
+                <div class="user-card-meta-row">
+                    <span class="user-card-telp">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color: var(--outline);">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                        </svg>
+                        {{ $pdg->no_telepon ?: '-' }}
+                    </span>
+                    @if($pdg->status_pedagang === 'aktif')
+                        <span class="badge-lapak-aktif">Lapak Aktif</span>
+                    @elseif($pdg->status_pedagang === 'sementara_tutup')
+                        <span class="badge-lapak-tutup">Sementara Tutup</span>
+                    @else
+                        <span class="badge-lapak-nonaktif">Nonaktif</span>
+                    @endif
+                </div>
+
+                <!-- Credential Box -->
+                <div class="user-card-cred-box">
+                    @if($pdg->user)
+                        <div class="cred-row">
+                            <span class="cred-label">Username:</span>
+                            <code class="cred-code">{{ $pdg->user->username }}</code>
+                            <button type="button" class="btn-copy-cred" onclick="salinTeks('{{ $pdg->user->username }}', 'Username')" title="Salin Username">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="cred-row cred-sub-row">
+                            <span class="cred-email">{{ $pdg->user->email ?: 'Tanpa email' }}</span>
+                            <span class="cred-pass">Sandi: <span id="sandi_pedagang_card_display_{{ $pdg->user->id }}" class="sandi-pedagang-val-{{ $pdg->user->id }}" style="font-family: monospace;">{{ $pdg->user->password_plain ?? '••••••••' }}</span></span>
+                        </div>
+                    @else
+                        <div class="cred-empty">
+                            <span class="dot-empty"></span> Belum dibuatkan akun login (Perlu otorisasi)
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Footer Action Buttons -->
+            <div class="user-card-footer">
+                @if($pdg->user)
+                    <button type="button" class="btn btn-outline btn-sm user-btn-action" onclick="bukaModalResetPassword('{{ $pdg->user->id }}', '{{ addslashes($pdg->nama_pedagang) }}', '{{ $pdg->user->username }}', '{{ addslashes($pdg->user->password_plain ?? 'password123') }}')" style="border-color: #f59e0b; color: #b45309;" title="Ganti Kata Sandi">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                        </svg>
+                        Sandi
+                    </button>
+                    <button type="button" class="btn btn-secondary btn-sm user-btn-action" onclick="editUser('{{ $pdg->user->id }}', '{{ addslashes($pdg->user->nama) }}', '{{ $pdg->user->username }}', '{{ $pdg->user->email }}', 'pedagang', '{{ $pdg->id }}', '{{ $pdg->user->status_aktivasi ?? 'aktif' }}')">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                        Edit
+                    </button>
+                    <button type="button" class="btn btn-danger btn-sm user-btn-action" onclick="konfirmasiCabutAkses('{{ $pdg->user->id }}', '{{ addslashes($pdg->nama_pedagang) }}', '{{ $pdg->no_kios ?: '-' }}', '{{ $pdg->user->username }}')" style="background: #dc2626; color: white;" title="Cabut Akses">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.93 4.93l14.14 14.14"></path>
+                        </svg>
+                        Cabut
+                    </button>
+                @else
+                    <button type="button" class="btn btn-primary btn-sm user-btn-full" onclick="beriAksesLangsung('{{ $pdg->id }}', '{{ addslashes($pdg->nama_pedagang) }}', '{{ $pdg->no_kios ?: '' }}')">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                        </svg>
+                        Beri Hak Akses
+                    </button>
+                @endif
+            </div>
+        </div>
+        @empty
+        <div class="user-card-empty">
+            Belum ada data mitra pedagang yang terdaftar di sistem.
+        </div>
+        @endforelse
+    </div>
+
     <!-- Bottom Slide Controller Dock (Focused Carousel + Chevron < >) -->
     @if($mitraPedagang->hasPages())
-        <div class="pedagang-slide-dock" style="margin-top: 18px;">
+        <div class="pedagang-slide-dock" style="margin-top: auto;">
             @php
                 $currentPage = $mitraPedagang->currentPage();
                 $lastPage = max(1, $mitraPedagang->lastPage());
@@ -425,7 +538,7 @@
 <!-- TAB 2: STAF & PENGELOLA SISTEM (SUPERADMIN, ADMIN, PETUGAS LAPANGAN)      -->
 <!-- ========================================================================= -->
 <div id="contentTabStaf" style="display: none;">
-    <div class="card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
+    <div class="pengguna-desktop-table card" style="padding: 0; overflow: hidden; border-radius: 12px; border: 1px solid var(--outline-variant); background: var(--surface-container-lowest);">
         <div class="table-responsive">
             <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
                 <thead style="background-color: var(--surface-container-low); border-bottom: 1px solid var(--outline-variant);">
@@ -450,7 +563,7 @@
                         <td style="padding: 16px; vertical-align: middle; color: var(--on-surface-variant);">
                             <code>{{ $user->username }}</code>
                             <div style="font-size: 0.725rem; color: #059669; margin-top: 3px;">
-                                Sandi: <span id="sandi_staf_display_{{ $user->id }}" style="font-family: monospace; letter-spacing: 1px; font-weight: 600;">{{ $user->password_plain ?? '••••••••' }}</span>
+                                Sandi: <span id="sandi_staf_display_{{ $user->id }}" class="sandi-staf-val-{{ $user->id }}" style="font-family: monospace; letter-spacing: 1px; font-weight: 600;">{{ $user->password_plain ?? '••••••••' }}</span>
                             </div>
                         </td>
                         <td style="padding: 16px; vertical-align: middle;">
@@ -520,6 +633,89 @@
                 </tbody>
             </table>
         </div>
+    </div>
+
+    <!-- Mobile & Tablet Card View (<= 992px) -->
+    <div class="pengguna-mobile-list">
+        @forelse($stafPengguna as $user)
+        <div class="pengguna-user-card">
+            <!-- Header: Nama + Role Badge -->
+            <div class="user-card-header">
+                <div style="font-weight: 700; color: var(--on-surface); font-size: 0.92rem;">
+                    {{ $user->nama }}
+                </div>
+                <div class="user-card-status">
+                    @if($user->role == 'superadmin')
+                        <span style="background-color: #f3e8ff; color: #7e22ce; border-radius: 999px; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; display: inline-block;">Super Admin</span>
+                    @elseif($user->role == 'admin')
+                        <span style="background-color: #e0f2fe; color: #0369a1; border-radius: 999px; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; display: inline-block;">Admin</span>
+                    @elseif($user->role == 'petugas')
+                        <span style="background-color: #fef3c7; color: #b45309; border-radius: 999px; padding: 3px 8px; font-size: 0.7rem; font-weight: 700; display: inline-block;">Petugas</span>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Body: Kredensial Box -->
+            <div class="user-card-body">
+                <div class="user-card-cred-box">
+                    <div class="cred-row">
+                        <span class="cred-label">Username:</span>
+                        <code class="cred-code">{{ $user->username }}</code>
+                        <button type="button" class="btn-copy-cred" onclick="salinTeks('{{ $user->username }}', 'Username')" title="Salin Username">
+                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="cred-row cred-sub-row">
+                        <span class="cred-email">{{ $user->email ?? 'Belum ada email' }}</span>
+                        <span class="cred-pass">Sandi: <span id="sandi_staf_card_display_{{ $user->id }}" class="sandi-staf-val-{{ $user->id }}" style="font-family: monospace;">{{ $user->password_plain ?? '••••••••' }}</span></span>
+                    </div>
+                </div>
+
+                <div class="user-card-meta-row" style="margin-top: 2px;">
+                    <span style="color: var(--on-surface-variant); font-size: 0.73rem;">
+                        Terdaftar: {{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}
+                    </span>
+                    <span>
+                        @if(($user->status_aktivasi ?? 'aktif') === 'pending')
+                            <span class="badge-status-pending">Menunggu Sandi</span>
+                        @else
+                            <span class="badge-status-active">Aktif</span>
+                        @endif
+                    </span>
+                </div>
+            </div>
+
+            <!-- Footer Action Buttons -->
+            <div class="user-card-footer">
+                <button type="button" class="btn btn-outline btn-sm user-btn-action" onclick="bukaModalResetPassword('{{ $user->id }}', '{{ addslashes($user->nama) }}', '{{ $user->username }}', '{{ addslashes($user->password_plain ?? 'password123') }}')" style="border-color: #f59e0b; color: #b45309;" title="Ganti Kata Sandi">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path>
+                    </svg>
+                    Sandi
+                </button>
+                <button type="button" class="btn btn-secondary btn-sm user-btn-action" onclick="editUser('{{ $user->id }}', '{{ addslashes($user->nama) }}', '{{ $user->username }}', '{{ $user->email }}', '{{ $user->role }}', '', '{{ $user->status_aktivasi ?? 'aktif' }}')">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit
+                </button>
+                @if(auth()->id() != $user->id)
+                    <button type="button" class="btn btn-danger btn-sm user-btn-action" onclick="deleteUser('{{ $user->id }}')" style="background-color: #ef4444; color: white;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Hapus
+                    </button>
+                @endif
+            </div>
+        </div>
+        @empty
+        <div class="user-card-empty">
+            Belum ada akun pengelola yang terdaftar.
+        </div>
+        @endforelse
     </div>
 </div>
 
@@ -1027,6 +1223,8 @@
         if (tab === 'pedagang') {
             contentPedagang.style.display = 'block';
             contentStaf.style.display = 'none';
+            btnPedagang.classList.add('active');
+            btnStaf.classList.remove('active');
             btnPedagang.style.color = 'var(--primary)';
             btnPedagang.style.borderBottomColor = 'var(--primary)';
             btnStaf.style.color = 'var(--on-surface-variant)';
@@ -1035,6 +1233,8 @@
         } else {
             contentPedagang.style.display = 'none';
             contentStaf.style.display = 'block';
+            btnStaf.classList.add('active');
+            btnPedagang.classList.remove('active');
             btnStaf.style.color = 'var(--primary)';
             btnStaf.style.borderBottomColor = 'var(--primary)';
             btnPedagang.style.color = 'var(--on-surface-variant)';
@@ -1162,18 +1362,16 @@
             // Tampilkan notifikasi toast sukses
             tampilkanToastSukses(data.message || 'Kata sandi berhasil diperbarui!');
 
-            // Update teks display di tabel secara langsung
+            // Update teks display di tabel & kartu mobile secara langsung
             if (currentResetUserId) {
-                const elPedagang = document.getElementById('sandi_pedagang_display_' + currentResetUserId);
-                if (elPedagang) {
-                    elPedagang.textContent = password;
-                    elPedagang.style.color = '#0284c7';
-                }
-                const elStaf = document.getElementById('sandi_staf_display_' + currentResetUserId);
-                if (elStaf) {
-                    elStaf.textContent = password;
-                    elStaf.style.color = '#0284c7';
-                }
+                document.querySelectorAll('.sandi-pedagang-val-' + currentResetUserId + ', #sandi_pedagang_display_' + currentResetUserId).forEach(el => {
+                    el.textContent = password;
+                    el.style.color = '#0284c7';
+                });
+                document.querySelectorAll('.sandi-staf-val-' + currentResetUserId + ', #sandi_staf_display_' + currentResetUserId).forEach(el => {
+                    el.textContent = password;
+                    el.style.color = '#0284c7';
+                });
             }
         })
         .catch(err => {
@@ -1270,14 +1468,14 @@
             // Tampilkan notifikasi toast sukses
             tampilkanToastSukses(data.message);
 
-            // Update semua span sandi yang ada di halaman
-            document.querySelectorAll('[id^="sandi_pedagang_display_"]').forEach(el => {
+            // Update semua span sandi yang ada di halaman (tabel desktop & kartu mobile)
+            document.querySelectorAll('[id^="sandi_pedagang_display_"], [class*="sandi-pedagang-val-"]').forEach(el => {
                 if (target === 'semua' || target === 'pedagang') {
                     el.textContent = password;
                     el.style.color = '#0284c7';
                 }
             });
-            document.querySelectorAll('[id^="sandi_staf_display_"]').forEach(el => {
+            document.querySelectorAll('[id^="sandi_staf_display_"], [class*="sandi-staf-val-"]').forEach(el => {
                 if (target === 'semua' || target === 'staf') {
                     el.textContent = password;
                     el.style.color = '#0284c7';

@@ -94,20 +94,18 @@
     }
 </style>
 
-@if(session('success'))
-    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-bottom: 18px; line-height: 1.5;">
-        {{ session('success') }}
-    </div>
-@endif
+@php
+    $displayCode = $active_code ?? session('demo_code');
+@endphp
 
-@if(session('demo_code'))
-    <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; font-size: 13px; padding: 12px 14px; border-radius: 10px; margin-bottom: 18px; line-height: 1.5;">
-        <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+@if($displayCode)
+    <div style="background: #eff6ff; border: 1.5px solid #93c5fd; color: #1e40af; font-size: 13px; padding: 14px 16px; border-radius: 12px; margin-bottom: 20px; line-height: 1.5; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);">
+        <div style="font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; color: #1d4ed8;">
             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>Mode Simulasi Pengujian Aktif:</span>
+            <span>Kode Verifikasi Reset Password:</span>
         </div>
-        <div style="margin: 4px 0;">Kode verifikasi OTP 6-digit Anda adalah: <strong style="font-size: 1.25rem; letter-spacing: 2px; font-family: monospace; background: #ffffff; padding: 2px 8px; border-radius: 6px; border: 1px solid #93c5fd; color: #1d4ed8;">{{ session('demo_code') }}</strong></div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">(Ketikkan kode di atas ke kolom isian kode verifikasi di bawah)</div>
+        <div style="margin: 6px 0;">Kode OTP 6-digit Anda: <strong style="font-size: 1.35rem; letter-spacing: 3px; font-family: monospace; background: #ffffff; padding: 4px 10px; border-radius: 8px; border: 1.5px solid #3b82f6; color: #1d4ed8; display: inline-block;">{{ $displayCode }}</strong></div>
+        <div style="font-size: 11.5px; color: #475569; margin-top: 4px;">Ketikkan 6 angka di atas ke kolom isian kode verifikasi di bawah ini untuk membuat kata sandi baru.</div>
     </div>
 @endif
 
