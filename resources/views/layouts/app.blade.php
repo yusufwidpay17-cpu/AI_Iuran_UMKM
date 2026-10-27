@@ -147,6 +147,14 @@
                             Manajemen Pengguna
                         </a>
                     @endif
+
+                    <!-- Profil Saya -->
+                    <a href="{{ route('profil.index') }}" class="sidebar-nav-item {{ Route::is('profil.*') ? 'active' : '' }}">
+                        <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        Profil Saya
+                    </a>
                 @endif
             </nav>
             
@@ -181,19 +189,26 @@
                         </div>
                     </a>
                 @else
-                    <div class="user-profile-widget">
-                        <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                    <a href="{{ route('profil.index') }}" class="user-profile-widget {{ Route::is('profil.*') ? 'profile-active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin: -4px -6px 8px -6px; border-radius: var(--radius-md); transition: all 0.2s; border: 1px solid {{ Route::is('profil.*') ? 'var(--primary)' : 'transparent' }}; background: {{ Route::is('profil.*') ? 'var(--primary-container)' : 'transparent' }};" title="Buka Profil & Pengaturan Akun">
+                        <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                             @if(Auth::user() && Auth::user()->foto_profil_url)
                                 <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                             @else
                                 {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
                             @endif
                         </div>
-                        <div class="user-info">
-                            <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
-                            <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
+                        <div class="user-info" style="flex: 1; min-width: 0;">
+                            <div class="user-name" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--on-surface)' }};">{{ Auth::user()->nama ?? 'Pengguna' }}</span>
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--on-surface-variant)' }}; flex-shrink: 0;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                            <div class="user-role" style="color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--outline)' }}; font-weight: 600; font-size: 0.7rem; display: flex; align-items: center; gap: 4px;">
+                                <span>Profil & Pengaturan Akun</span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 @endif
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf
@@ -232,13 +247,13 @@
                             @endif
                         </a>
                     @else
-                        <div class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                        <a href="{{ route('profil.index') }}" class="user-avatar top-navbar-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; text-decoration: none; border: 2px solid {{ Route::is('profil.*') ? 'var(--primary)' : 'transparent' }};" title="Buka Profil & Pengaturan Akun">
                             @if(Auth::user() && Auth::user()->foto_profil_url)
                                 <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                             @else
                                 {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
                             @endif
-                        </div>
+                        </a>
                     @endif
                 </div>
             </header>
@@ -317,6 +332,12 @@
                                         Manajemen Pengguna
                                     </a>
                                 @endif
+
+                                <!-- Profil Saya -->
+                                <a href="{{ route('profil.index') }}" class="sidebar-nav-item {{ Route::is('profil.*') ? 'active' : '' }}">
+                                    <svg class="sidebar-nav-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    Profil Saya
+                                </a>
                             @endif
                         </nav>
                         <div style="margin-top: var(--space-md);">
@@ -342,19 +363,26 @@
                                     </div>
                                 </a>
                             @else
-                                <div class="user-profile-widget" style="margin-bottom: var(--space-md);">
-                                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                                <a href="{{ route('profil.index') }}" class="user-profile-widget {{ Route::is('profil.*') ? 'profile-active' : '' }}" style="text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 8px 10px; margin-bottom: var(--space-md); border-radius: var(--radius-md); transition: all 0.2s; border: 1px solid {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--outline-variant)' }}; background: {{ Route::is('profil.*') ? 'var(--primary-container)' : 'var(--surface-container)' }};" title="Buka Profil & Pengaturan Akun">
+                                    <div class="user-avatar" style="overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         @if(Auth::user() && Auth::user()->foto_profil_url)
                                             <img src="{{ Auth::user()->foto_profil_url }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                                         @else
                                             {{ strtoupper(substr(Auth::user()->nama ?? 'U', 0, 1)) }}
                                         @endif
                                     </div>
-                                    <div class="user-info">
-                                        <div class="user-name">{{ Auth::user()->nama ?? 'Pengguna' }}</div>
-                                        <div class="user-role">{{ Auth::user()->role ?? 'Role' }}</div>
+                                    <div class="user-info" style="flex: 1; min-width: 0;">
+                                        <div class="user-name" style="display: flex; align-items: center; justify-content: space-between; gap: 4px;">
+                                            <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 700; color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--on-surface)' }};">{{ Auth::user()->nama ?? 'Pengguna' }}</span>
+                                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--on-surface-variant)' }}; flex-shrink: 0;">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="user-role" style="color: {{ Route::is('profil.*') ? 'var(--primary)' : 'var(--outline)' }}; font-weight: 600; font-size: 0.7rem; display: flex; align-items: center; gap: 4px;">
+                                            <span>Profil & Pengaturan Akun</span>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             @endif
                             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                 @csrf

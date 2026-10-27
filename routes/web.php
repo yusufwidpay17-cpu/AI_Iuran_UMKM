@@ -15,6 +15,7 @@ use App\Http\Controllers\SegmentasiController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PedagangPortalController;
 use App\Http\Controllers\KalenderOperasionalController;
+use App\Http\Controllers\ProfilController;
 
 /*
 |--------------------------------------------------------------------------
@@ -302,9 +303,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/profil/password', [PedagangPortalController::class, 'updatePassword'])->name('profil.password');
     });
 
-    // Alias route profil.foto & profil.password direct
-    Route::post('/profil/foto', [PedagangPortalController::class, 'updateFoto'])->name('profil.foto')->middleware('auth');
-    Route::post('/profil/password', [PedagangPortalController::class, 'updatePassword'])->name('profil.password')->middleware('auth');
+    // D. Profil Saya & Pengaturan Akun (Superadmin, Admin, Petugas, Pedagang)
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil.index');
+    Route::post('/profil/update', [ProfilController::class, 'updateProfile'])->name('profil.update');
+    Route::post('/profil/foto', [ProfilController::class, 'updateFoto'])->name('profil.foto');
+    Route::post('/profil/password', [ProfilController::class, 'updatePassword'])->name('profil.password');
 
 
     // ==========================================
