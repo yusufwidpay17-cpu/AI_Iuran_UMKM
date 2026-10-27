@@ -108,13 +108,11 @@ class AuthController extends Controller
 
         $user = \App\Models\User::where('email', $email)->first();
 
-        // Pesan respons umum untuk mencegah kebocoran informasi pendaftaran email (Email Enumeration)
-        $genericSuccessMessage = 'Jika alamat email tersebut terdaftar dalam sistem kami, kode verifikasi 6 digit telah dikirimkan ke kotak masuk Anda. Silakan periksa email dan masukkan kode verifikasi.';
-
-        // Jika email tidak terdaftar, tetap arahkan ke form verifikasi dengan pesan umum tanpa membocorkan status akun
+        // Validasi apakah email terdaftar di database
         if (!$user) {
-            return redirect()->route('password.reset', ['email' => $email])
-                ->with('success', $genericSuccessMessage);
+            return back()->withInput()->withErrors([
+                'email' => 'Alamat email tidak terdaftar dalam sistem. Pastikan memasukkan email akun yang valid.'
+            ]);
         }
 
         // Generate kode acak kriptografis 6-digit (CSPRNG)
@@ -129,7 +127,7 @@ class AuthController extends Controller
             ]
         );
 
-        // Kirim email kode verifikasi secara aman
+        // Kirim email kode verifikasi ke Gmail pengguna
         try {
             $appName = config('app.name', 'AmanahLedger');
             \Illuminate\Support\Facades\Mail::send(
@@ -146,37 +144,22 @@ class AuthController extends Controller
             \Illuminate\Support\Facades\Log::error('SMTP Error saat reset password: ' . $e->getMessage());
 
             return back()->withInput()->withErrors([
-                'email' => 'Permintaan belum dapat diproses karena layanan pengiriman email sistem sedang mengalami gangguan. Silakan hubungi administrator sistem untuk memeriksa konfigurasi layanan email.'
+                'email' => 'Gagal mengirim email verifikasi ke ' . $email . '. Pastikan konfigurasi SMTP email di file .env sudah benar. (' . $e->getMessage() . ')'
             ]);
         }
 
-        // Redirect ke form reset password
-        $redirect = redirect()->route('password.reset', ['email' => $email])
-            ->with('success', $genericSuccessMessage);
-
-        // Jika dalam mode pengujian lokal / driver log, simpan dan kirimkan demo_code untuk kemudahan testing
-        if (config('mail.default') === 'log' || config('app.env') === 'local') {
-            session(['active_reset_code_' . md5($email) => $code]);
-            \Illuminate\Support\Facades\Cache::put('active_reset_code_' . md5($email), $code, now()->addMinutes(15));
-            $redirect->with('demo_code', $code);
-        }
-
-        return $redirect;
+        // Redirect ke form reset password tanpa membocorkan kode ke browser/session
+        return redirect()->route('password.reset', ['email' => $email])
+            ->with('success', 'Kode verifikasi 6 digit telah berhasil dikirimkan ke kotak masuk email ' . $email . '. Silakan periksa email Anda (cek juga folder Spam).');
     }
 
     public function showResetForm(Request $request, $token = null)
     {
         $email = $request->input('email', old('email'));
-        $demoCode = session('demo_code');
-        if (!$demoCode && $email) {
-            $demoCode = session('active_reset_code_' . md5($email)) 
-                     ?: \Illuminate\Support\Facades\Cache::get('active_reset_code_' . md5($email));
-        }
         
         return view('auth.reset-password')->with([
             'token' => null,
-            'email' => $email,
-            'active_code' => $demoCode
+            'email' => $email
         ]);
     }
 
