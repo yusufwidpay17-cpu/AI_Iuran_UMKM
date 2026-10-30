@@ -506,6 +506,20 @@
                 window.addEventListener('scroll', handleNavScroll, { passive: true });
                 handleNavScroll();
             }
+
+            // Instant Top Progress Bar on navigation click
+            const topBar = document.createElement('div');
+            topBar.id = 'page-top-loader';
+            topBar.style.cssText = 'position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,#3b82f6,#10b981);z-index:99999;transition:width 0.3s ease;pointer-events:none;box-shadow:0 0 8px rgba(59,130,246,0.6);';
+            document.body.appendChild(topBar);
+
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('a');
+                if (link && link.href && !link.target && !link.hasAttribute('download') && link.origin === window.location.origin && !link.getAttribute('href').startsWith('#') && !link.getAttribute('href').startsWith('javascript:')) {
+                    topBar.style.width = '40%';
+                    setTimeout(function() { topBar.style.width = '80%'; }, 200);
+                }
+            });
         });
     </script>
     

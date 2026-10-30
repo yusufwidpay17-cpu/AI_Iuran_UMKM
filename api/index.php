@@ -5,26 +5,20 @@ define('LARAVEL_START', microtime(true));
 
 // Create temporary directory structure for storage on Vercel (/tmp is writeable)
 $tmpStorage = '/tmp/storage';
-$directories = [
-    $tmpStorage,
-    $tmpStorage . '/framework',
-    $tmpStorage . '/framework/views',
-    $tmpStorage . '/framework/cache',
-    $tmpStorage . '/framework/sessions',
-    $tmpStorage . '/framework/testing',
-    $tmpStorage . '/logs',
-];
-
-foreach ($directories as $dir) {
-    if (!file_exists($dir)) {
-        @mkdir($dir, 0755, true);
-    }
+if (!is_dir($tmpStorage . '/framework/views')) {
+    @mkdir($tmpStorage . '/framework/views', 0755, true);
+    @mkdir($tmpStorage . '/framework/cache', 0755, true);
+    @mkdir($tmpStorage . '/framework/sessions', 0755, true);
+    @mkdir($tmpStorage . '/framework/testing', 0755, true);
+    @mkdir($tmpStorage . '/logs', 0755, true);
 }
 
-// Check SQLite DB in /tmp if sqlite driver is used
-$sqliteFile = '/tmp/database.sqlite';
-if (!file_exists($sqliteFile)) {
-    @touch($sqliteFile);
+// Check SQLite DB in /tmp only if sqlite driver is used
+if (getenv('DB_CONNECTION') === 'sqlite') {
+    $sqliteFile = '/tmp/database.sqlite';
+    if (!file_exists($sqliteFile)) {
+        @touch($sqliteFile);
+    }
 }
 
 // Load Composer Autoload
