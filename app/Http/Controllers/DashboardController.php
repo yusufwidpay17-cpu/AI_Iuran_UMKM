@@ -134,32 +134,36 @@ class DashboardController extends Controller
             : 0;
 
         // 3. Arrears & Monthly Income
-        $allUnpaidBills = Tagihan::whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])->get();
-        $totalTunggakan = $allUnpaidBills->sum(function($b) {
-            return max(0, $b->nominal_tagihan - $b->nominal_dibayar);
-        });
+        $totalTunggakan = (float) Tagihan::whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
+            ->selectRaw('COALESCE(SUM(nominal_tagihan - nominal_dibayar), 0) as total')
+            ->value('total');
 
         $startThisMonth = Carbon::now()->startOfMonth()->format('Y-m-d');
         $endThisMonth = Carbon::now()->endOfMonth()->format('Y-m-d');
         $incomeThisMonth = Tagihan::whereBetween('tanggal_tagihan', [$startThisMonth, $endThisMonth])->sum('nominal_dibayar');
 
-        // 4. Section B: Pedagang Belum Bayar Hari Ini (with days arrears and total arrears)
+        // 4. Section B: Pedagang Belum Bayar Hari Ini (with days arrears and total arrears optimized via batch query)
         $unpaidMerchantsToday = Tagihan::with('pedagang')
             ->where('tanggal_tagihan', $today)
             ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
-            ->get()
-            ->map(function($tgh) {
-                // Calculate total days & amount menunggak for this merchant
-                $merchantUnpaid = Tagihan::where('pedagang_id', $tgh->pedagang_id)
-                    ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
-                    ->get();
-                
-                $tgh->total_tunggakan_pedagang = $merchantUnpaid->sum(function($item) {
-                    return max(0, $item->nominal_tagihan - $item->nominal_dibayar);
-                });
-                $tgh->jumlah_hari_menunggak = $merchantUnpaid->count();
-                return $tgh;
+            ->get();
+
+        $unpaidPedagangIds = $unpaidMerchantsToday->pluck('pedagang_id')->unique()->filter()->values();
+
+        if ($unpaidPedagangIds->isNotEmpty()) {
+            $arrearsMap = Tagihan::whereIn('pedagang_id', $unpaidPedagangIds)
+                ->whereIn('status_bayar', ['belum_bayar', 'bayar_sebagian'])
+                ->selectRaw('pedagang_id, count(*) as hari_count, COALESCE(SUM(nominal_tagihan - nominal_dibayar), 0) as total_tunggakan')
+                ->groupBy('pedagang_id')
+                ->get()
+                ->keyBy('pedagang_id');
+
+            $unpaidMerchantsToday->each(function($tgh) use ($arrearsMap) {
+                $item = $arrearsMap->get($tgh->pedagang_id);
+                $tgh->total_tunggakan_pedagang = $item ? max(0, $item->total_tunggakan) : max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar);
+                $tgh->jumlah_hari_menunggak = $item ? $item->hari_count : 1;
             });
+        }
 
         // 5. Section C: Top 5 Merchants with Largest Arrears
         $topArrears = Pedagang::select(
