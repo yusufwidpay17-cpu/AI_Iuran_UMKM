@@ -185,17 +185,17 @@
                                 <span style="color: #d97706; font-weight: 800;">Rp {{ number_format($sisaTagihan, 0, ',', '.') }}</span>
                             @endif
                         </td>
-                        <td style="padding: 14px 16px;">
+                        <td style="padding: 12px 14px; white-space: nowrap;">
                             @if ($txn->status_bayar === 'lunas')
-                                <span style="background: #dcfce7; color: #15803d; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-block;">
+                                <span style="background: #dcfce7; color: #15803d; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                     LUNAS
                                 </span>
                             @elseif ($txn->status_bayar === 'bayar_sebagian')
-                                <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-block;">
+                                <span style="background: #fef3c7; color: #b45309; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                     CICIL
                                 </span>
                             @else
-                                <span style="background: #fee2e2; color: #b91c1c; font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; display: inline-block;">
+                                <span style="background: #fee2e2; color: #b91c1c; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                     BELUM BAYAR
                                 </span>
                             @endif
@@ -481,11 +481,12 @@
     }
     .badge-status-pill {
         font-size: 0.7rem;
-        font-weight: 800;
+        font-weight: 700;
         padding: 3px 9px;
         border-radius: 999px;
         display: inline-block;
         letter-spacing: 0.02em;
+        white-space: nowrap !important;
     }
     .badge-status-lunas {
         background: #dcfce7;

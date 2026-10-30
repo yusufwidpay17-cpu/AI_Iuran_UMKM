@@ -178,17 +178,17 @@
                     </td>
 
                     <!-- Status -->
-                    <td style="padding: 14px 16px; vertical-align: middle; text-align: center;">
+                    <td style="padding: 12px 14px; vertical-align: middle; text-align: center; white-space: nowrap;">
                         @if($tgh->status_bayar === 'lunas')
-                            <span style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px;">
+                            <span style="background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                 LUNAS
                             </span>
                         @elseif($tgh->status_bayar === 'bayar_sebagian')
-                            <span style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px;">
+                            <span style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                 CICIL
                             </span>
                         @else
-                            <span style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 999px;">
+                            <span style="background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; font-size: 0.72rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; display: inline-block; white-space: nowrap;">
                                 BELUM BAYAR
                             </span>
                         @endif

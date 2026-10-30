@@ -22,6 +22,171 @@
     [data-theme="dark"] .transaction-row td {
         border-bottom-color: #334155;
     }
+
+    /* Refined Stat Cards & Typography */
+    .tagihan-stat-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 14px 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 84px;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .tagihan-stat-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+    .tagihan-stat-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        line-height: 1.2;
+    }
+    .tagihan-stat-value {
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        margin: 3px 0 2px 0 !important;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        font-feature-settings: "tnum";
+    }
+    .tagihan-stat-sub {
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    /* Single-line Status Badges */
+    .status-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 9px;
+        border-radius: 999px;
+        white-space: nowrap !important;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        text-align: center;
+    }
+    .status-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .status-badge-lunas {
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+    }
+    .status-badge-lunas .status-badge-dot {
+        background: #10b981;
+    }
+    .status-badge-sebagian {
+        background: #fffbeb;
+        color: #b45309;
+        border: 1px solid #fde68a;
+    }
+    .status-badge-sebagian .status-badge-dot {
+        background: #f59e0b;
+    }
+    .status-badge-belum {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+    .status-badge-belum .status-badge-dot {
+        background: #ef4444;
+    }
+    .status-badge-batal,
+    .status-badge-libur {
+        background: #f1f5f9;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+    }
+    .status-badge-batal .status-badge-dot {
+        background: #94a3b8;
+    }
+    .status-badge-libur .status-badge-dot {
+        background: #64748b;
+    }
+
+    /* Dark Mode Adaptations */
+    [data-theme="dark"] .tagihan-stat-card {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+    }
+    [data-theme="dark"] .status-badge-lunas {
+        background: rgba(16, 185, 129, 0.2) !important;
+        color: #34d399 !important;
+        border-color: rgba(16, 185, 129, 0.4) !important;
+    }
+    [data-theme="dark"] .status-badge-sebagian {
+        background: rgba(245, 158, 11, 0.2) !important;
+        color: #fbbf24 !important;
+        border-color: rgba(245, 158, 11, 0.4) !important;
+    }
+    [data-theme="dark"] .status-badge-belum {
+        background: rgba(239, 68, 68, 0.2) !important;
+        color: #f87171 !important;
+        border-color: rgba(239, 68, 68, 0.4) !important;
+    }
+    [data-theme="dark"] .status-badge-batal,
+    [data-theme="dark"] .status-badge-libur {
+        background: #334155 !important;
+        color: #cbd5e1 !important;
+        border-color: #475569 !important;
+    }
+
+    /* Responsive adjustments for mobile & small screens */
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 1.18rem !important;
+        }
+        .page-subtitle {
+            font-size: 0.75rem !important;
+        }
+        .stats-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 8px !important;
+        }
+        .stats-grid > :nth-child(3) {
+            grid-column: 1 / -1 !important;
+        }
+        .tagihan-stat-card {
+            padding: 10px 12px !important;
+            border-radius: 10px !important;
+            min-height: 72px !important;
+        }
+        .tagihan-stat-label {
+            font-size: 0.65rem !important;
+        }
+        .tagihan-stat-value {
+            font-size: 1.05rem !important;
+            margin: 2px 0 !important;
+        }
+        .tagihan-stat-sub {
+            font-size: 0.68rem !important;
+        }
+        .tab-btn {
+            padding: 6px 12px !important;
+            font-size: 0.78rem !important;
+        }
+        .data-table th, .data-table td {
+            padding: 8px 10px !important;
+        }
+        .status-badge-pill {
+            font-size: 0.68rem !important;
+            padding: 2px 7px !important;
+        }
+    }
 </style>
 @endsection
 
@@ -185,18 +350,18 @@
 <!-- SUMMARY STATS CARDS -->
 <div class="stats-grid">
     <!-- Card Total Target -->
-    <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6;">
-        <div class="stat-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">TOTAL TARGET TAGIHAN</div>
-        <div class="stat-value numeric-display" style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin: 4px 0;">Rp {{ number_format($tagihans->where('status_bayar', '!=', 'dibatalkan')->sum('nominal_tagihan'), 0, ',', '.') }}</div>
-        <div class="stat-sub" style="font-size: 0.8125rem; color: #64748b;">{{ $tagihans->where('status_bayar', '!=', 'dibatalkan')->count() }} Tagihan Aktif</div>
+    <div class="stat-card tagihan-stat-card" style="border-left: 4px solid #3b82f6;">
+        <div class="stat-label tagihan-stat-label" style="color: #64748b;">TOTAL TARGET TAGIHAN</div>
+        <div class="stat-value numeric-display tagihan-stat-value" style="color: #0f172a;">Rp {{ number_format($tagihans->where('status_bayar', '!=', 'dibatalkan')->sum('nominal_tagihan'), 0, ',', '.') }}</div>
+        <div class="stat-sub tagihan-stat-sub" style="color: #64748b;">{{ $tagihans->where('status_bayar', '!=', 'dibatalkan')->count() }} Tagihan Aktif</div>
     </div>
 
     <!-- Card Sudah Bayar -->
-    <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; border-left: 4px solid #10b981;">
-        <div class="stat-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #047857; letter-spacing: 0.5px;">TOTAL TERKUMPUL (SUDAH BAYAR)</div>
-        <div class="stat-value numeric-display" style="font-size: 1.5rem; font-weight: 800; color: #10b981; margin: 4px 0;">Rp {{ number_format($tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
-        <div class="stat-sub" style="font-size: 0.8125rem; color: #047857; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+    <div class="stat-card tagihan-stat-card" style="border-left: 4px solid #10b981;">
+        <div class="stat-label tagihan-stat-label" style="color: #047857;">TOTAL TERKUMPUL (SUDAH BAYAR)</div>
+        <div class="stat-value numeric-display tagihan-stat-value" style="color: #10b981;">Rp {{ number_format($tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
+        <div class="stat-sub tagihan-stat-sub" style="color: #047857; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
             </svg>
             <span>{{ $tagihanLunas->count() }} Pedagang Lunas Hari Ini</span>
@@ -204,11 +369,11 @@
     </div>
 
     <!-- Card Belum Bayar -->
-    <div class="stat-card" style="background: #ffffff; border-radius: 12px; padding: 18px; border: 1px solid #e2e8f0; border-left: 4px solid #ef4444;">
-        <div class="stat-label" style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: #b91c1c; letter-spacing: 0.5px;">BELUM TERBAYAR (MENUNGGAK)</div>
-        <div class="stat-value numeric-display" style="font-size: 1.5rem; font-weight: 800; color: #ef4444; margin: 4px 0;">Rp {{ number_format($tagihans->where('status_bayar', '!=', 'dibatalkan')->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
-        <div class="stat-sub" style="font-size: 0.8125rem; color: #b91c1c; font-weight: 600; display: flex; align-items: center; gap: 4px;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <div class="stat-card tagihan-stat-card" style="border-left: 4px solid #ef4444;">
+        <div class="stat-label tagihan-stat-label" style="color: #b91c1c;">BELUM TERBAYAR (MENUNGGAK)</div>
+        <div class="stat-value numeric-display tagihan-stat-value" style="color: #ef4444;">Rp {{ number_format($tagihans->where('status_bayar', '!=', 'dibatalkan')->sum('nominal_tagihan') - $tagihans->sum('nominal_dibayar'), 0, ',', '.') }}</div>
+        <div class="stat-sub tagihan-stat-sub" style="color: #b91c1c; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
             <span>{{ $tagihanBelum->count() }} Pedagang Belum Bayar</span>
@@ -217,18 +382,18 @@
 </div>
 
 <!-- CATEGORY TABS -->
-<div style="display: flex; gap: 8px; margin-top: 12px; margin-bottom: 16px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; flex-wrap: wrap;">
-    <button type="button" class="tab-btn active" id="tab-all" onclick="filterTab('all')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #2563eb; color: #ffffff; cursor: pointer; transition: all 0.2s;">
+<div style="display: flex; gap: 8px; margin-top: 10px; margin-bottom: 14px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; flex-wrap: wrap;">
+    <button type="button" class="tab-btn active" id="tab-all" onclick="filterTab('all')" style="padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; border: none; background: #2563eb; color: #ffffff; cursor: pointer; transition: all 0.2s;">
         Semua Transaksi ({{ $tagihans->count() }})
     </button>
-    <button type="button" class="tab-btn" id="tab-lunas" onclick="filterTab('lunas')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+    <button type="button" class="tab-btn" id="tab-lunas" onclick="filterTab('lunas')" style="padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
         </svg>
         <span>Sudah Bayar ({{ $tagihanLunas->count() }})</span>
     </button>
-    <button type="button" class="tab-btn" id="tab-belum" onclick="filterTab('belum')" style="padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.875rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+    <button type="button" class="tab-btn" id="tab-belum" onclick="filterTab('belum')" style="padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 0.8125rem; border: none; background: #f1f5f9; color: #475569; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
         </svg>
         <span>Belum Bayar ({{ $tagihanBelum->count() }})</span>
@@ -240,12 +405,12 @@
     <div class="table-responsive">
         <table class="data-table" style="width: 100%; border-collapse: collapse;">
             <thead>
-                <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-transform: uppercase; font-size: 0.75rem; color: #334155; letter-spacing: 0.05em; font-weight: 700;">
-                    <th style="padding: 12px 16px; text-align: left; width: 260px;">Kios & Nama Pedagang</th>
-                    <th style="padding: 12px 16px; text-align: left;">Rincian Iuran & Keterangan</th>
-                    <th style="padding: 12px 16px; text-align: left; width: 180px;">Nominal Tagihan</th>
-                    <th style="padding: 12px 16px; text-align: center; width: 130px;">Status</th>
-                    <th style="padding: 12px 16px; text-align: right; width: 170px;">Aksi</th>
+                <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-transform: uppercase; font-size: 0.72rem; color: #334155; letter-spacing: 0.05em; font-weight: 700;">
+                    <th style="padding: 10px 14px; text-align: left; width: 240px; white-space: nowrap;">Kios & Nama Pedagang</th>
+                    <th style="padding: 10px 14px; text-align: left; white-space: nowrap;">Rincian Iuran & Keterangan</th>
+                    <th style="padding: 10px 14px; text-align: left; width: 160px; white-space: nowrap;">Nominal Tagihan</th>
+                    <th style="padding: 10px 14px; text-align: center; width: 130px; white-space: nowrap;">Status</th>
+                    <th style="padding: 10px 14px; text-align: right; width: 150px; white-space: nowrap;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -260,34 +425,34 @@
                     @endphp
                     <tr class="transaction-row {{ $rowStatusClass }}" style="border-bottom: 1px solid #e2e8f0; transition: background 0.15s ease; {{ $isBatal ? 'background: #f8fafc; opacity: 0.8;' : '' }}">
                         <!-- Kios & Nama Pedagang -->
-                        <td style="padding: 12px 16px; vertical-align: middle;">
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 700; font-size: 0.775rem; padding: 4px 8px; border-radius: 6px; white-space: nowrap; font-family: monospace;">
+                        <td style="padding: 10px 14px; vertical-align: middle;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; font-weight: 700; font-size: 0.72rem; padding: 3px 6px; border-radius: 6px; white-space: nowrap; font-family: monospace;">
                                     {{ $tgh->pedagang->no_kios ?? '-' }}
                                 </span>
-                                <div>
+                                <div style="min-width: 0;">
                                     @if ($tgh->pedagang)
-                                        <a href="{{ route('pedagang.show', $tgh->pedagang_id) }}" style="font-weight: 700; color: #0f172a; text-decoration: none; font-size: 0.9rem; display: block; line-height: 1.3;">
+                                        <a href="{{ route('pedagang.show', $tgh->pedagang_id) }}" style="font-weight: 600; color: #0f172a; text-decoration: none; font-size: 0.84rem; display: block; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">
                                             {{ $tgh->pedagang->nama_pedagang }}
                                         </a>
-                                        <div style="font-size: 0.75rem; color: #64748b; margin-top: 2px;">
+                                        <div style="font-size: 0.7rem; color: #64748b; margin-top: 1px; white-space: nowrap;">
                                             {{ $tgh->pedagang->nama_usaha ?? 'Lapak Pasar' }} <span style="color: #cbd5e1;">•</span> <strong style="color: #475569;">{{ str_starts_with($tgh->pedagang->blok_kios ?? '', 'Blok') ? ($tgh->pedagang->blok_kios ?? '-') : 'Blok ' . ($tgh->pedagang->blok_kios ?? '-') }}</strong>
                                         </div>
                                     @else
-                                        <span style="color: #94a3b8; font-style: italic; font-size: 0.85rem;">Data pedagang terhapus</span>
+                                        <span style="color: #94a3b8; font-style: italic; font-size: 0.8rem;">Data pedagang terhapus</span>
                                     @endif
                                 </div>
                             </div>
                         </td>
 
                         <!-- Rincian Iuran & Keterangan -->
-                        <td style="padding: 12px 16px; vertical-align: middle;">
-                            <div style="font-size: 0.825rem; font-weight: 600; color: #0f172a;">
+                        <td style="padding: 10px 14px; vertical-align: middle;">
+                            <div style="font-size: 0.8rem; font-weight: 600; color: #0f172a; line-height: 1.2;">
                                 {{ $tgh->jenis_iuran ?? 'Iuran Harian Pasar' }}
                             </div>
                             @if ($isLunas)
-                                <div style="font-size: 0.75rem; color: #059669; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <div style="font-size: 0.7rem; color: #059669; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; white-space: nowrap;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                     <span>Diterima sah</span>
@@ -296,113 +461,113 @@
                                     @endif
                                 </div>
                             @elseif ($isSebagian)
-                                <div style="font-size: 0.75rem; color: #d97706; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <div style="font-size: 0.7rem; color: #d97706; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; white-space: nowrap;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                     </svg>
                                     <span>Terbayar Rp {{ number_format($tgh->nominal_dibayar, 0, ',', '.') }}</span>
                                 </div>
                             @elseif ($isBatal)
-                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <div style="font-size: 0.7rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; white-space: nowrap;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                     </svg>
                                     <span>{{ $tgh->catatan ?? 'Dibatalkan / Bebas Iuran' }}</span>
                                 </div>
                             @elseif ($isTidakBerdagang)
-                                <div style="font-size: 0.75rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 4px;">
-                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <div style="font-size: 0.7rem; color: #64748b; font-weight: 500; margin-top: 2px; display: flex; align-items: center; gap: 3px; white-space: nowrap;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
                                     </svg>
                                     <span>{{ $tgh->catatan ?? 'Lapak Libur / Tutup' }}</span>
                                 </div>
                             @else
-                                <div style="font-size: 0.75rem; color: #94a3b8; font-weight: 500; margin-top: 2px;">
+                                <div style="font-size: 0.7rem; color: #94a3b8; font-weight: 500; margin-top: 2px; white-space: nowrap;">
                                     Menunggu setoran harian
                                 </div>
                             @endif
                         </td>
 
                         <!-- Nominal Tagihan & Sisa -->
-                        <td style="padding: 12px 16px; vertical-align: middle;" class="numeric-display">
-                            <div style="font-size: 0.925rem; font-weight: 700; color: #0f172a;">
+                        <td style="padding: 10px 14px; vertical-align: middle; white-space: nowrap;" class="numeric-display">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: #0f172a; line-height: 1.2;">
                                 Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
                             </div>
                             @if ($isLunas)
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #10b981; margin-top: 1px; display: flex; align-items: center; gap: 3px;">
+                                <div style="font-size: 0.7rem; font-weight: 600; color: #10b981; margin-top: 1px; display: flex; align-items: center; gap: 3px;">
                                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
                                     </svg>
                                     <span>Lunas</span>
                                 </div>
                             @elseif ($isSebagian)
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #d97706; margin-top: 1px;">
+                                <div style="font-size: 0.7rem; font-weight: 600; color: #d97706; margin-top: 1px;">
                                     Sisa: Rp {{ number_format($tgh->nominal_tagihan - $tgh->nominal_dibayar, 0, ',', '.') }}
                                 </div>
                             @elseif ($isBatal)
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #64748b; margin-top: 1px;">
-                                    Rp 0 (Bebas Iuran)
+                                <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; margin-top: 1px;">
+                                    Rp 0 (Bebas)
                                 </div>
                             @elseif ($isTidakBerdagang)
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #64748b; margin-top: 1px;">
+                                <div style="font-size: 0.7rem; font-weight: 600; color: #64748b; margin-top: 1px;">
                                     Rp 0 (Libur)
                                 </div>
                             @else
-                                <div style="font-size: 0.725rem; font-weight: 600; color: #dc2626; margin-top: 1px;">
+                                <div style="font-size: 0.7rem; font-weight: 600; color: #dc2626; margin-top: 1px;">
                                     Sisa: Rp {{ number_format($tgh->nominal_tagihan, 0, ',', '.') }}
                                 </div>
                             @endif
                         </td>
 
-                        <!-- Status Bayar Badge -->
-                        <td style="padding: 12px 16px; vertical-align: middle; text-align: center;">
+                        <!-- Status Bayar Badge (Selalu Satu Baris dengan nowrap) -->
+                        <td style="padding: 10px 14px; vertical-align: middle; text-align: center; white-space: nowrap;">
                             @if ($isLunas)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #ecfdf5; color: #047857; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #a7f3d0;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981;"></span> Lunas
+                                <span class="status-badge-pill status-badge-lunas">
+                                    <span class="status-badge-dot"></span>Lunas
                                 </span>
                             @elseif ($isSebagian)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fffbeb; color: #b45309; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #fde68a;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #f59e0b;"></span> Sebagian
+                                <span class="status-badge-pill status-badge-sebagian">
+                                    <span class="status-badge-dot"></span>Sebagian
                                 </span>
                             @elseif ($isBatal)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #cbd5e1;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #94a3b8;"></span> Bebas / Batal
+                                <span class="status-badge-pill status-badge-batal">
+                                    <span class="status-badge-dot"></span>Bebas / Batal
                                 </span>
                             @elseif ($isTidakBerdagang)
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #cbd5e1;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #64748b;"></span> Libur
+                                <span class="status-badge-pill status-badge-libur">
+                                    <span class="status-badge-dot"></span>Libur
                                 </span>
                             @else
-                                <span style="display: inline-flex; align-items: center; gap: 5px; background: #fef2f2; color: #b91c1c; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid #fecaca;">
-                                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #ef4444;"></span> Belum Bayar
+                                <span class="status-badge-pill status-badge-belum">
+                                    <span class="status-badge-dot"></span>Belum Bayar
                                 </span>
                             @endif
                         </td>
 
                         <!-- Aksi Pembayaran -->
-                        <td style="padding: 12px 16px; vertical-align: middle; text-align: right;">
-                            <div style="display: flex; gap: 6px; justify-content: flex-end; align-items: center;">
+                        <td style="padding: 10px 14px; vertical-align: middle; text-align: right; white-space: nowrap;">
+                            <div style="display: flex; gap: 5px; justify-content: flex-end; align-items: center;">
                                 @if ($isLunas)
-                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', 'lunas')" style="border-radius: 6px; font-weight: 600; padding: 5px 12px; font-size: 0.75rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff; display: inline-flex; align-items: center; gap: 4px;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <button class="btn btn-secondary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', 'lunas')" style="border-radius: 6px; font-weight: 600; padding: 4px 10px; font-size: 0.72rem; color: #0284c7; border: 1px solid #bae6fd; background: #f0f9ff; display: inline-flex; align-items: center; gap: 3px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                         <span>Edit</span>
                                     </button>
                                 @elseif ($isBatal)
-                                    <span style="font-size: 0.75rem; color: #94a3b8; font-weight: 600; padding-right: 8px;">
+                                    <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600; padding-right: 6px;">
                                         Bebas Iuran
                                     </span>
                                 @else
-                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', '{{ $isSebagian ? 'bayar_sebagian' : 'belum_bayar' }}')" style="border-radius: 6px; font-weight: 700; padding: 5px 12px; font-size: 0.75rem; background: #2563eb; border-color: #2563eb; box-shadow: 0 1px 2px rgba(37,99,235,0.2); display: inline-flex; align-items: center; gap: 4px;">
-                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <button class="btn btn-primary btn-sm" onclick="openBayarModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}', '{{ $tgh->nominal_tagihan }}', '{{ max(0, $tgh->nominal_tagihan - $tgh->nominal_dibayar) }}', '{{ $tgh->nominal_dibayar }}', '{{ $isSebagian ? 'bayar_sebagian' : 'belum_bayar' }}')" style="border-radius: 6px; font-weight: 600; padding: 4px 10px; font-size: 0.72rem; background: #2563eb; border-color: #2563eb; display: inline-flex; align-items: center; gap: 3px;">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
                                         </svg>
                                         <span>Bayar</span>
                                     </button>
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 6px; padding: 5px 8px; font-size: 0.725rem; color: #64748b; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Lapak Tutup / Libur">
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="openTidakBerdagangModal('{{ $tgh->id }}', '{{ $tgh->pedagang->nama_pedagang ?? '' }}')" style="border-radius: 6px; padding: 4px 7px; font-size: 0.7rem; color: #64748b; border: 1px solid #cbd5e1; background: #ffffff;" title="Catat Lapak Tutup / Libur">
                                         Tutup
                                     </button>
                                 @endif
