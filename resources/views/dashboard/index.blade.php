@@ -351,12 +351,20 @@
     
     <!-- SECTION B: PEDAGANG BELUM BAYAR HARI INI -->
     <div id="tabel-belum-bayar" class="card" style="margin-bottom: 0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 class="card-title" style="margin-bottom: 0;">Pedagang Belum Bayar Hari Ini</h3>
-            <span class="badge badge-bayar-belum_bayar" style="font-size: 0.71875rem;">{{ $unpaidMerchantsToday->count() }} Pedagang</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <h3 class="card-title" style="margin-bottom: 0;">Pedagang Belum Bayar Hari Ini</h3>
+                <span class="badge badge-bayar-belum_bayar" style="font-size: 0.71875rem;">{{ $unpaidMerchantsToday->count() }} Pedagang</span>
+            </div>
+            <span class="table-scroll-hint">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+                Geser tabel
+            </span>
         </div>
         
-        <div class="table-responsive" style="max-height: 310px; overflow-y: auto;">
+        <div class="table-responsive table-dashboard-scroll">
             <table class="data-table">
                 <thead>
                     <tr>

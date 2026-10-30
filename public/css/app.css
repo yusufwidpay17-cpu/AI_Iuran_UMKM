@@ -950,14 +950,27 @@ a:hover {
     background-color: #ffffff;
 }
 
-.table-responsive::-webkit-scrollbar {
-    height: 6px;
-    width: 6px;
+.table-dashboard-scroll {
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
 }
 
-.table-responsive::-webkit-scrollbar-thumb {
-    background-color: #cbd5e1;
-    border-radius: var(--radius-pill);
+.table-dashboard-scroll thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #f8fafc;
+}
+
+[data-theme="dark"] .table-dashboard-scroll thead th {
+    background-color: #1e293b;
+}
+
+.table-scroll-hint {
+    display: none;
 }
 
 .data-table {
@@ -3101,9 +3114,43 @@ nav svg.w-5,
         min-width: 0 !important;
         display: block;
         overflow-x: auto !important;
-        -webkit-overflow-scrolling: touch;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-x pan-y !important;
+        overscroll-behavior-x: contain;
         border: 1px solid var(--outline-variant);
         box-shadow: inset -4px 0 8px -4px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-dashboard-scroll {
+        max-height: none !important;
+        overflow-y: visible !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-x pan-y !important;
+        overscroll-behavior-x: contain;
+    }
+
+    .table-dashboard-scroll .data-table {
+        min-width: 580px !important;
+        width: 100%;
+    }
+
+    .table-dashboard-scroll .data-table th,
+    .table-dashboard-scroll .data-table td {
+        white-space: nowrap !important;
+        padding: 9px 10px !important;
+    }
+
+    .table-scroll-hint {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        color: var(--primary);
+        font-size: 0.7rem;
+        background: rgba(37, 99, 235, 0.08);
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-weight: 600;
     }
 
     .data-table, .table {
