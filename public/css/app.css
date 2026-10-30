@@ -3123,13 +3123,11 @@ nav svg.w-5,
 
     .table-dashboard-scroll {
         max-height: none !important;
-        overflow-y: hidden !important;
         overflow-x: auto !important;
+        overflow-y: visible !important;
         -webkit-overflow-scrolling: touch !important;
-        touch-action: pan-x !important;
-        overscroll-behavior-x: contain !important;
-        overscroll-behavior-y: none !important;
-        scroll-behavior: smooth;
+        touch-action: auto !important;
+        overscroll-behavior-x: contain;
         position: relative;
     }
 
