@@ -4,7 +4,7 @@
 <style>
     .login-form-group {
         position: relative;
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
     
     .login-input {
@@ -52,7 +52,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+        margin-bottom: 26px;
         font-size: 14px;
     }
 
@@ -89,7 +89,7 @@
         color: white;
         border: none;
         border-radius: 12px;
-        padding: 14px;
+        padding: 13px;
         font-size: 15px;
         font-weight: 600;
         cursor: pointer;
@@ -110,7 +110,7 @@
         color: #475569;
         border: 1px solid #e2e8f0;
         border-radius: 12px;
-        padding: 14px;
+        padding: 13px;
         font-size: 15px;
         font-weight: 600;
         cursor: pointer;
@@ -124,6 +124,62 @@
     .btn-login-secondary:hover {
         background-color: #f1f5f9;
         color: #1e293b;
+    }
+
+    @media (max-width: 480px) {
+        .login-form-group {
+            margin-bottom: 16px;
+        }
+        
+        .login-input {
+            padding: 11px 14px 11px 38px;
+            font-size: 13.5px;
+            border-radius: 10px;
+        }
+
+        .login-icon {
+            left: 12px;
+            width: 15px;
+            height: 15px;
+        }
+
+        .login-icon-right {
+            right: 12px;
+            width: 15px;
+            height: 15px;
+        }
+
+        .login-options {
+            margin-bottom: 20px;
+            font-size: 12.5px;
+        }
+
+        .checkbox-group {
+            gap: 6px;
+            font-size: 12.5px;
+        }
+
+        .checkbox-group input {
+            width: 15px;
+            height: 15px;
+        }
+
+        .forgot-link {
+            font-size: 12.5px;
+        }
+
+        .btn-login-primary {
+            padding: 11px;
+            font-size: 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn-login-secondary {
+            padding: 11px;
+            font-size: 14px;
+            border-radius: 10px;
+        }
     }
 </style>
 

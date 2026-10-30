@@ -14,16 +14,20 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     
     <style>
+        html {
+            height: 100%;
+        }
+
         body {
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             margin: 0;
-            padding: 16px;
+            padding: 24px 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            min-height: -webkit-fill-available;
+            min-height: 100dvh;
             box-sizing: border-box;
         }
 
@@ -35,35 +39,29 @@
             width: 100%;
             max-width: 380px;
             background-color: #ffffff;
-            padding: 36px 28px;
+            padding: 34px 28px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 4px 10px rgba(0, 0, 0, 0.04);
             border-radius: 20px;
             box-sizing: border-box;
-        }
-
-        @media (max-width: 480px) {
-            .auth-card {
-                padding: 28px 20px;
-                border-radius: 16px;
-            }
+            margin: auto;
         }
         
         .auth-brand {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 26px;
         }
 
         .logo-circle-outer {
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             border-radius: 50%;
             border: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             background-color: #ffffff;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -76,11 +74,40 @@
         }
         
         .auth-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             color: #0f172a;
             margin: 0;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.4px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 16px;
+            }
+
+            .auth-card {
+                max-width: 350px;
+                padding: 24px 20px;
+                border-radius: 18px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            }
+
+            .auth-brand {
+                margin-bottom: 20px;
+            }
+
+            .logo-circle-outer {
+                width: 58px;
+                height: 58px;
+                margin-bottom: 12px;
+            }
+
+            .auth-title {
+                font-size: 19px;
+                letter-spacing: -0.3px;
+            }
         }
     </style>
 </head>
@@ -106,7 +133,6 @@
             @endif
             
             @yield('content')
-        </div>
     </div>
 </body>
 </html>
