@@ -58,10 +58,12 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => null,
-            'options' => extension_loaded('pdo_mysql') ? (env('MYSQL_ATTR_SSL_CA') || env('DB_SSL') ? [
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', true),
-                PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
-            ] : []) : [],
+            'options' => extension_loaded('pdo_mysql') ? (
+                !in_array(env('DB_HOST', '127.0.0.1'), ['127.0.0.1', 'localhost']) || env('MYSQL_ATTR_SSL_CA') || env('DB_SSL') ? [
+                    PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', file_exists('/etc/pki/tls/certs/ca-bundle.crt') ? '/etc/pki/tls/certs/ca-bundle.crt' : (file_exists('/etc/ssl/certs/ca-certificates.crt') ? '/etc/ssl/certs/ca-certificates.crt' : true)),
+                    PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false,
+                ] : []
+            ) : [],
         ],
 
         'pgsql' => [
